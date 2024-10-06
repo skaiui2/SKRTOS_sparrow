@@ -1,0 +1,3 @@
+C:/Users/el/CLionProjects/mytryos/xSkRTOS/cmake-build-debug/CMakeFiles/xSkRTOS.dir
+C:/Users/el/CLionProjects/mytryos/xSkRTOS/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/el/CLionProjects/mytryos/xSkRTOS/cmake-build-debug/CMakeFiles/rebuild_cache.dir

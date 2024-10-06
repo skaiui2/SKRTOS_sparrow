@@ -1,0 +1,532 @@
+#include "stm32f10x.h"                  // Device header
+#include "stm32f10x_gpio.h"
+
+
+
+
+void led_init(void)
+{
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOC, ENABLE);
+
+    GPIO_InitTypeDef GPIO_InitStructure;
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
+    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_13;
+    GPIO_InitStructure.GPIO_Speed =  GPIO_Speed_50MHz;
+    GPIO_Init(GPIOC, &GPIO_InitStructure);
+}
+
+
+
+
+#include<stdint.h>
+#include<stdio.h>
+#include<stdlib.h>
+
+
+#define aligment_byte               0x07
+#define configSysTickClockHz			( ( unsigned long ) 72000000 )
+#define configTickRateHz			( ( uint32_t ) 1000 )
+#define configShieldInterPriority 	191
+#define config_heap   12*1024
+#define configMaxPriori  32
+
+
+#define Class(class)    \
+typedef struct  class  class;\
+struct class
+
+#define MIN_size     ((size_t) (heapstructSize << 1))
+
+Class(heap_node){
+    heap_node *next;
+    size_t blocksize;
+};
+
+Class(xheap){
+    heap_node head;
+    heap_node *tail;
+    size_t allsize;
+};
+
+xheap theheap = {
+        .tail = NULL,
+        .allsize = config_heap,
+};
+
+static  uint8_t allheap[config_heap];
+static const size_t heapstructSize = (sizeof(heap_node) + (size_t)(aligment_byte)) &~(aligment_byte);
+
+void heap_init()
+{
+    heap_node *firstnode;
+    uint32_t start_heap ,end_heap;
+    //get start address
+    start_heap =(uint32_t) allheap;
+    if( (start_heap & aligment_byte) != 0){
+        start_heap += aligment_byte ;
+        start_heap &= ~aligment_byte;
+        theheap.allsize -=  (size_t)(start_heap - (uint32_t)allheap);//byte aligment means move to high address,so sub it!
+    }
+    theheap.head.next = (heap_node *)start_heap;
+    theheap.head.blocksize = (size_t)0;
+    end_heap  = ( start_heap + (uint32_t)config_heap);
+    if( (end_heap & aligment_byte) != 0){
+        end_heap += aligment_byte ;
+        end_heap &= ~aligment_byte;
+        theheap.allsize =  (size_t)(end_heap - start_heap );
+    }
+    theheap.tail = (heap_node*)end_heap;
+    theheap.tail->blocksize  = 0;
+    theheap.tail->next =NULL;
+    firstnode = (heap_node*)start_heap;
+    firstnode->next = theheap.tail;
+    firstnode->blocksize = theheap.allsize;
+}
+
+void *heap_malloc(size_t wantsize)
+{
+    heap_node *prevnode;
+    heap_node *usenode;
+    heap_node *newnode;
+    size_t aligmentrequisize;
+    void *xReturn = NULL;
+    wantsize += heapstructSize;
+    if((wantsize & aligment_byte) != 0x00)
+    {
+        aligmentrequisize = aligment_byte - (wantsize & aligment_byte);
+        wantsize += aligmentrequisize;
+    }//I will add the TaskSuspend function ,that make there be a atomic operation
+    if(theheap.tail== NULL )
+    {
+        heap_init();
+    }//
+    prevnode = &theheap.head;
+    usenode = theheap.head.next;
+    while((usenode->blocksize) < wantsize )
+    {
+        prevnode = usenode;
+        usenode = usenode ->next;
+    }
+    xReturn = (void*)(((uint8_t*)usenode) + heapstructSize);
+    prevnode->next = usenode->next ;
+    if( (usenode->blocksize - wantsize) > MIN_size )
+    {
+        newnode = (void*)(((uint8_t*)usenode) + wantsize);
+        newnode->blocksize = usenode->blocksize - wantsize;
+        usenode->blocksize = wantsize;
+        newnode->next = prevnode->next ;
+        prevnode->next = newnode;
+    }
+    theheap.allsize-= usenode->blocksize;
+    usenode->next = NULL;
+    return xReturn;
+}
+
+static void InsertFreeBlock(heap_node* xInsertBlock);
+void heap_free(void *xret)
+{
+    heap_node *xlink;
+    uint8_t *xFree = (uint8_t*)xret;
+
+    xFree -= heapstructSize;
+    xlink = (void*)xFree;
+    theheap.allsize += xlink->blocksize;
+    InsertFreeBlock((heap_node*)xlink);
+}
+
+static void InsertFreeBlock(heap_node* xInsertBlock)
+{
+    heap_node *first_fitnode;
+    uint8_t* getaddr;
+
+    for(first_fitnode = &theheap.head;first_fitnode->next < xInsertBlock;first_fitnode = first_fitnode->next)
+    { /*finding the fit node*/ }
+
+    xInsertBlock->next = first_fitnode->next;
+    first_fitnode->next = xInsertBlock;
+
+    getaddr = (uint8_t*)xInsertBlock;
+    if((getaddr + xInsertBlock->blocksize) == (uint8_t*)(xInsertBlock->next))
+    {
+        if(xInsertBlock->next != theheap.tail )
+        {
+            xInsertBlock->blocksize += xInsertBlock->next->blocksize;
+            xInsertBlock->next = xInsertBlock->next->next;
+        }
+        else
+        {
+            xInsertBlock->next = theheap.tail;
+        }
+    }
+    getaddr = (uint8_t*)first_fitnode;
+    if((getaddr + first_fitnode->blocksize) == (uint8_t*) xInsertBlock)
+    {
+        first_fitnode->blocksize += xInsertBlock->blocksize;
+        first_fitnode->next = xInsertBlock->next;
+    }
+}
+
+Class(TCB_t)
+{
+    volatile uint32_t * pxTopOfStack;
+    unsigned long uxPriority;
+    uint32_t * pxStack;
+};
+typedef  TCB_t         * TaskHandle_t;
+
+__attribute__( ( used ) )  TCB_t * volatile pxCurrentTCB = NULL;
+typedef void (* TaskFunction_t)( void * );
+
+Class(Stack_register)
+{
+    //automatic stacking
+    uint32_t r4;
+    uint32_t r5;
+    uint32_t r6;
+    uint32_t r7;
+    uint32_t r8;
+    uint32_t r9;
+    uint32_t r10;
+    uint32_t r11;
+    //manual stacking
+    uint32_t r0;
+    uint32_t r1;
+    uint32_t r2;
+    uint32_t r3;
+    uint32_t r12;
+    uint32_t LR;
+    uint32_t PC;
+    uint32_t xPSR;
+};
+
+#define vPortSVCHandler SVC_Handler
+#define xPortPendSVHandler PendSV_Handler
+
+void __attribute__( ( naked ) )  vPortSVCHandler( void )
+{
+    __asm volatile (
+            "	ldr	r3, pxCurrentTCBConst2		\n"
+            "	ldr r1, [r3]					\n"
+            "	ldr r0, [r1]					\n"
+            "	ldmia r0!, {r4-r11}				\n"
+            "	msr psp, r0						\n"
+            "	isb								\n"
+            "	mov r0, #0 						\n"
+            "	msr	basepri, r0					\n"
+            "	orr r14, #0xd					\n"
+            "	bx r14							\n"
+            "									\n"
+            "	.align 4						\n"
+            "pxCurrentTCBConst2: .word pxCurrentTCB				\n"
+            );
+}
+
+void __attribute__( ( naked ) )  xPortPendSVHandler( void )
+{
+    __asm volatile
+            (
+            "	mrs r0, psp							\n"
+            "	isb									\n"
+            "										\n"
+            "	ldr	r3, pxCurrentTCBConst			\n"
+            "	ldr	r2, [r3]						\n"
+            "										\n"
+            "	stmdb r0!, {r4-r11}					\n"
+            "	str r0, [r2]						\n"
+            "										\n"
+            "	stmdb sp!, {r3, r14}				\n"
+            "	mov r0, %0							\n"
+            "	msr basepri, r0						\n"
+            "   dsb                                 \n"
+            "   isb                                 \n"
+            "	bl vTaskSwitchContext				\n"
+            "	mov r0, #0							\n"
+            "	msr basepri, r0						\n"
+            "	ldmia sp!, {r3, r14}				\n"
+            "										\n"
+            "	ldr r1, [r3]						\n"
+            "	ldr r0, [r1]						\n"
+            "	ldmia r0!, {r4-r11}					\n"
+            "	msr psp, r0							\n"
+            "	isb									\n"
+            "	bx r14								\n"
+            "	nop									\n"
+            "	.align 4							\n"
+            "pxCurrentTCBConst: .word pxCurrentTCB	\n"
+            ::"i" ( configShieldInterPriority )
+            );
+}
+
+#define switchTask()\
+*( ( volatile uint32_t * ) 0xe000ed04 ) = 1UL << 28UL;
+
+uint32_t  NextTicks = ~(uint32_t)0;
+uint32_t  TicksBase = 0;
+
+uint32_t ReadyBitTable = 0;
+TaskHandle_t TcbTaskTable[configMaxPriori];
+
+uint32_t DelayBitTable = 0;
+uint32_t TicksTable[configMaxPriori];
+uint32_t TicksTableAssist[configMaxPriori];
+uint32_t* WakeTicksTable;
+uint32_t* OverWakeTicksTable;
+#define TicksTableInit( ) {  \
+    WakeTicksTable = TicksTable;    \
+    OverWakeTicksTable = TicksTableAssist;  \
+}
+#define TicksTableSwitch( ){    \
+    uint32_t *temp;             \
+    temp = WakeTicksTable;      \
+    WakeTicksTable = OverWakeTicksTable; \
+    OverWakeTicksTable = temp;  \
+    }
+
+uint32_t SuspendBitTable = 0;
+
+TaskHandle_t tcbTask1 = NULL;
+TaskHandle_t tcbTask2 = NULL;
+TaskHandle_t leisureTcb = NULL;
+
+void SetTaskPriority( TCB_t *self )
+{
+    TcbTaskTable[self->uxPriority] = self;
+}
+
+void TaskDelay( uint16_t ticks )
+{
+    uint32_t WakeTime = TicksBase + ticks;
+    TCB_t *self = pxCurrentTCB;
+    if( WakeTime < TicksBase)
+    {
+        OverWakeTicksTable[self->uxPriority] = WakeTime;
+    }
+    else
+    {
+        WakeTicksTable[self->uxPriority] = WakeTime;
+    }
+    ReadyBitTable &= ~(1 << (self->uxPriority) );
+    switchTask();
+}
+
+void CheckTicks( void )
+{
+    TicksBase += 1;
+    if( TicksBase == 0){
+        TicksTableSwitch( );
+    }
+    for(int i=0 ; i < configMaxPriori;i++) {
+        if(  WakeTicksTable[i]  > 0) {
+            if ( TicksBase >= WakeTicksTable[i] ) {
+                WakeTicksTable[i] = 0;
+                ReadyBitTable |= (1 << i);
+            }
+        }
+    }
+    switchTask();
+}
+
+static void __attribute__((always_inline)) vPortRaiseBASEPRI( void )
+{
+    uint32_t ulNewBASEPRI;
+    __asm volatile
+            (
+            "	mov %0, %1												\n"\
+            "	msr basepri, %0											\n"\
+            "	isb														\n"\
+            "	dsb														\n"\
+            : "=r" ( ulNewBASEPRI ) : "i" ( configShieldInterPriority ) : "memory"
+            );
+}
+
+static void __attribute__((always_inline)) vPortSetBASEPRI( uint32_t ulNewMaskValue )
+{
+    __asm volatile
+            (
+            "	msr basepri, %0	"::"r" ( ulNewMaskValue ) : "memory"
+            );
+}
+
+void SysTick_Handler(void)
+{
+    vPortRaiseBASEPRI();
+    CheckTicks();
+    vPortSetBASEPRI(0);
+}
+
+uint32_t * pxPortInitialiseStack( uint32_t * pxTopOfStack,
+                                  TaskFunction_t pxCode,
+                                  void * pvParameters )
+{
+    pxTopOfStack -= 16;
+    Stack_register *Stack = (Stack_register *)pxTopOfStack;
+
+    Stack->xPSR = 0x01000000UL;
+    Stack->PC = ( ( uint32_t ) pxCode ) & ( ( uint32_t ) 0xfffffffeUL );
+    Stack->LR = ( uint32_t ) pvParameters;
+    Stack->r0 = ( uint32_t ) NULL;
+
+    return pxTopOfStack;
+}
+
+void xTaskCreate( TaskFunction_t pxTaskCode,
+                  const char * const pcName,
+                  const uint16_t usStackDepth,
+                  void * const pvParameters,
+                  uint32_t uxPriority,
+                  TaskHandle_t * const pxCreatedTask )
+{
+    uint32_t *topStack =NULL;
+    TCB_t *NewTcb = (TCB_t *)heap_malloc(sizeof(TCB_t *));
+    TcbTaskTable[uxPriority] = NewTcb;
+    NewTcb->uxPriority = uxPriority;
+    NewTcb->pxStack = ( uint32_t *) heap_malloc( ( ( ( size_t ) usStackDepth ) * sizeof( uint32_t * ) ) );
+    topStack =  NewTcb->pxStack + (usStackDepth - (uint32_t)1) ;
+    topStack = ( uint32_t *) (((uint32_t)topStack) & (~((uint32_t) aligment_byte)));
+    NewTcb->pxTopOfStack = pxPortInitialiseStack(topStack,pxTaskCode,pvParameters);
+    *pxCreatedTask = ( TCB_t *) NewTcb;
+    pxCurrentTCB = NewTcb;
+    ReadyBitTable |= (1 << uxPriority);
+}
+
+__attribute__( ( always_inline ) ) static inline uint8_t FindHighestPriority( void )
+{
+    uint8_t TopZeroNumber;
+    __asm volatile
+            (
+            "clz %0, %1\n"
+            "mov r3, #31\n"
+            "sub %0, r3, %0\n"
+            :"=r" (TopZeroNumber)
+            :"r" (ReadyBitTable)
+            :"r3"
+            );
+    return TopZeroNumber;
+}
+
+void vTaskSwitchContext( void )
+{
+    pxCurrentTCB = TcbTaskTable[ FindHighestPriority()];
+}
+
+void led_bright( )
+{
+    while (1) {
+        GPIO_ResetBits(GPIOC, GPIO_Pin_13);
+        TaskDelay(1000);
+    }
+}
+
+void led_extinguish()
+{
+    while (1) {
+        GPIO_SetBits(GPIOC, GPIO_Pin_13);
+        TaskDelay(500);
+    }
+}
+
+
+uint32_t coi =10;
+void leisureTask( )
+{
+    while(1){
+        coi++;
+        coi--;
+    }
+}
+
+
+void SchedulerInit( void )
+{
+    TicksTableInit();
+    xTaskCreate(    leisureTask,
+                    "leisureTask",
+                    256,
+                    NULL,
+                    1,
+                    &leisureTcb
+    );
+}
+
+Class(Systick_struct)
+{
+    uint32_t CTRL;
+    uint32_t LOAD;
+    uint32_t VAL;
+    uint32_t CALIB;
+};
+
+
+void __attribute__( ( always_inline ) ) SchedulerStart( void )
+{
+    /* Start the timer that generates the tick ISR.  Interrupts are disabled
+     * here already. */
+    ( *( ( volatile uint32_t * ) 0xe000ed20 ) ) |= ( ( ( uint32_t ) 255UL ) << 16UL );
+    ( *( ( volatile uint32_t * ) 0xe000ed20 ) ) |= ( ( ( uint32_t ) 255UL ) << 24UL );
+
+    Systick_struct *Sys_tick = (Systick_struct *)0xe000e010;
+    /* Stop and clear the SysTick. */
+    Sys_tick->CTRL = 0UL;
+    Sys_tick->VAL = 0UL;
+
+    /* Configure SysTick to interrupt at the requested rate. */
+    Sys_tick->LOAD = ( configSysTickClockHz / configTickRateHz ) - 1UL;
+    Sys_tick->CTRL = ( ( 1UL << 2UL ) | ( 1UL << 1UL ) | ( 1UL << 0UL ) );
+
+    /* Start the first task. */
+    __asm volatile (
+            " ldr r0, =0xE000ED08 	\n"/* Use the NVIC offset register to locate the stack. */
+            " ldr r0, [r0] 			\n"
+            " ldr r0, [r0] 			\n"
+            " msr msp, r0			\n"/* Set the msp back to the start of the stack. */
+            " cpsie i				\n"/* Globally enable interrupts. */
+            " cpsie f				\n"
+            " dsb					\n"
+            " isb					\n"
+            " svc 0					\n"/* System call to start first task. */
+            " nop					\n"
+            " .ltorg				\n"
+            );
+}
+
+
+
+void APP( )
+{
+
+    xTaskCreate(    led_bright,
+                    "led_bright",
+                    256,
+                    NULL,
+                    2,
+                    &tcbTask1
+    );
+
+    xTaskCreate(    led_extinguish,
+                    "led_extinguish",
+                    256,
+                    NULL,
+                    3,
+                    &tcbTask2
+    );
+}
+
+
+int main(void)
+{
+
+    led_init();
+    SchedulerInit();
+
+
+    APP();
+
+    SchedulerStart();
+
+
+    while (1)
+    {
+
+    }
+
+}
