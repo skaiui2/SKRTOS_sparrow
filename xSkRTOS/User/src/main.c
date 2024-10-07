@@ -95,7 +95,7 @@ void *heap_malloc(size_t wantsize)
     {
         aligmentrequisize = aligment_byte - (wantsize & aligment_byte);
         wantsize += aligmentrequisize;
-    }//I will add the TaskSuspend function ,that make there be a atomic operation
+    }//I will add the TaskSuspend function ,that make here be a atomic operation
     if(theheap.tail== NULL )
     {
         heap_init();
@@ -294,6 +294,8 @@ uint32_t* OverWakeTicksTable;
 
 uint32_t SuspendBitTable = 0;
 
+//the table is defined for signal mechanism
+uint32_t BlockedBitTable = 0;
 
 void SetTaskPriority( TCB_t *self )
 {
