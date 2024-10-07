@@ -166,16 +166,6 @@ static void InsertFreeBlock(heap_node* xInsertBlock)
     }
 }
 
-Class(TCB_t)
-{
-    volatile uint32_t * pxTopOfStack;
-    unsigned long uxPriority;
-    uint32_t * pxStack;
-};
-typedef  TCB_t         *TaskHandle_t;
-
-__attribute__( ( used ) )  TCB_t * volatile pxCurrentTCB = NULL;
-typedef void (* TaskFunction_t)( void * );
 
 Class(Stack_register)
 {
@@ -197,6 +187,26 @@ Class(Stack_register)
     uint32_t LR;
     uint32_t PC;
     uint32_t xPSR;
+};
+
+Class(TCB_t)
+{
+    volatile uint32_t * pxTopOfStack;
+    unsigned long uxPriority;
+    uint32_t * pxStack;
+    Stack_register *self_stack;//Save the status of the stack in the task !You can use gdb to debug it!
+};
+typedef  TCB_t         *TaskHandle_t;
+
+__attribute__( ( used ) )  TCB_t * volatile pxCurrentTCB = NULL;
+typedef void (* TaskFunction_t)( void * );
+
+Class(Systick_struct)
+{
+    uint32_t CTRL;
+    uint32_t LOAD;
+    uint32_t VAL;
+    uint32_t CALIB;
 };
 
 #define vPortSVCHandler SVC_Handler
@@ -284,9 +294,6 @@ uint32_t* OverWakeTicksTable;
 
 uint32_t SuspendBitTable = 0;
 
-TaskHandle_t tcbTask1 = NULL;
-TaskHandle_t tcbTask2 = NULL;
-TaskHandle_t leisureTcb = NULL;
 
 void SetTaskPriority( TCB_t *self )
 {
@@ -305,6 +312,9 @@ void TaskDelay( uint16_t ticks )
     {
         WakeTicksTable[self->uxPriority] = WakeTime;
     }
+    /* This is a useless operation(for DelayBitTable), it can be discarded.
+     * But it is retained for the sake of normativity.For example, view the status of all current tasks.*/
+    DelayBitTable |= (1 << (self->uxPriority) );
     ReadyBitTable &= ~(1 << (self->uxPriority) );
     switchTask();
 }
@@ -319,6 +329,7 @@ void CheckTicks( void )
         if(  WakeTicksTable[i]  > 0) {
             if ( TicksBase >= WakeTicksTable[i] ) {
                 WakeTicksTable[i] = 0;
+                DelayBitTable &= ~(1 << i );//it is retained for the sake of normativity.
                 ReadyBitTable |= (1 << i);
             }
         }
@@ -338,9 +349,9 @@ __attribute__((always_inline)) uint32_t xEnterCritical( void )
             " dsb                   \n"
             " isb                   \n"
             " cpsie i               \n"
-            : "=r" (xReturn)        // Output operand
-            : "r" (configShieldInterPriority) // Input operand
-            : "memory"              // Clobbered list
+            : "=r" (xReturn)
+            : "r" (configShieldInterPriority)
+            : "memory"
             );
 
     return xReturn;
@@ -369,7 +380,8 @@ void SysTick_Handler(void)
 
 uint32_t * pxPortInitialiseStack( uint32_t * pxTopOfStack,
                                   TaskFunction_t pxCode,
-                                  void * pvParameters )
+                                  void * pvParameters ,
+                                  TaskHandle_t * const self)
 {
     pxTopOfStack -= 16;
     Stack_register *Stack = (Stack_register *)pxTopOfStack;
@@ -377,27 +389,28 @@ uint32_t * pxPortInitialiseStack( uint32_t * pxTopOfStack,
     Stack->xPSR = 0x01000000UL;
     Stack->PC = ( ( uint32_t ) pxCode ) & ( ( uint32_t ) 0xfffffffeUL );
     Stack->LR = ( uint32_t ) pvParameters;
-    Stack->r0 = ( uint32_t ) NULL;
+    Stack->r0 = ( uint32_t ) self;
+    (*self)->self_stack = Stack;
 
     return pxTopOfStack;
 }
 
 void xTaskCreate( TaskFunction_t pxTaskCode,
-                  const char * const pcName,
                   const uint16_t usStackDepth,
-                  void * const pvParameters,
+                  void * const pvParameters,//Maybe it can be used by debug
                   uint32_t uxPriority,
-                  TaskHandle_t * const pxCreatedTask )
+                  TaskHandle_t * const self )
 {
     uint32_t *topStack =NULL;
     TCB_t *NewTcb = (TCB_t *)heap_malloc(sizeof(TCB_t *));
+    *self = ( TCB_t *) NewTcb;
     TcbTaskTable[uxPriority] = NewTcb;
     NewTcb->uxPriority = uxPriority;
     NewTcb->pxStack = ( uint32_t *) heap_malloc( ( ( ( size_t ) usStackDepth ) * sizeof( uint32_t * ) ) );
     topStack =  NewTcb->pxStack + (usStackDepth - (uint32_t)1) ;
     topStack = ( uint32_t *) (((uint32_t)topStack) & (~((uint32_t) aligment_byte)));
-    NewTcb->pxTopOfStack = pxPortInitialiseStack(topStack,pxTaskCode,pvParameters);
-    *pxCreatedTask = ( TCB_t *) NewTcb;
+    NewTcb->pxTopOfStack = pxPortInitialiseStack(topStack,pxTaskCode,pvParameters,self);
+
     pxCurrentTCB = NewTcb;
     ReadyBitTable |= (1 << uxPriority);
 }
@@ -422,51 +435,33 @@ void vTaskSwitchContext( void )
     pxCurrentTCB = TcbTaskTable[ FindHighestPriority()];
 }
 
-void led_bright( )
+void EnterSleepMode(void)
 {
-    while (1) {
-        GPIO_ResetBits(GPIOC, GPIO_Pin_13);
-        TaskDelay(1000);
-    }
-}
-
-void led_extinguish()
-{
-    while (1) {
-        GPIO_SetBits(GPIOC, GPIO_Pin_13);
-        TaskDelay(500);
-    }
+    SCB->SCR &= ~SCB_SCR_SLEEPDEEP_Msk;
+    __WFI();
 }
 
 
-uint32_t coi =10;
+//Task handle can be hide, but in order to debug, it must be created manually by the user
+TaskHandle_t leisureTcb = NULL;
+
 void leisureTask( )
-{
-    while(1){
-        coi++;
+{//leisureTask content can be manually modified as needed
+    while (1) {
+        EnterSleepMode();
     }
 }
-
 
 void SchedulerInit( void )
 {
     TicksTableInit();
     xTaskCreate(    leisureTask,
-                    "leisureTask",
                     128,
                     NULL,
                     1,
                     &leisureTcb
     );
 }
-
-Class(Systick_struct)
-{
-    uint32_t CTRL;
-    uint32_t LOAD;
-    uint32_t VAL;
-    uint32_t CALIB;
-};
 
 
 void __attribute__( ( always_inline ) ) SchedulerStart( void )
@@ -502,12 +497,30 @@ void __attribute__( ( always_inline ) ) SchedulerStart( void )
 }
 
 
+//Task Area!The user must create Task handle manually because of debugging and specification
+TaskHandle_t tcbTask1 = NULL;
+TaskHandle_t tcbTask2 = NULL;
+
+void led_bright( )
+{
+    while (1) {
+        GPIO_ResetBits(GPIOC, GPIO_Pin_13);
+        TaskDelay(1000);
+    }
+}
+
+void led_extinguish()
+{
+    while (1) {
+        GPIO_SetBits(GPIOC, GPIO_Pin_13);
+        TaskDelay(500);
+    }
+}
 
 void APP( )
 {
 
     xTaskCreate(    led_bright,
-                    "led_bright",
                     128,
                     NULL,
                     2,
@@ -515,7 +528,6 @@ void APP( )
     );
 
     xTaskCreate(    led_extinguish,
-                    "led_extinguish",
                     128,
                     NULL,
                     3,

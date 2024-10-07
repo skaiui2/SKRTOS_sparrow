@@ -128,8 +128,6 @@ Discarded input sections
                 0x00000000       0xa8 CMakeFiles/xSkRTOS.dir/User/src/main.c.obj
  .data.NextTicks
                 0x00000000        0x4 CMakeFiles/xSkRTOS.dir/User/src/main.c.obj
- .bss.DelayBitTable
-                0x00000000        0x4 CMakeFiles/xSkRTOS.dir/User/src/main.c.obj
  .bss.SuspendBitTable
                 0x00000000        0x4 CMakeFiles/xSkRTOS.dir/User/src/main.c.obj
  .text.SetTaskPriority
@@ -756,7 +754,7 @@ LOAD d:/all/devemcu/gcc_arm/gccarm/bin/../lib/gcc/arm-none-eabi/10.3.1/thumb/v7-
                 0x08000000                g_pfnVectors
                 0x0800010c                . = ALIGN (0x4)
 
-.text           0x08000110      0xa94
+.text           0x08000110      0xadc
                 0x08000110                . = ALIGN (0x4)
  *(.text)
  .text          0x08000110       0x40 d:/all/devemcu/gcc_arm/gccarm/bin/../lib/gcc/arm-none-eabi/10.3.1/thumb/v7-m/nofp/crtbegin.o
@@ -764,245 +762,249 @@ LOAD d:/all/devemcu/gcc_arm/gccarm/bin/../lib/gcc/arm-none-eabi/10.3.1/thumb/v7-
  .text.__libc_init_array
                 0x08000150       0x48 d:/all/devemcu/gcc_arm/gccarm/bin/../lib/gcc/arm-none-eabi/10.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libc_nano.a(lib_a-init.o)
                 0x08000150                __libc_init_array
+ .text.__WFI    0x08000198        0xe CMakeFiles/xSkRTOS.dir/User/src/main.c.obj
+ *fill*         0x080001a6        0x2 
  .text.led_init
-                0x08000198       0x34 CMakeFiles/xSkRTOS.dir/User/src/main.c.obj
-                0x08000198                led_init
+                0x080001a8       0x34 CMakeFiles/xSkRTOS.dir/User/src/main.c.obj
+                0x080001a8                led_init
  .text.heap_init
-                0x080001cc       0xa4 CMakeFiles/xSkRTOS.dir/User/src/main.c.obj
-                0x080001cc                heap_init
+                0x080001dc       0xa4 CMakeFiles/xSkRTOS.dir/User/src/main.c.obj
+                0x080001dc                heap_init
  .text.heap_malloc
-                0x08000270       0xc8 CMakeFiles/xSkRTOS.dir/User/src/main.c.obj
-                0x08000270                heap_malloc
- *fill*         0x08000338        0x8 
+                0x08000280       0xc8 CMakeFiles/xSkRTOS.dir/User/src/main.c.obj
+                0x08000280                heap_malloc
+ *fill*         0x08000348        0x8 
  .text.SVC_Handler
-                0x08000340       0x28 CMakeFiles/xSkRTOS.dir/User/src/main.c.obj
-                0x08000340                SVC_Handler
- *fill*         0x08000368        0x8 
+                0x08000350       0x28 CMakeFiles/xSkRTOS.dir/User/src/main.c.obj
+                0x08000350                SVC_Handler
+ *fill*         0x08000378        0x8 
  .text.PendSV_Handler
-                0x08000370       0x58 CMakeFiles/xSkRTOS.dir/User/src/main.c.obj
-                0x08000370                PendSV_Handler
+                0x08000380       0x58 CMakeFiles/xSkRTOS.dir/User/src/main.c.obj
+                0x08000380                PendSV_Handler
  .text.TaskDelay
-                0x080003c8       0x88 CMakeFiles/xSkRTOS.dir/User/src/main.c.obj
-                0x080003c8                TaskDelay
+                0x080003d8       0xa4 CMakeFiles/xSkRTOS.dir/User/src/main.c.obj
+                0x080003d8                TaskDelay
  .text.CheckTicks
-                0x08000450       0xac CMakeFiles/xSkRTOS.dir/User/src/main.c.obj
-                0x08000450                CheckTicks
+                0x0800047c       0xc4 CMakeFiles/xSkRTOS.dir/User/src/main.c.obj
+                0x0800047c                CheckTicks
  .text.SysTick_Handler
-                0x080004fc       0x46 CMakeFiles/xSkRTOS.dir/User/src/main.c.obj
-                0x080004fc                SysTick_Handler
+                0x08000540       0x46 CMakeFiles/xSkRTOS.dir/User/src/main.c.obj
+                0x08000540                SysTick_Handler
  .text.pxPortInitialiseStack
-                0x08000542       0x40 CMakeFiles/xSkRTOS.dir/User/src/main.c.obj
-                0x08000542                pxPortInitialiseStack
- *fill*         0x08000582        0x2 
+                0x08000586       0x4a CMakeFiles/xSkRTOS.dir/User/src/main.c.obj
+                0x08000586                pxPortInitialiseStack
  .text.xTaskCreate
-                0x08000584       0x9c CMakeFiles/xSkRTOS.dir/User/src/main.c.obj
-                0x08000584                xTaskCreate
+                0x080005d0       0x9c CMakeFiles/xSkRTOS.dir/User/src/main.c.obj
+                0x080005d0                xTaskCreate
  .text.vTaskSwitchContext
-                0x08000620       0x3c CMakeFiles/xSkRTOS.dir/User/src/main.c.obj
-                0x08000620                vTaskSwitchContext
- .text.led_bright
-                0x0800065c       0x1c CMakeFiles/xSkRTOS.dir/User/src/main.c.obj
-                0x0800065c                led_bright
- .text.led_extinguish
-                0x08000678       0x1c CMakeFiles/xSkRTOS.dir/User/src/main.c.obj
-                0x08000678                led_extinguish
+                0x0800066c       0x3c CMakeFiles/xSkRTOS.dir/User/src/main.c.obj
+                0x0800066c                vTaskSwitchContext
+ .text.EnterSleepMode
+                0x080006a8       0x1c CMakeFiles/xSkRTOS.dir/User/src/main.c.obj
+                0x080006a8                EnterSleepMode
  .text.leisureTask
-                0x08000694       0x14 CMakeFiles/xSkRTOS.dir/User/src/main.c.obj
-                0x08000694                leisureTask
+                0x080006c4        0xa CMakeFiles/xSkRTOS.dir/User/src/main.c.obj
+                0x080006c4                leisureTask
+ *fill*         0x080006ce        0x2 
  .text.SchedulerInit
-                0x080006a8       0x48 CMakeFiles/xSkRTOS.dir/User/src/main.c.obj
-                0x080006a8                SchedulerInit
- .text.APP      0x080006f0       0x4c CMakeFiles/xSkRTOS.dir/User/src/main.c.obj
-                0x080006f0                APP
- .text.main     0x0800073c       0x74 CMakeFiles/xSkRTOS.dir/User/src/main.c.obj
-                0x0800073c                main
+                0x080006d0       0x40 CMakeFiles/xSkRTOS.dir/User/src/main.c.obj
+                0x080006d0                SchedulerInit
+ .text.led_bright
+                0x08000710       0x1c CMakeFiles/xSkRTOS.dir/User/src/main.c.obj
+                0x08000710                led_bright
+ .text.led_extinguish
+                0x0800072c       0x1c CMakeFiles/xSkRTOS.dir/User/src/main.c.obj
+                0x0800072c                led_extinguish
+ .text.APP      0x08000748       0x3c CMakeFiles/xSkRTOS.dir/User/src/main.c.obj
+                0x08000748                APP
+ .text.main     0x08000784       0x74 CMakeFiles/xSkRTOS.dir/User/src/main.c.obj
+                0x08000784                main
  .text.NMI_Handler
-                0x080007b0        0xc CMakeFiles/xSkRTOS.dir/User/src/stm32f10x_it.c.obj
-                0x080007b0                NMI_Handler
+                0x080007f8        0xc CMakeFiles/xSkRTOS.dir/User/src/stm32f10x_it.c.obj
+                0x080007f8                NMI_Handler
  .text.HardFault_Handler
-                0x080007bc        0x6 CMakeFiles/xSkRTOS.dir/User/src/stm32f10x_it.c.obj
-                0x080007bc                HardFault_Handler
+                0x08000804        0x6 CMakeFiles/xSkRTOS.dir/User/src/stm32f10x_it.c.obj
+                0x08000804                HardFault_Handler
  .text.MemManage_Handler
-                0x080007c2        0x6 CMakeFiles/xSkRTOS.dir/User/src/stm32f10x_it.c.obj
-                0x080007c2                MemManage_Handler
+                0x0800080a        0x6 CMakeFiles/xSkRTOS.dir/User/src/stm32f10x_it.c.obj
+                0x0800080a                MemManage_Handler
  .text.BusFault_Handler
-                0x080007c8        0x6 CMakeFiles/xSkRTOS.dir/User/src/stm32f10x_it.c.obj
-                0x080007c8                BusFault_Handler
+                0x08000810        0x6 CMakeFiles/xSkRTOS.dir/User/src/stm32f10x_it.c.obj
+                0x08000810                BusFault_Handler
  .text.UsageFault_Handler
-                0x080007ce        0x6 CMakeFiles/xSkRTOS.dir/User/src/stm32f10x_it.c.obj
-                0x080007ce                UsageFault_Handler
+                0x08000816        0x6 CMakeFiles/xSkRTOS.dir/User/src/stm32f10x_it.c.obj
+                0x08000816                UsageFault_Handler
  .text.DebugMon_Handler
-                0x080007d4        0xc CMakeFiles/xSkRTOS.dir/User/src/stm32f10x_it.c.obj
-                0x080007d4                DebugMon_Handler
+                0x0800081c        0xc CMakeFiles/xSkRTOS.dir/User/src/stm32f10x_it.c.obj
+                0x0800081c                DebugMon_Handler
  .text.Reset_Handler
-                0x080007e0       0x48 CMakeFiles/xSkRTOS.dir/Start/src/startup_stm32f103xb.s.obj
-                0x080007e0                Reset_Handler
+                0x08000828       0x48 CMakeFiles/xSkRTOS.dir/Start/src/startup_stm32f103xb.s.obj
+                0x08000828                Reset_Handler
  .text.Default_Handler
-                0x08000828        0x2 CMakeFiles/xSkRTOS.dir/Start/src/startup_stm32f103xb.s.obj
-                0x08000828                RTC_Alarm_IRQHandler
-                0x08000828                EXTI2_IRQHandler
-                0x08000828                TIM1_CC_IRQHandler
-                0x08000828                PVD_IRQHandler
-                0x08000828                EXTI3_IRQHandler
-                0x08000828                EXTI0_IRQHandler
-                0x08000828                I2C2_EV_IRQHandler
-                0x08000828                ADC1_2_IRQHandler
-                0x08000828                SPI1_IRQHandler
-                0x08000828                TAMPER_IRQHandler
-                0x08000828                DMA1_Channel4_IRQHandler
-                0x08000828                USART3_IRQHandler
-                0x08000828                RTC_IRQHandler
-                0x08000828                DMA1_Channel7_IRQHandler
-                0x08000828                CAN1_RX1_IRQHandler
-                0x08000828                TIM4_IRQHandler
-                0x08000828                I2C1_EV_IRQHandler
-                0x08000828                DMA1_Channel6_IRQHandler
-                0x08000828                TIM3_IRQHandler
-                0x08000828                RCC_IRQHandler
-                0x08000828                TIM1_TRG_COM_IRQHandler
-                0x08000828                DMA1_Channel1_IRQHandler
-                0x08000828                Default_Handler
-                0x08000828                EXTI15_10_IRQHandler
-                0x08000828                EXTI9_5_IRQHandler
-                0x08000828                SPI2_IRQHandler
-                0x08000828                DMA1_Channel5_IRQHandler
-                0x08000828                EXTI4_IRQHandler
-                0x08000828                USB_LP_CAN1_RX0_IRQHandler
-                0x08000828                USB_HP_CAN1_TX_IRQHandler
-                0x08000828                DMA1_Channel3_IRQHandler
-                0x08000828                TIM1_UP_IRQHandler
-                0x08000828                WWDG_IRQHandler
-                0x08000828                TIM2_IRQHandler
-                0x08000828                TIM1_BRK_IRQHandler
-                0x08000828                EXTI1_IRQHandler
-                0x08000828                USART2_IRQHandler
-                0x08000828                I2C2_ER_IRQHandler
-                0x08000828                DMA1_Channel2_IRQHandler
-                0x08000828                CAN1_SCE_IRQHandler
-                0x08000828                FLASH_IRQHandler
-                0x08000828                USART1_IRQHandler
-                0x08000828                I2C1_ER_IRQHandler
-                0x08000828                USBWakeUp_IRQHandler
- *fill*         0x0800082a        0x2 
+                0x08000870        0x2 CMakeFiles/xSkRTOS.dir/Start/src/startup_stm32f103xb.s.obj
+                0x08000870                RTC_Alarm_IRQHandler
+                0x08000870                EXTI2_IRQHandler
+                0x08000870                TIM1_CC_IRQHandler
+                0x08000870                PVD_IRQHandler
+                0x08000870                EXTI3_IRQHandler
+                0x08000870                EXTI0_IRQHandler
+                0x08000870                I2C2_EV_IRQHandler
+                0x08000870                ADC1_2_IRQHandler
+                0x08000870                SPI1_IRQHandler
+                0x08000870                TAMPER_IRQHandler
+                0x08000870                DMA1_Channel4_IRQHandler
+                0x08000870                USART3_IRQHandler
+                0x08000870                RTC_IRQHandler
+                0x08000870                DMA1_Channel7_IRQHandler
+                0x08000870                CAN1_RX1_IRQHandler
+                0x08000870                TIM4_IRQHandler
+                0x08000870                I2C1_EV_IRQHandler
+                0x08000870                DMA1_Channel6_IRQHandler
+                0x08000870                TIM3_IRQHandler
+                0x08000870                RCC_IRQHandler
+                0x08000870                TIM1_TRG_COM_IRQHandler
+                0x08000870                DMA1_Channel1_IRQHandler
+                0x08000870                Default_Handler
+                0x08000870                EXTI15_10_IRQHandler
+                0x08000870                EXTI9_5_IRQHandler
+                0x08000870                SPI2_IRQHandler
+                0x08000870                DMA1_Channel5_IRQHandler
+                0x08000870                EXTI4_IRQHandler
+                0x08000870                USB_LP_CAN1_RX0_IRQHandler
+                0x08000870                USB_HP_CAN1_TX_IRQHandler
+                0x08000870                DMA1_Channel3_IRQHandler
+                0x08000870                TIM1_UP_IRQHandler
+                0x08000870                WWDG_IRQHandler
+                0x08000870                TIM2_IRQHandler
+                0x08000870                TIM1_BRK_IRQHandler
+                0x08000870                EXTI1_IRQHandler
+                0x08000870                USART2_IRQHandler
+                0x08000870                I2C2_ER_IRQHandler
+                0x08000870                DMA1_Channel2_IRQHandler
+                0x08000870                CAN1_SCE_IRQHandler
+                0x08000870                FLASH_IRQHandler
+                0x08000870                USART1_IRQHandler
+                0x08000870                I2C1_ER_IRQHandler
+                0x08000870                USBWakeUp_IRQHandler
+ *fill*         0x08000872        0x2 
  .text.SystemInit
-                0x0800082c       0x68 CMakeFiles/xSkRTOS.dir/Start/src/system_stm32f10x.c.obj
-                0x0800082c                SystemInit
+                0x08000874       0x68 CMakeFiles/xSkRTOS.dir/Start/src/system_stm32f10x.c.obj
+                0x08000874                SystemInit
  .text.SetSysClock
-                0x08000894        0xc CMakeFiles/xSkRTOS.dir/Start/src/system_stm32f10x.c.obj
+                0x080008dc        0xc CMakeFiles/xSkRTOS.dir/Start/src/system_stm32f10x.c.obj
  .text.SetSysClockTo72
-                0x080008a0      0x100 CMakeFiles/xSkRTOS.dir/Start/src/system_stm32f10x.c.obj
+                0x080008e8      0x100 CMakeFiles/xSkRTOS.dir/Start/src/system_stm32f10x.c.obj
  .text.GPIO_Init
-                0x080009a0      0x178 CMakeFiles/xSkRTOS.dir/Library/src/stm32f10x_gpio.c.obj
-                0x080009a0                GPIO_Init
+                0x080009e8      0x178 CMakeFiles/xSkRTOS.dir/Library/src/stm32f10x_gpio.c.obj
+                0x080009e8                GPIO_Init
  .text.GPIO_SetBits
-                0x08000b18       0x1c CMakeFiles/xSkRTOS.dir/Library/src/stm32f10x_gpio.c.obj
-                0x08000b18                GPIO_SetBits
+                0x08000b60       0x1c CMakeFiles/xSkRTOS.dir/Library/src/stm32f10x_gpio.c.obj
+                0x08000b60                GPIO_SetBits
  .text.GPIO_ResetBits
-                0x08000b34       0x1c CMakeFiles/xSkRTOS.dir/Library/src/stm32f10x_gpio.c.obj
-                0x08000b34                GPIO_ResetBits
+                0x08000b7c       0x1c CMakeFiles/xSkRTOS.dir/Library/src/stm32f10x_gpio.c.obj
+                0x08000b7c                GPIO_ResetBits
  .text.RCC_APB2PeriphClockCmd
-                0x08000b50       0x3c CMakeFiles/xSkRTOS.dir/Library/src/stm32f10x_rcc.c.obj
-                0x08000b50                RCC_APB2PeriphClockCmd
+                0x08000b98       0x3c CMakeFiles/xSkRTOS.dir/Library/src/stm32f10x_rcc.c.obj
+                0x08000b98                RCC_APB2PeriphClockCmd
  *(.glue_7)
- .glue_7        0x08000b8c        0x0 linker stubs
+ .glue_7        0x08000bd4        0x0 linker stubs
  *(.glue_7t)
- .glue_7t       0x08000b8c        0x0 linker stubs
+ .glue_7t       0x08000bd4        0x0 linker stubs
  *(.eh_frame)
- .eh_frame      0x08000b8c        0x0 d:/all/devemcu/gcc_arm/gccarm/bin/../lib/gcc/arm-none-eabi/10.3.1/thumb/v7-m/nofp/crtbegin.o
+ .eh_frame      0x08000bd4        0x0 d:/all/devemcu/gcc_arm/gccarm/bin/../lib/gcc/arm-none-eabi/10.3.1/thumb/v7-m/nofp/crtbegin.o
  *(.init)
- .init          0x08000b8c        0x4 d:/all/devemcu/gcc_arm/gccarm/bin/../lib/gcc/arm-none-eabi/10.3.1/thumb/v7-m/nofp/crti.o
-                0x08000b8c                _init
- .init          0x08000b90        0x8 d:/all/devemcu/gcc_arm/gccarm/bin/../lib/gcc/arm-none-eabi/10.3.1/thumb/v7-m/nofp/crtn.o
+ .init          0x08000bd4        0x4 d:/all/devemcu/gcc_arm/gccarm/bin/../lib/gcc/arm-none-eabi/10.3.1/thumb/v7-m/nofp/crti.o
+                0x08000bd4                _init
+ .init          0x08000bd8        0x8 d:/all/devemcu/gcc_arm/gccarm/bin/../lib/gcc/arm-none-eabi/10.3.1/thumb/v7-m/nofp/crtn.o
  *(.fini)
- .fini          0x08000b98        0x4 d:/all/devemcu/gcc_arm/gccarm/bin/../lib/gcc/arm-none-eabi/10.3.1/thumb/v7-m/nofp/crti.o
-                0x08000b98                _fini
- .fini          0x08000b9c        0x8 d:/all/devemcu/gcc_arm/gccarm/bin/../lib/gcc/arm-none-eabi/10.3.1/thumb/v7-m/nofp/crtn.o
-                0x08000ba4                . = ALIGN (0x4)
-                0x08000ba4                _etext = .
+ .fini          0x08000be0        0x4 d:/all/devemcu/gcc_arm/gccarm/bin/../lib/gcc/arm-none-eabi/10.3.1/thumb/v7-m/nofp/crti.o
+                0x08000be0                _fini
+ .fini          0x08000be4        0x8 d:/all/devemcu/gcc_arm/gccarm/bin/../lib/gcc/arm-none-eabi/10.3.1/thumb/v7-m/nofp/crtn.o
+                0x08000bec                . = ALIGN (0x4)
+                0x08000bec                _etext = .
 
-.vfp11_veneer   0x08000ba4        0x0
- .vfp11_veneer  0x08000ba4        0x0 linker stubs
+.vfp11_veneer   0x08000bec        0x0
+ .vfp11_veneer  0x08000bec        0x0 linker stubs
 
-.v4_bx          0x08000ba4        0x0
- .v4_bx         0x08000ba4        0x0 linker stubs
+.v4_bx          0x08000bec        0x0
+ .v4_bx         0x08000bec        0x0 linker stubs
 
-.iplt           0x08000ba4        0x0
- .iplt          0x08000ba4        0x0 d:/all/devemcu/gcc_arm/gccarm/bin/../lib/gcc/arm-none-eabi/10.3.1/thumb/v7-m/nofp/crtbegin.o
+.iplt           0x08000bec        0x0
+ .iplt          0x08000bec        0x0 d:/all/devemcu/gcc_arm/gccarm/bin/../lib/gcc/arm-none-eabi/10.3.1/thumb/v7-m/nofp/crtbegin.o
 
-.rodata         0x08000ba4       0x28
-                0x08000ba4                . = ALIGN (0x4)
+.rel.dyn        0x08000bec        0x0
+ .rel.iplt      0x08000bec        0x0 d:/all/devemcu/gcc_arm/gccarm/bin/../lib/gcc/arm-none-eabi/10.3.1/thumb/v7-m/nofp/crtbegin.o
+
+.rodata         0x08000bec        0x0
+                0x08000bec                . = ALIGN (0x4)
  *(.rodata)
- .rodata        0x08000ba4       0x27 CMakeFiles/xSkRTOS.dir/User/src/main.c.obj
  *(.rodata*)
-                0x08000bcc                . = ALIGN (0x4)
- *fill*         0x08000bcb        0x1 
-
-.rel.dyn        0x08000bcc        0x0
- .rel.iplt      0x08000bcc        0x0 d:/all/devemcu/gcc_arm/gccarm/bin/../lib/gcc/arm-none-eabi/10.3.1/thumb/v7-m/nofp/crtbegin.o
+                0x08000bec                . = ALIGN (0x4)
 
 .ARM.extab
  *(.ARM.extab* .gnu.linkonce.armextab.*)
 
-.ARM            0x08000bcc        0x0
-                0x08000bcc                __exidx_start = .
+.ARM            0x08000bec        0x0
+                0x08000bec                __exidx_start = .
  *(.ARM.exidx*)
-                0x08000bcc                __exidx_end = .
+                0x08000bec                __exidx_end = .
 
-.preinit_array  0x08000bcc        0x0
-                0x08000bcc                PROVIDE (__preinit_array_start = .)
+.preinit_array  0x08000bec        0x0
+                0x08000bec                PROVIDE (__preinit_array_start = .)
  *(.preinit_array*)
-                0x08000bcc                PROVIDE (__preinit_array_end = .)
+                0x08000bec                PROVIDE (__preinit_array_end = .)
 
-.init_array     0x08000bcc        0x4
-                0x08000bcc                PROVIDE (__init_array_start = .)
+.init_array     0x08000bec        0x4
+                0x08000bec                PROVIDE (__init_array_start = .)
  *(SORT_BY_NAME(.init_array.*))
  *(.init_array*)
- .init_array    0x08000bcc        0x4 d:/all/devemcu/gcc_arm/gccarm/bin/../lib/gcc/arm-none-eabi/10.3.1/thumb/v7-m/nofp/crtbegin.o
-                0x08000bd0                PROVIDE (__init_array_end = .)
+ .init_array    0x08000bec        0x4 d:/all/devemcu/gcc_arm/gccarm/bin/../lib/gcc/arm-none-eabi/10.3.1/thumb/v7-m/nofp/crtbegin.o
+                0x08000bf0                PROVIDE (__init_array_end = .)
 
-.fini_array     0x08000bd0        0x4
+.fini_array     0x08000bf0        0x4
                 [!provide]                PROVIDE (__fini_array_start = .)
  *(SORT_BY_NAME(.fini_array.*))
  *(.fini_array*)
- .fini_array    0x08000bd0        0x4 d:/all/devemcu/gcc_arm/gccarm/bin/../lib/gcc/arm-none-eabi/10.3.1/thumb/v7-m/nofp/crtbegin.o
+ .fini_array    0x08000bf0        0x4 d:/all/devemcu/gcc_arm/gccarm/bin/../lib/gcc/arm-none-eabi/10.3.1/thumb/v7-m/nofp/crtbegin.o
                 [!provide]                PROVIDE (__fini_array_end = .)
-                0x08000bd4                _sidata = LOADADDR (.data)
+                0x08000bf4                _sidata = LOADADDR (.data)
 
-.data           0x20000000       0x14 load address 0x08000bd4
+.data           0x20000000       0x10 load address 0x08000bf4
                 0x20000000                . = ALIGN (0x4)
                 0x20000000                _sdata = .
  *(.data)
  *(.data*)
  .data.theheap  0x20000000       0x10 CMakeFiles/xSkRTOS.dir/User/src/main.c.obj
                 0x20000000                theheap
- .data.coi      0x20000010        0x4 CMakeFiles/xSkRTOS.dir/User/src/main.c.obj
-                0x20000010                coi
-                0x20000014                . = ALIGN (0x4)
-                0x20000014                _edata = .
+                0x20000010                . = ALIGN (0x4)
+                0x20000010                _edata = .
 
-.igot.plt       0x20000014        0x0 load address 0x08000be8
- .igot.plt      0x20000014        0x0 d:/all/devemcu/gcc_arm/gccarm/bin/../lib/gcc/arm-none-eabi/10.3.1/thumb/v7-m/nofp/crtbegin.o
-                0x20000014                . = ALIGN (0x4)
+.igot.plt       0x20000010        0x0 load address 0x08000c04
+ .igot.plt      0x20000010        0x0 d:/all/devemcu/gcc_arm/gccarm/bin/../lib/gcc/arm-none-eabi/10.3.1/thumb/v7-m/nofp/crtbegin.o
+                0x20000010                . = ALIGN (0x4)
 
-.bss            0x20000014     0x206c load address 0x08000be8
-                0x20000014                _sbss = .
-                0x20000014                __bss_start__ = _sbss
+.bss            0x20000010     0x2070 load address 0x08000c04
+                0x20000010                _sbss = .
+                0x20000010                __bss_start__ = _sbss
  *(.bss)
- .bss           0x20000014       0x1c d:/all/devemcu/gcc_arm/gccarm/bin/../lib/gcc/arm-none-eabi/10.3.1/thumb/v7-m/nofp/crtbegin.o
+ .bss           0x20000010       0x1c d:/all/devemcu/gcc_arm/gccarm/bin/../lib/gcc/arm-none-eabi/10.3.1/thumb/v7-m/nofp/crtbegin.o
  *(.bss*)
- .bss.allheap   0x20000030     0x2000 CMakeFiles/xSkRTOS.dir/User/src/main.c.obj
+ .bss.allheap   0x2000002c     0x2000 CMakeFiles/xSkRTOS.dir/User/src/main.c.obj
  .bss.pxCurrentTCB
-                0x20002030        0x4 CMakeFiles/xSkRTOS.dir/User/src/main.c.obj
-                0x20002030                pxCurrentTCB
+                0x2000202c        0x4 CMakeFiles/xSkRTOS.dir/User/src/main.c.obj
+                0x2000202c                pxCurrentTCB
  .bss.TicksBase
-                0x20002034        0x4 CMakeFiles/xSkRTOS.dir/User/src/main.c.obj
-                0x20002034                TicksBase
+                0x20002030        0x4 CMakeFiles/xSkRTOS.dir/User/src/main.c.obj
+                0x20002030                TicksBase
  .bss.ReadyBitTable
-                0x20002038        0x4 CMakeFiles/xSkRTOS.dir/User/src/main.c.obj
-                0x20002038                ReadyBitTable
+                0x20002034        0x4 CMakeFiles/xSkRTOS.dir/User/src/main.c.obj
+                0x20002034                ReadyBitTable
  .bss.TcbTaskTable
-                0x2000203c       0x10 CMakeFiles/xSkRTOS.dir/User/src/main.c.obj
-                0x2000203c                TcbTaskTable
+                0x20002038       0x10 CMakeFiles/xSkRTOS.dir/User/src/main.c.obj
+                0x20002038                TcbTaskTable
+ .bss.DelayBitTable
+                0x20002048        0x4 CMakeFiles/xSkRTOS.dir/User/src/main.c.obj
+                0x20002048                DelayBitTable
  .bss.TicksTable
                 0x2000204c       0x10 CMakeFiles/xSkRTOS.dir/User/src/main.c.obj
                 0x2000204c                TicksTable
@@ -1015,20 +1017,20 @@ LOAD d:/all/devemcu/gcc_arm/gccarm/bin/../lib/gcc/arm-none-eabi/10.3.1/thumb/v7-
  .bss.OverWakeTicksTable
                 0x20002070        0x4 CMakeFiles/xSkRTOS.dir/User/src/main.c.obj
                 0x20002070                OverWakeTicksTable
- .bss.tcbTask1  0x20002074        0x4 CMakeFiles/xSkRTOS.dir/User/src/main.c.obj
-                0x20002074                tcbTask1
- .bss.tcbTask2  0x20002078        0x4 CMakeFiles/xSkRTOS.dir/User/src/main.c.obj
-                0x20002078                tcbTask2
  .bss.leisureTcb
-                0x2000207c        0x4 CMakeFiles/xSkRTOS.dir/User/src/main.c.obj
-                0x2000207c                leisureTcb
+                0x20002074        0x4 CMakeFiles/xSkRTOS.dir/User/src/main.c.obj
+                0x20002074                leisureTcb
+ .bss.tcbTask1  0x20002078        0x4 CMakeFiles/xSkRTOS.dir/User/src/main.c.obj
+                0x20002078                tcbTask1
+ .bss.tcbTask2  0x2000207c        0x4 CMakeFiles/xSkRTOS.dir/User/src/main.c.obj
+                0x2000207c                tcbTask2
  *(COMMON)
                 0x20002080                . = ALIGN (0x4)
                 0x20002080                _ebss = .
                 0x20002080                __bss_end__ = _ebss
 
 ._user_heap_stack
-                0x20002080      0xc00 load address 0x08000be8
+                0x20002080      0xc00 load address 0x08000c04
                 0x20002080                . = ALIGN (0x8)
                 [!provide]                PROVIDE (end = .)
                 [!provide]                PROVIDE (_end = .)
@@ -1072,51 +1074,51 @@ LOAD d:/all/devemcu/gcc_arm/gccarm/bin/../lib/gcc/arm-none-eabi/10.3.1/../../../
 LOAD d:/all/devemcu/gcc_arm/gccarm/bin/../lib/gcc/arm-none-eabi/10.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libm.a
 LOAD d:/all/devemcu/gcc_arm/gccarm/bin/../lib/gcc/arm-none-eabi/10.3.1/thumb/v7-m/nofp\libgcc.a
 
-.debug_frame    0x00000000      0xc64
+.debug_frame    0x00000000      0xca4
  .debug_frame   0x00000000       0x2c d:/all/devemcu/gcc_arm/gccarm/bin/../lib/gcc/arm-none-eabi/10.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libc_nano.a(lib_a-init.o)
- .debug_frame   0x0000002c      0x32c CMakeFiles/xSkRTOS.dir/User/src/main.c.obj
- .debug_frame   0x00000358       0xb0 CMakeFiles/xSkRTOS.dir/User/src/stm32f10x_it.c.obj
- .debug_frame   0x00000408       0x98 CMakeFiles/xSkRTOS.dir/Start/src/system_stm32f10x.c.obj
- .debug_frame   0x000004a0      0x2d0 CMakeFiles/xSkRTOS.dir/Library/src/stm32f10x_gpio.c.obj
- .debug_frame   0x00000770      0x4f4 CMakeFiles/xSkRTOS.dir/Library/src/stm32f10x_rcc.c.obj
+ .debug_frame   0x0000002c      0x36c CMakeFiles/xSkRTOS.dir/User/src/main.c.obj
+ .debug_frame   0x00000398       0xb0 CMakeFiles/xSkRTOS.dir/User/src/stm32f10x_it.c.obj
+ .debug_frame   0x00000448       0x98 CMakeFiles/xSkRTOS.dir/Start/src/system_stm32f10x.c.obj
+ .debug_frame   0x000004e0      0x2d0 CMakeFiles/xSkRTOS.dir/Library/src/stm32f10x_gpio.c.obj
+ .debug_frame   0x000007b0      0x4f4 CMakeFiles/xSkRTOS.dir/Library/src/stm32f10x_rcc.c.obj
 
-.debug_info     0x00000000     0x20dd
- .debug_info    0x00000000      0xb3d CMakeFiles/xSkRTOS.dir/User/src/main.c.obj
- .debug_info    0x00000b3d       0xdc CMakeFiles/xSkRTOS.dir/User/src/stm32f10x_it.c.obj
- .debug_info    0x00000c19       0x22 CMakeFiles/xSkRTOS.dir/Start/src/startup_stm32f103xb.s.obj
- .debug_info    0x00000c3b      0x479 CMakeFiles/xSkRTOS.dir/Start/src/system_stm32f10x.c.obj
- .debug_info    0x000010b4      0x732 CMakeFiles/xSkRTOS.dir/Library/src/stm32f10x_gpio.c.obj
- .debug_info    0x000017e6      0x8f7 CMakeFiles/xSkRTOS.dir/Library/src/stm32f10x_rcc.c.obj
+.debug_info     0x00000000     0x2261
+ .debug_info    0x00000000      0xcc1 CMakeFiles/xSkRTOS.dir/User/src/main.c.obj
+ .debug_info    0x00000cc1       0xdc CMakeFiles/xSkRTOS.dir/User/src/stm32f10x_it.c.obj
+ .debug_info    0x00000d9d       0x22 CMakeFiles/xSkRTOS.dir/Start/src/startup_stm32f103xb.s.obj
+ .debug_info    0x00000dbf      0x479 CMakeFiles/xSkRTOS.dir/Start/src/system_stm32f10x.c.obj
+ .debug_info    0x00001238      0x732 CMakeFiles/xSkRTOS.dir/Library/src/stm32f10x_gpio.c.obj
+ .debug_info    0x0000196a      0x8f7 CMakeFiles/xSkRTOS.dir/Library/src/stm32f10x_rcc.c.obj
 
-.debug_abbrev   0x00000000      0x9ca
- .debug_abbrev  0x00000000      0x3fe CMakeFiles/xSkRTOS.dir/User/src/main.c.obj
- .debug_abbrev  0x000003fe       0x47 CMakeFiles/xSkRTOS.dir/User/src/stm32f10x_it.c.obj
- .debug_abbrev  0x00000445       0x12 CMakeFiles/xSkRTOS.dir/Start/src/startup_stm32f103xb.s.obj
- .debug_abbrev  0x00000457      0x1b1 CMakeFiles/xSkRTOS.dir/Start/src/system_stm32f10x.c.obj
- .debug_abbrev  0x00000608      0x1ec CMakeFiles/xSkRTOS.dir/Library/src/stm32f10x_gpio.c.obj
- .debug_abbrev  0x000007f4      0x1d6 CMakeFiles/xSkRTOS.dir/Library/src/stm32f10x_rcc.c.obj
+.debug_abbrev   0x00000000      0x9a4
+ .debug_abbrev  0x00000000      0x3d8 CMakeFiles/xSkRTOS.dir/User/src/main.c.obj
+ .debug_abbrev  0x000003d8       0x47 CMakeFiles/xSkRTOS.dir/User/src/stm32f10x_it.c.obj
+ .debug_abbrev  0x0000041f       0x12 CMakeFiles/xSkRTOS.dir/Start/src/startup_stm32f103xb.s.obj
+ .debug_abbrev  0x00000431      0x1b1 CMakeFiles/xSkRTOS.dir/Start/src/system_stm32f10x.c.obj
+ .debug_abbrev  0x000005e2      0x1ec CMakeFiles/xSkRTOS.dir/Library/src/stm32f10x_gpio.c.obj
+ .debug_abbrev  0x000007ce      0x1d6 CMakeFiles/xSkRTOS.dir/Library/src/stm32f10x_rcc.c.obj
 
-.debug_aranges  0x00000000      0x338
+.debug_aranges  0x00000000      0x348
  .debug_aranges
-                0x00000000       0xd0 CMakeFiles/xSkRTOS.dir/User/src/main.c.obj
+                0x00000000       0xe0 CMakeFiles/xSkRTOS.dir/User/src/main.c.obj
  .debug_aranges
-                0x000000d0       0x48 CMakeFiles/xSkRTOS.dir/User/src/stm32f10x_it.c.obj
+                0x000000e0       0x48 CMakeFiles/xSkRTOS.dir/User/src/stm32f10x_it.c.obj
  .debug_aranges
-                0x00000118       0x28 CMakeFiles/xSkRTOS.dir/Start/src/startup_stm32f103xb.s.obj
+                0x00000128       0x28 CMakeFiles/xSkRTOS.dir/Start/src/startup_stm32f103xb.s.obj
  .debug_aranges
-                0x00000140       0x38 CMakeFiles/xSkRTOS.dir/Start/src/system_stm32f10x.c.obj
+                0x00000150       0x38 CMakeFiles/xSkRTOS.dir/Start/src/system_stm32f10x.c.obj
  .debug_aranges
-                0x00000178       0xa8 CMakeFiles/xSkRTOS.dir/Library/src/stm32f10x_gpio.c.obj
+                0x00000188       0xa8 CMakeFiles/xSkRTOS.dir/Library/src/stm32f10x_gpio.c.obj
  .debug_aranges
-                0x00000220      0x118 CMakeFiles/xSkRTOS.dir/Library/src/stm32f10x_rcc.c.obj
+                0x00000230      0x118 CMakeFiles/xSkRTOS.dir/Library/src/stm32f10x_rcc.c.obj
 
-.debug_ranges   0x00000000      0x2e0
- .debug_ranges  0x00000000       0xc0 CMakeFiles/xSkRTOS.dir/User/src/main.c.obj
- .debug_ranges  0x000000c0       0x38 CMakeFiles/xSkRTOS.dir/User/src/stm32f10x_it.c.obj
- .debug_ranges  0x000000f8       0x20 CMakeFiles/xSkRTOS.dir/Start/src/startup_stm32f103xb.s.obj
- .debug_ranges  0x00000118       0x28 CMakeFiles/xSkRTOS.dir/Start/src/system_stm32f10x.c.obj
- .debug_ranges  0x00000140       0x98 CMakeFiles/xSkRTOS.dir/Library/src/stm32f10x_gpio.c.obj
- .debug_ranges  0x000001d8      0x108 CMakeFiles/xSkRTOS.dir/Library/src/stm32f10x_rcc.c.obj
+.debug_ranges   0x00000000      0x2f0
+ .debug_ranges  0x00000000       0xd0 CMakeFiles/xSkRTOS.dir/User/src/main.c.obj
+ .debug_ranges  0x000000d0       0x38 CMakeFiles/xSkRTOS.dir/User/src/stm32f10x_it.c.obj
+ .debug_ranges  0x00000108       0x20 CMakeFiles/xSkRTOS.dir/Start/src/startup_stm32f103xb.s.obj
+ .debug_ranges  0x00000128       0x28 CMakeFiles/xSkRTOS.dir/Start/src/system_stm32f10x.c.obj
+ .debug_ranges  0x00000150       0x98 CMakeFiles/xSkRTOS.dir/Library/src/stm32f10x_gpio.c.obj
+ .debug_ranges  0x000001e8      0x108 CMakeFiles/xSkRTOS.dir/Library/src/stm32f10x_rcc.c.obj
 
 .debug_macro    0x00000000     0xe13d
  .debug_macro   0x00000000      0x357 CMakeFiles/xSkRTOS.dir/User/src/main.c.obj
@@ -1191,26 +1193,26 @@ LOAD d:/all/devemcu/gcc_arm/gccarm/bin/../lib/gcc/arm-none-eabi/10.3.1/thumb/v7-
  .debug_macro   0x0000dac0      0x2a1 CMakeFiles/xSkRTOS.dir/Library/src/stm32f10x_rcc.c.obj
  .debug_macro   0x0000dd61      0x3dc CMakeFiles/xSkRTOS.dir/Library/src/stm32f10x_rcc.c.obj
 
-.debug_line     0x00000000     0x27c6
- .debug_line    0x00000000      0xa35 CMakeFiles/xSkRTOS.dir/User/src/main.c.obj
- .debug_line    0x00000a35      0x4ed CMakeFiles/xSkRTOS.dir/User/src/stm32f10x_it.c.obj
- .debug_line    0x00000f22       0xa8 CMakeFiles/xSkRTOS.dir/Start/src/startup_stm32f103xb.s.obj
- .debug_line    0x00000fca      0x5e2 CMakeFiles/xSkRTOS.dir/Start/src/system_stm32f10x.c.obj
- .debug_line    0x000015ac      0x83f CMakeFiles/xSkRTOS.dir/Library/src/stm32f10x_gpio.c.obj
- .debug_line    0x00001deb      0x9db CMakeFiles/xSkRTOS.dir/Library/src/stm32f10x_rcc.c.obj
+.debug_line     0x00000000     0x284c
+ .debug_line    0x00000000      0xabb CMakeFiles/xSkRTOS.dir/User/src/main.c.obj
+ .debug_line    0x00000abb      0x4ed CMakeFiles/xSkRTOS.dir/User/src/stm32f10x_it.c.obj
+ .debug_line    0x00000fa8       0xa8 CMakeFiles/xSkRTOS.dir/Start/src/startup_stm32f103xb.s.obj
+ .debug_line    0x00001050      0x5e2 CMakeFiles/xSkRTOS.dir/Start/src/system_stm32f10x.c.obj
+ .debug_line    0x00001632      0x83f CMakeFiles/xSkRTOS.dir/Library/src/stm32f10x_gpio.c.obj
+ .debug_line    0x00001e71      0x9db CMakeFiles/xSkRTOS.dir/Library/src/stm32f10x_rcc.c.obj
 
-.debug_str      0x00000000    0x529d4
- .debug_str     0x00000000    0x5173e CMakeFiles/xSkRTOS.dir/User/src/main.c.obj
-                              0x51980 (size before relaxing)
- .debug_str     0x0005173e       0xb9 CMakeFiles/xSkRTOS.dir/User/src/stm32f10x_it.c.obj
+.debug_str      0x00000000    0x529df
+ .debug_str     0x00000000    0x51797 CMakeFiles/xSkRTOS.dir/User/src/main.c.obj
+                              0x519d9 (size before relaxing)
+ .debug_str     0x00051797       0xb9 CMakeFiles/xSkRTOS.dir/User/src/stm32f10x_it.c.obj
                               0x4d616 (size before relaxing)
- .debug_str     0x000517f7       0x58 CMakeFiles/xSkRTOS.dir/Start/src/startup_stm32f103xb.s.obj
+ .debug_str     0x00051850       0x58 CMakeFiles/xSkRTOS.dir/Start/src/startup_stm32f103xb.s.obj
                                  0x94 (size before relaxing)
- .debug_str     0x0005184f      0x19f CMakeFiles/xSkRTOS.dir/Start/src/system_stm32f10x.c.obj
+ .debug_str     0x000518a8      0x151 CMakeFiles/xSkRTOS.dir/Start/src/system_stm32f10x.c.obj
                               0x4d74f (size before relaxing)
- .debug_str     0x000519ee      0x4d9 CMakeFiles/xSkRTOS.dir/Library/src/stm32f10x_gpio.c.obj
+ .debug_str     0x000519f9      0x4d9 CMakeFiles/xSkRTOS.dir/Library/src/stm32f10x_gpio.c.obj
                               0x4db9c (size before relaxing)
- .debug_str     0x00051ec7      0xb0d CMakeFiles/xSkRTOS.dir/Library/src/stm32f10x_rcc.c.obj
+ .debug_str     0x00051ed2      0xb0d CMakeFiles/xSkRTOS.dir/Library/src/stm32f10x_rcc.c.obj
                               0x4e182 (size before relaxing)
 
 .comment        0x00000000       0x49
