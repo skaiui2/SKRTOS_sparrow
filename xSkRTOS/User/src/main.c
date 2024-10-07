@@ -27,8 +27,8 @@ void led_init(void)
 #define configSysTickClockHz			( ( unsigned long ) 72000000 )
 #define configTickRateHz			( ( uint32_t ) 1000 )
 #define configShieldInterPriority 	191
-#define config_heap   12*1024
-#define configMaxPriori  32
+#define config_heap   8*1024
+#define configMaxPriori  4
 
 
 #define Class(class)    \
@@ -172,7 +172,7 @@ Class(TCB_t)
     unsigned long uxPriority;
     uint32_t * pxStack;
 };
-typedef  TCB_t         * TaskHandle_t;
+typedef  TCB_t         *TaskHandle_t;
 
 __attribute__( ( used ) )  TCB_t * volatile pxCurrentTCB = NULL;
 typedef void (* TaskFunction_t)( void * );
@@ -326,32 +326,45 @@ void CheckTicks( void )
     switchTask();
 }
 
-static void __attribute__((always_inline)) vPortRaiseBASEPRI( void )
+
+__attribute__((always_inline)) uint32_t xEnterCritical( void )
 {
-    uint32_t ulNewBASEPRI;
-    __asm volatile
-            (
-            "	mov %0, %1												\n"\
-            "	msr basepri, %0											\n"\
-            "	isb														\n"\
-            "	dsb														\n"\
-            : "=r" ( ulNewBASEPRI ) : "i" ( configShieldInterPriority ) : "memory"
+    uint32_t xReturn;
+
+    __asm volatile(
+            " cpsid i               \n"
+            " mrs %0, basepri       \n"
+            " msr basepri, %1       \n"
+            " dsb                   \n"
+            " isb                   \n"
+            " cpsie i               \n"
+            : "=r" (xReturn)        // Output operand
+            : "r" (configShieldInterPriority) // Input operand
+            : "memory"              // Clobbered list
+            );
+
+    return xReturn;
+}
+
+__attribute__((always_inline)) void xEixtCritical( uint32_t xReturn )
+{
+    __asm volatile(
+            " cpsid i               \n"
+            " msr basepri, %0       \n"
+            " dsb                   \n"
+            " isb                   \n"
+            " cpsie i               \n"
+            :: "r" (xReturn)
+            : "memory"
             );
 }
 
-static void __attribute__((always_inline)) vPortSetBASEPRI( uint32_t ulNewMaskValue )
-{
-    __asm volatile
-            (
-            "	msr basepri, %0	"::"r" ( ulNewMaskValue ) : "memory"
-            );
-}
 
 void SysTick_Handler(void)
 {
-    vPortRaiseBASEPRI();
+    uint32_t xre = xEnterCritical();
     CheckTicks();
-    vPortSetBASEPRI(0);
+    xEixtCritical(xre);
 }
 
 uint32_t * pxPortInitialiseStack( uint32_t * pxTopOfStack,
@@ -431,7 +444,6 @@ void leisureTask( )
 {
     while(1){
         coi++;
-        coi--;
     }
 }
 
@@ -441,7 +453,7 @@ void SchedulerInit( void )
     TicksTableInit();
     xTaskCreate(    leisureTask,
                     "leisureTask",
-                    256,
+                    128,
                     NULL,
                     1,
                     &leisureTcb
@@ -496,7 +508,7 @@ void APP( )
 
     xTaskCreate(    led_bright,
                     "led_bright",
-                    256,
+                    128,
                     NULL,
                     2,
                     &tcbTask1
@@ -504,7 +516,7 @@ void APP( )
 
     xTaskCreate(    led_extinguish,
                     "led_extinguish",
-                    256,
+                    128,
                     NULL,
                     3,
                     &tcbTask2
