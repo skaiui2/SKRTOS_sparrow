@@ -60,6 +60,7 @@ add_executable(${CMAKE_PROJECT_NAME}
         Library/src/stm32f10x_gpio.c
         Library/src/stm32f10x_rcc.c
         System/src/Delay.c
+        System/inc/Delay.h
 )
 
 set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} --specs=nosys.specs")

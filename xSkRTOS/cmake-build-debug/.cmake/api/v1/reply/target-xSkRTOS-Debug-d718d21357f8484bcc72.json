@@ -175,6 +175,13 @@
 			[
 				2
 			]
+		},
+		{
+			"name" : "Header Files",
+			"sourceIndexes" : 
+			[
+				8
+			]
 		}
 	],
 	"sources" : 
@@ -226,6 +233,11 @@
 			"compileGroupIndex" : 0,
 			"path" : "System/src/Delay.c",
 			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "System/inc/Delay.h",
+			"sourceGroupIndex" : 2
 		}
 	],
 	"type" : "EXECUTABLE"

@@ -107,11 +107,11 @@ void *heap_malloc(size_t wantsize)
         prevnode = usenode;
         usenode = usenode ->next;
     }
-    xReturn = (void*)(((uint8_t*)usenode) + heapstructSize);
+    xReturn = (void*)( ( (uint8_t*)usenode ) + heapstructSize );
     prevnode->next = usenode->next ;
     if( (usenode->blocksize - wantsize) > MIN_size )
     {
-        newnode = (void*)(((uint8_t*)usenode) + wantsize);
+        newnode = (void*)( ( (uint8_t*)usenode ) + wantsize );
         newnode->blocksize = usenode->blocksize - wantsize;
         usenode->blocksize = wantsize;
         newnode->next = prevnode->next ;
@@ -201,13 +201,6 @@ typedef  TCB_t         *TaskHandle_t;
 __attribute__( ( used ) )  TCB_t * volatile pxCurrentTCB = NULL;
 typedef void (* TaskFunction_t)( void * );
 
-Class(Systick_struct)
-{
-    uint32_t CTRL;
-    uint32_t LOAD;
-    uint32_t VAL;
-    uint32_t CALIB;
-};
 
 #define vPortSVCHandler SVC_Handler
 #define xPortPendSVHandler PendSV_Handler
@@ -302,6 +295,7 @@ void SetTaskPriority( TCB_t *self )
     TcbTaskTable[self->uxPriority] = self;
 }
 
+/*The RTOS delay will switch the task.It is used to liberate low-priority task*/
 void TaskDelay( uint16_t ticks )
 {
     uint32_t WakeTime = TicksBase + ticks;
@@ -399,7 +393,7 @@ uint32_t * pxPortInitialiseStack( uint32_t * pxTopOfStack,
 
 void xTaskCreate( TaskFunction_t pxTaskCode,
                   const uint16_t usStackDepth,
-                  void * const pvParameters,//Maybe it can be used by debug
+                  void * const pvParameters,//it can be used to debug
                   uint32_t uxPriority,
                   TaskHandle_t * const self )
 {
@@ -473,14 +467,12 @@ void __attribute__( ( always_inline ) ) SchedulerStart( void )
     ( *( ( volatile uint32_t * ) 0xe000ed20 ) ) |= ( ( ( uint32_t ) 255UL ) << 16UL );
     ( *( ( volatile uint32_t * ) 0xe000ed20 ) ) |= ( ( ( uint32_t ) 255UL ) << 24UL );
 
-    Systick_struct *Sys_tick = (Systick_struct *)0xe000e010;
     /* Stop and clear the SysTick. */
-    Sys_tick->CTRL = 0UL;
-    Sys_tick->VAL = 0UL;
-
+    SysTick->CTRL = 0UL;
+    SysTick->VAL = 0UL;
     /* Configure SysTick to interrupt at the requested rate. */
-    Sys_tick->LOAD = ( configSysTickClockHz / configTickRateHz ) - 1UL;
-    Sys_tick->CTRL = ( ( 1UL << 2UL ) | ( 1UL << 1UL ) | ( 1UL << 0UL ) );
+    SysTick->LOAD = ( configSysTickClockHz / configTickRateHz ) - 1UL;
+    SysTick->CTRL = ( ( 1UL << 2UL ) | ( 1UL << 1UL ) | ( 1UL << 0UL ) );
 
     /* Start the first task. */
     __asm volatile (
@@ -499,23 +491,24 @@ void __attribute__( ( always_inline ) ) SchedulerStart( void )
 }
 
 
-//Task Area!The user must create Task handle manually because of debugging and specification
+//Task Area!The user must create task handle manually because of debugging and specification
 TaskHandle_t tcbTask1 = NULL;
 TaskHandle_t tcbTask2 = NULL;
 
+#include "Delay.h"
 void led_bright( )
 {
     while (1) {
         GPIO_ResetBits(GPIOC, GPIO_Pin_13);
-        TaskDelay(1000);
+        TaskDelay(2000);
     }
 }
 
-void led_extinguish()
+void led_extinguish( )
 {
     while (1) {
         GPIO_SetBits(GPIOC, GPIO_Pin_13);
-        TaskDelay(500);
+        TaskDelay(1000);
     }
 }
 
@@ -540,7 +533,8 @@ void APP( )
 
 int main(void)
 {
-
+    /*Obtain subtle level delay.It is applied to scenarios that require timing*/
+    delay_init(72);
     led_init();
     SchedulerInit();
 

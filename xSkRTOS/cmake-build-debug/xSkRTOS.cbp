@@ -105,6 +105,9 @@
 		<Unit filename="C:/Users/el/CLionProjects/mytryos/xSkRTOS/Start/src/system_stm32f10x.c">
 			<Option target="xSkRTOS"/>
 		</Unit>
+		<Unit filename="C:/Users/el/CLionProjects/mytryos/xSkRTOS/System/inc/Delay.h">
+			<Option target="xSkRTOS"/>
+		</Unit>
 		<Unit filename="C:/Users/el/CLionProjects/mytryos/xSkRTOS/System/src/Delay.c">
 			<Option target="xSkRTOS"/>
 		</Unit>

@@ -9,6 +9,6 @@ CMake Deprecation Warning:
 
 
 Build type: Debug
--- Configuring done (0.2s)
--- Generating done (0.0s)
+-- Configuring done (0.6s)
+-- Generating done (0.1s)
 -- Build files have been written to: C:/Users/el/CLionProjects/mytryos/xSkRTOS/cmake-build-debug

@@ -61,4 +61,5 @@ CMakeFiles/xSkRTOS.dir/User/src/main.c.obj: \
  d:\all\devemcu\gcc_arm\gccarm\arm-none-eabi\include\sys\stdio.h \
  d:\all\devemcu\gcc_arm\gccarm\arm-none-eabi\include\stdlib.h \
  d:\all\devemcu\gcc_arm\gccarm\arm-none-eabi\include\machine\stdlib.h \
- d:\all\devemcu\gcc_arm\gccarm\arm-none-eabi\include\alloca.h
+ d:\all\devemcu\gcc_arm\gccarm\arm-none-eabi\include\alloca.h \
+ C:\Users\el\CLionProjects\mytryos\xSkRTOS\System\inc/Delay.h

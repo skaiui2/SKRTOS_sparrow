@@ -182,6 +182,7 @@ CMakeFiles/xSkRTOS.dir/User/src/main.c.obj: C:/Users/el/CLionProjects/mytryos/xS
   C:/Users/el/CLionProjects/mytryos/xSkRTOS/Start/inc/core_cm3.h \
   C:/Users/el/CLionProjects/mytryos/xSkRTOS/Start/inc/stm32f10x.h \
   C:/Users/el/CLionProjects/mytryos/xSkRTOS/Start/inc/system_stm32f10x.h \
+  C:/Users/el/CLionProjects/mytryos/xSkRTOS/System/inc/Delay.h \
   C:/Users/el/CLionProjects/mytryos/xSkRTOS/User/Inc/stm32f10x_conf.h \
   D:/all/devemcu/gcc_arm/gccarm/arm-none-eabi/include/_ansi.h \
   D:/all/devemcu/gcc_arm/gccarm/arm-none-eabi/include/_newlib_version.h \
@@ -356,6 +357,8 @@ C:/Users/el/CLionProjects/mytryos/xSkRTOS/Start/src/system_stm32f10x.c:
 
 C:/Users/el/CLionProjects/mytryos/xSkRTOS/System/src/Delay.c:
 
+C:/Users/el/CLionProjects/mytryos/xSkRTOS/System/inc/Delay.h:
+
 D:/all/devemcu/gcc_arm/gccarm/arm-none-eabi/include/sys/select.h:
 
 D:/all/devemcu/gcc_arm/gccarm/arm-none-eabi/include/_ansi.h:
@@ -378,11 +381,11 @@ D:/all/devemcu/gcc_arm/gccarm/arm-none-eabi/include/stdlib.h:
 
 D:/all/devemcu/gcc_arm/gccarm/arm-none-eabi/include/sys/_pthreadtypes.h:
 
-D:/all/devemcu/gcc_arm/gccarm/arm-none-eabi/include/sys/stdio.h:
-
 D:/all/devemcu/gcc_arm/gccarm/arm-none-eabi/include/sys/cdefs.h:
 
 D:/all/devemcu/gcc_arm/gccarm/arm-none-eabi/include/sys/reent.h:
+
+D:/all/devemcu/gcc_arm/gccarm/arm-none-eabi/include/sys/stdio.h:
 
 D:/all/devemcu/gcc_arm/gccarm/arm-none-eabi/include/sys/timespec.h:
 
