@@ -1,6 +1,5 @@
-#include "stm32f10x.h"                  // Device header
+#include "core_cm3.h"
 #include<stdint.h>
-#include<stdio.h>
 #include<stdlib.h>
 
 
