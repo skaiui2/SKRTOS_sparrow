@@ -1,23 +1,4 @@
 #include "stm32f10x.h"                  // Device header
-#include "stm32f10x_gpio.h"
-
-
-
-
-void led_init(void)
-{
-    RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOC, ENABLE);
-
-    GPIO_InitTypeDef GPIO_InitStructure;
-    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
-    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_13;
-    GPIO_InitStructure.GPIO_Speed =  GPIO_Speed_50MHz;
-    GPIO_Init(GPIOC, &GPIO_InitStructure);
-}
-
-
-
-
 #include<stdint.h>
 #include<stdio.h>
 #include<stdlib.h>
@@ -95,11 +76,11 @@ void *heap_malloc(size_t wantsize)
     {
         aligmentrequisize = aligment_byte - (wantsize & aligment_byte);
         wantsize += aligmentrequisize;
-    }//I will add the TaskSuspend function ,that make here be a atomic operation
+    }//You can add the TaskSuspend function ,that make here be a atomic operation
     if(theheap.tail== NULL )
     {
         heap_init();
-    }//
+    }//Resume
     prevnode = &theheap.head;
     usenode = theheap.head.next;
     while((usenode->blocksize) < wantsize )
@@ -321,9 +302,12 @@ void CheckTicks( void )
     if( TicksBase == 0){
         TicksTableSwitch( );
     }
-    for(int i=0 ; i < configMaxPriori;i++) {
-        if(  WakeTicksTable[i]  > 0) {
-            if ( TicksBase >= WakeTicksTable[i] ) {
+    for(int i=0 ; i < configMaxPriori;i++) 
+    {
+        if(  WakeTicksTable[i]  > 0) 
+        {
+            if ( TicksBase >= WakeTicksTable[i] ) 
+            {
                 WakeTicksTable[i] = 0;
                 DelayBitTable &= ~(1 << i );//it is retained for the sake of normativity.
                 ReadyBitTable |= (1 << i);
@@ -492,61 +476,3 @@ void __attribute__( ( always_inline ) ) SchedulerStart( void )
 
 
 //Task Area!The user must create task handle manually because of debugging and specification
-TaskHandle_t tcbTask1 = NULL;
-TaskHandle_t tcbTask2 = NULL;
-
-#include "Delay.h"
-void led_bright( )
-{
-    while (1) {
-        GPIO_ResetBits(GPIOC, GPIO_Pin_13);
-        TaskDelay(2000);
-    }
-}
-
-void led_extinguish( )
-{
-    while (1) {
-        GPIO_SetBits(GPIOC, GPIO_Pin_13);
-        TaskDelay(1000);
-    }
-}
-
-void APP( )
-{
-
-    xTaskCreate(    led_bright,
-                    128,
-                    NULL,
-                    2,
-                    &tcbTask1
-    );
-
-    xTaskCreate(    led_extinguish,
-                    128,
-                    NULL,
-                    3,
-                    &tcbTask2
-    );
-}
-
-
-int main(void)
-{
-    /*Obtain subtle level delay.It is applied to scenarios that require timing*/
-    delay_init(72);
-    led_init();
-    SchedulerInit();
-
-
-    APP();
-
-    SchedulerStart();
-
-
-    while (1)
-    {
-
-    }
-
-}
