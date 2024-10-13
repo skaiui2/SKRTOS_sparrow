@@ -1,0 +1,5 @@
+C:/Users/el/CLionProjects/stm32f1/cmake-build-debug/CMakeFiles/stm32f1.dir
+C:/Users/el/CLionProjects/stm32f1/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/el/CLionProjects/stm32f1/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+C:/Users/el/CLionProjects/stm32f1/cmake-build-debug/cmake/stm32cubemx/CMakeFiles/edit_cache.dir
+C:/Users/el/CLionProjects/stm32f1/cmake-build-debug/cmake/stm32cubemx/CMakeFiles/rebuild_cache.dir

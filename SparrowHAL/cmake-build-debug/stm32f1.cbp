@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6"/>
+	<Project>
+		<Option title="stm32f1"/>
+		<Option makefile_is_custom="1"/>
+		<Option compiler="gcc"/>
+		<Option virtualFolders="CMake Files\;CMake Files\cmake\;CMake Files\cmake\stm32cubemx\;"/>
+		<Build>
+			<Target title="all">
+				<Option working_dir="C:/Users/el/CLionProjects/stm32f1/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="D:/all/devemcu/MinGW/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/el/CLionProjects/stm32f1/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="D:/all/devemcu/MinGW/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/el/CLionProjects/stm32f1/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="D:/all/devemcu/MinGW/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/el/CLionProjects/stm32f1/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="D:/all/devemcu/MinGW/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/el/CLionProjects/stm32f1/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="stm32f1">
+				<Option output="C:/Users/el/CLionProjects/stm32f1/cmake-build-debug/stm32f1.elf" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="C:/Users/el/CLionProjects/stm32f1/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DUSE_HAL_DRIVER"/>
+					<Add option="-DSTM32F103xB"/>
+					<Add option="-DDEBUG"/>
+					<Add directory="C:/Users/el/CLionProjects/stm32f1/cmake/stm32cubemx/../../Core/Inc"/>
+					<Add directory="C:/Users/el/CLionProjects/stm32f1/cmake/stm32cubemx/../../Drivers/STM32F1xx_HAL_Driver/Inc"/>
+					<Add directory="C:/Users/el/CLionProjects/stm32f1/cmake/stm32cubemx/../../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy"/>
+					<Add directory="C:/Users/el/CLionProjects/stm32f1/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32F1xx/Include"/>
+					<Add directory="C:/Users/el/CLionProjects/stm32f1/cmake/stm32cubemx/../../Drivers/CMSIS/Include"/>
+					<Add directory="d:\all\devemcu\gcc_arm\gccarm\bin\../lib/gcc/arm-none-eabi/10.3.1/../../../../arm-none-eabi/include/c++/10.3.1"/>
+					<Add directory="d:\all\devemcu\gcc_arm\gccarm\bin\../lib/gcc/arm-none-eabi/10.3.1/../../../../arm-none-eabi/include/c++/10.3.1/arm-none-eabi"/>
+					<Add directory="d:\all\devemcu\gcc_arm\gccarm\bin\../lib/gcc/arm-none-eabi/10.3.1/../../../../arm-none-eabi/include/c++/10.3.1/backward"/>
+					<Add directory="d:\all\devemcu\gcc_arm\gccarm\bin\../lib/gcc/arm-none-eabi/10.3.1/include"/>
+					<Add directory="d:\all\devemcu\gcc_arm\gccarm\bin\../lib/gcc/arm-none-eabi/10.3.1/include-fixed"/>
+					<Add directory="d:\all\devemcu\gcc_arm\gccarm\bin\../lib/gcc/arm-none-eabi/10.3.1/../../../../arm-none-eabi/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="D:/all/devemcu/MinGW/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/el/CLionProjects/stm32f1/cmake-build-debug/Makefile&quot;  VERBOSE=1 stm32f1"/>
+					<CompileFile command="D:/all/devemcu/MinGW/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/el/CLionProjects/stm32f1/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="D:/all/devemcu/MinGW/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/el/CLionProjects/stm32f1/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="D:/all/devemcu/MinGW/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/el/CLionProjects/stm32f1/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="stm32f1/fast">
+				<Option output="C:/Users/el/CLionProjects/stm32f1/cmake-build-debug/stm32f1.elf" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="C:/Users/el/CLionProjects/stm32f1/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DUSE_HAL_DRIVER"/>
+					<Add option="-DSTM32F103xB"/>
+					<Add option="-DDEBUG"/>
+					<Add directory="C:/Users/el/CLionProjects/stm32f1/cmake/stm32cubemx/../../Core/Inc"/>
+					<Add directory="C:/Users/el/CLionProjects/stm32f1/cmake/stm32cubemx/../../Drivers/STM32F1xx_HAL_Driver/Inc"/>
+					<Add directory="C:/Users/el/CLionProjects/stm32f1/cmake/stm32cubemx/../../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy"/>
+					<Add directory="C:/Users/el/CLionProjects/stm32f1/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32F1xx/Include"/>
+					<Add directory="C:/Users/el/CLionProjects/stm32f1/cmake/stm32cubemx/../../Drivers/CMSIS/Include"/>
+					<Add directory="d:\all\devemcu\gcc_arm\gccarm\bin\../lib/gcc/arm-none-eabi/10.3.1/../../../../arm-none-eabi/include/c++/10.3.1"/>
+					<Add directory="d:\all\devemcu\gcc_arm\gccarm\bin\../lib/gcc/arm-none-eabi/10.3.1/../../../../arm-none-eabi/include/c++/10.3.1/arm-none-eabi"/>
+					<Add directory="d:\all\devemcu\gcc_arm\gccarm\bin\../lib/gcc/arm-none-eabi/10.3.1/../../../../arm-none-eabi/include/c++/10.3.1/backward"/>
+					<Add directory="d:\all\devemcu\gcc_arm\gccarm\bin\../lib/gcc/arm-none-eabi/10.3.1/include"/>
+					<Add directory="d:\all\devemcu\gcc_arm\gccarm\bin\../lib/gcc/arm-none-eabi/10.3.1/include-fixed"/>
+					<Add directory="d:\all\devemcu\gcc_arm\gccarm\bin\../lib/gcc/arm-none-eabi/10.3.1/../../../../arm-none-eabi/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="D:/all/devemcu/MinGW/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/el/CLionProjects/stm32f1/cmake-build-debug/Makefile&quot;  VERBOSE=1 stm32f1/fast"/>
+					<CompileFile command="D:/all/devemcu/MinGW/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/el/CLionProjects/stm32f1/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="D:/all/devemcu/MinGW/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/el/CLionProjects/stm32f1/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="D:/all/devemcu/MinGW/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/el/CLionProjects/stm32f1/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="edit_cache">
+				<Option working_dir="C:/Users/el/CLionProjects/stm32f1/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="D:/all/devemcu/MinGW/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/el/CLionProjects/stm32f1/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="D:/all/devemcu/MinGW/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/el/CLionProjects/stm32f1/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="D:/all/devemcu/MinGW/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/el/CLionProjects/stm32f1/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="D:/all/devemcu/MinGW/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/el/CLionProjects/stm32f1/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rebuild_cache">
+				<Option working_dir="C:/Users/el/CLionProjects/stm32f1/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="D:/all/devemcu/MinGW/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/el/CLionProjects/stm32f1/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="D:/all/devemcu/MinGW/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/el/CLionProjects/stm32f1/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="D:/all/devemcu/MinGW/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/el/CLionProjects/stm32f1/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="D:/all/devemcu/MinGW/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/el/CLionProjects/stm32f1/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+		</Build>
+		<Unit filename="C:/Users/el/CLionProjects/stm32f1/Core/Src/main.c">
+			<Option target="stm32f1"/>
+		</Unit>
+		<Unit filename="C:/Users/el/CLionProjects/stm32f1/Core/Src/stm32f1xx_hal_msp.c">
+			<Option target="stm32f1"/>
+		</Unit>
+		<Unit filename="C:/Users/el/CLionProjects/stm32f1/Core/Src/stm32f1xx_hal_timebase_tim.c">
+			<Option target="stm32f1"/>
+		</Unit>
+		<Unit filename="C:/Users/el/CLionProjects/stm32f1/Core/Src/stm32f1xx_it.c">
+			<Option target="stm32f1"/>
+		</Unit>
+		<Unit filename="C:/Users/el/CLionProjects/stm32f1/Core/Src/syscalls.c">
+			<Option target="stm32f1"/>
+		</Unit>
+		<Unit filename="C:/Users/el/CLionProjects/stm32f1/Core/Src/sysmem.c">
+			<Option target="stm32f1"/>
+		</Unit>
+		<Unit filename="C:/Users/el/CLionProjects/stm32f1/Core/Src/system_stm32f1xx.c">
+			<Option target="stm32f1"/>
+		</Unit>
+		<Unit filename="C:/Users/el/CLionProjects/stm32f1/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal.c">
+			<Option target="stm32f1"/>
+		</Unit>
+		<Unit filename="C:/Users/el/CLionProjects/stm32f1/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_cortex.c">
+			<Option target="stm32f1"/>
+		</Unit>
+		<Unit filename="C:/Users/el/CLionProjects/stm32f1/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_dma.c">
+			<Option target="stm32f1"/>
+		</Unit>
+		<Unit filename="C:/Users/el/CLionProjects/stm32f1/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_exti.c">
+			<Option target="stm32f1"/>
+		</Unit>
+		<Unit filename="C:/Users/el/CLionProjects/stm32f1/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash.c">
+			<Option target="stm32f1"/>
+		</Unit>
+		<Unit filename="C:/Users/el/CLionProjects/stm32f1/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash_ex.c">
+			<Option target="stm32f1"/>
+		</Unit>
+		<Unit filename="C:/Users/el/CLionProjects/stm32f1/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio.c">
+			<Option target="stm32f1"/>
+		</Unit>
+		<Unit filename="C:/Users/el/CLionProjects/stm32f1/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio_ex.c">
+			<Option target="stm32f1"/>
+		</Unit>
+		<Unit filename="C:/Users/el/CLionProjects/stm32f1/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pwr.c">
+			<Option target="stm32f1"/>
+		</Unit>
+		<Unit filename="C:/Users/el/CLionProjects/stm32f1/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc.c">
+			<Option target="stm32f1"/>
+		</Unit>
+		<Unit filename="C:/Users/el/CLionProjects/stm32f1/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc_ex.c">
+			<Option target="stm32f1"/>
+		</Unit>
+		<Unit filename="C:/Users/el/CLionProjects/stm32f1/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim.c">
+			<Option target="stm32f1"/>
+		</Unit>
+		<Unit filename="C:/Users/el/CLionProjects/stm32f1/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim_ex.c">
+			<Option target="stm32f1"/>
+		</Unit>
+		<Unit filename="C:/Users/el/CLionProjects/stm32f1/startup_stm32f103xb.s">
+			<Option target="stm32f1"/>
+		</Unit>
+		<Unit filename="C:/Users/el/CLionProjects/stm32f1/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+		<Unit filename="C:/Users/el/CLionProjects/stm32f1/cmake/gcc-arm-none-eabi.cmake">
+			<Option virtualFolder="CMake Files\cmake\"/>
+		</Unit>
+		<Unit filename="C:/Users/el/CLionProjects/stm32f1/cmake/stm32cubemx/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\cmake\stm32cubemx\"/>
+		</Unit>
+	</Project>
+</CodeBlocks_project_file>

@@ -1,0 +1,31 @@
+CMakeFiles/stm32f1.dir/FreeRTOS/src/list.c.obj: \
+ C:\Users\el\CLionProjects\stm32f1\FreeRTOS\src\list.c \
+ d:\all\devemcu\gcc_arm\gccarm\arm-none-eabi\include\stdlib.h \
+ d:\all\devemcu\gcc_arm\gccarm\arm-none-eabi\include\machine\ieeefp.h \
+ d:\all\devemcu\gcc_arm\gccarm\arm-none-eabi\include\_ansi.h \
+ d:\all\devemcu\gcc_arm\gccarm\arm-none-eabi\include\newlib.h \
+ d:\all\devemcu\gcc_arm\gccarm\arm-none-eabi\include\_newlib_version.h \
+ d:\all\devemcu\gcc_arm\gccarm\arm-none-eabi\include\sys\config.h \
+ d:\all\devemcu\gcc_arm\gccarm\arm-none-eabi\include\sys\features.h \
+ d:\all\devemcu\gcc_arm\gccarm\lib\gcc\arm-none-eabi\10.3.1\include\stddef.h \
+ d:\all\devemcu\gcc_arm\gccarm\arm-none-eabi\include\sys\reent.h \
+ d:\all\devemcu\gcc_arm\gccarm\arm-none-eabi\include\_ansi.h \
+ d:\all\devemcu\gcc_arm\gccarm\arm-none-eabi\include\sys\_types.h \
+ d:\all\devemcu\gcc_arm\gccarm\arm-none-eabi\include\machine\_types.h \
+ d:\all\devemcu\gcc_arm\gccarm\arm-none-eabi\include\machine\_default_types.h \
+ d:\all\devemcu\gcc_arm\gccarm\arm-none-eabi\include\sys\lock.h \
+ d:\all\devemcu\gcc_arm\gccarm\arm-none-eabi\include\sys\cdefs.h \
+ d:\all\devemcu\gcc_arm\gccarm\arm-none-eabi\include\machine\stdlib.h \
+ d:\all\devemcu\gcc_arm\gccarm\arm-none-eabi\include\alloca.h \
+ C:\Users\el\CLionProjects\stm32f1\FreeRTOS\include/FreeRTOS.h \
+ d:\all\devemcu\gcc_arm\gccarm\lib\gcc\arm-none-eabi\10.3.1\include\stdint.h \
+ d:\all\devemcu\gcc_arm\gccarm\arm-none-eabi\include\stdint.h \
+ d:\all\devemcu\gcc_arm\gccarm\arm-none-eabi\include\sys\_intsup.h \
+ d:\all\devemcu\gcc_arm\gccarm\arm-none-eabi\include\sys\_stdint.h \
+ C:\Users\el\CLionProjects\stm32f1\FreeRTOS\include/FreeRTOSConfig.h \
+ C:\Users\el\CLionProjects\stm32f1\FreeRTOS\include/projdefs.h \
+ C:\Users\el\CLionProjects\stm32f1\FreeRTOS\include/portable.h \
+ C:\Users\el\CLionProjects\stm32f1\FreeRTOS\include/deprecated_definitions.h \
+ C:\Users\el\CLionProjects\stm32f1\FreeRTOS\port\ARM_CM3/portmacro.h \
+ C:\Users\el\CLionProjects\stm32f1\FreeRTOS\include/mpu_wrappers.h \
+ C:\Users\el\CLionProjects\stm32f1\FreeRTOS\include/list.h
