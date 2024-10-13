@@ -1,2 +1,8 @@
 # SKRTOS_sparrow
-这里是Sparrow的源码，对于arm cm3架构的单片机(例如stm32f103c8t6)，只需要将其复制到原工程的文件中，并且删除掉stm32f1xx_it.c文件中的SVC_Handler和PendSV_Handler中断，即可成功完成移植。
+这里是Sparrow的源码，对于arm cm3架构的单片机(例如stm32f103c8t6)，只需要将其复制到原工程的文件中，并且删除掉stm32f1xx_it.c文件中的SVC_Handler、SysTick_Handler和PendSV_Handler中断，即可成功完成移植。
+
+
+
+关于Sparrow的文档教程将会在知乎等平台持续更新，敬请期待。
+
+知乎链接：[400行程序写一个实时操作系统（开篇） - 知乎 (zhihu.com)](https://zhuanlan.zhihu.com/p/963319443)
