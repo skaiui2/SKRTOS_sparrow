@@ -5,13 +5,13 @@
 # compile C with D:/all/devemcu/gcc_arm/gccarm/bin/arm-none-eabi-gcc.exe
 ASM_DEFINES = 
 
-ASM_INCLUDES = -IC:\Users\el\CLionProjects\mytryos\xSkRTOS\SkRTOS\include -IC:\Users\el\CLionProjects\mytryos\xSkRTOS\Library\inc -IC:\Users\el\CLionProjects\mytryos\xSkRTOS\Start\inc -IC:\Users\el\CLionProjects\mytryos\xSkRTOS\System\inc -IC:\Users\el\CLionProjects\mytryos\xSkRTOS\User\Inc
+ASM_INCLUDES = -IC:\Users\el\CLionProjects\Sparrow\mytryos\xSkRTOS\SkRTOS\include -IC:\Users\el\CLionProjects\Sparrow\mytryos\xSkRTOS\Library\inc -IC:\Users\el\CLionProjects\Sparrow\mytryos\xSkRTOS\Start\inc -IC:\Users\el\CLionProjects\Sparrow\mytryos\xSkRTOS\System\inc -IC:\Users\el\CLionProjects\Sparrow\mytryos\xSkRTOS\User\Inc
 
 ASM_FLAGS =  -mcpu=cortex-m3  -Wall -Wextra -Wpedantic -fdata-sections -ffunction-sections -O0 -g3 -x assembler-with-cpp -MMD -MP -g
 
 C_DEFINES = 
 
-C_INCLUDES = -IC:\Users\el\CLionProjects\mytryos\xSkRTOS\SkRTOS\include -IC:\Users\el\CLionProjects\mytryos\xSkRTOS\Library\inc -IC:\Users\el\CLionProjects\mytryos\xSkRTOS\Start\inc -IC:\Users\el\CLionProjects\mytryos\xSkRTOS\System\inc -IC:\Users\el\CLionProjects\mytryos\xSkRTOS\User\Inc
+C_INCLUDES = -IC:\Users\el\CLionProjects\Sparrow\mytryos\xSkRTOS\SkRTOS\include -IC:\Users\el\CLionProjects\Sparrow\mytryos\xSkRTOS\Library\inc -IC:\Users\el\CLionProjects\Sparrow\mytryos\xSkRTOS\Start\inc -IC:\Users\el\CLionProjects\Sparrow\mytryos\xSkRTOS\System\inc -IC:\Users\el\CLionProjects\Sparrow\mytryos\xSkRTOS\User\Inc
 
 C_FLAGS =  -mcpu=cortex-m3  -Wall -Wextra -Wpedantic -fdata-sections -ffunction-sections -O0 -g3 -g -std=gnu11 -fdiagnostics-color=always
 

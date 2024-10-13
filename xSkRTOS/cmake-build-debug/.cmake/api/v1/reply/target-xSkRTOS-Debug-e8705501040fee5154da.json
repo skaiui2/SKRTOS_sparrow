@@ -55,23 +55,23 @@
 			[
 				{
 					"backtrace" : 2,
-					"path" : "C:/Users/el/CLionProjects/mytryos/xSkRTOS/SkRTOS/include"
+					"path" : "C:/Users/el/CLionProjects/Sparrow/mytryos/xSkRTOS/SkRTOS/include"
 				},
 				{
 					"backtrace" : 3,
-					"path" : "C:/Users/el/CLionProjects/mytryos/xSkRTOS/Library/inc"
+					"path" : "C:/Users/el/CLionProjects/Sparrow/mytryos/xSkRTOS/Library/inc"
 				},
 				{
 					"backtrace" : 3,
-					"path" : "C:/Users/el/CLionProjects/mytryos/xSkRTOS/Start/inc"
+					"path" : "C:/Users/el/CLionProjects/Sparrow/mytryos/xSkRTOS/Start/inc"
 				},
 				{
 					"backtrace" : 3,
-					"path" : "C:/Users/el/CLionProjects/mytryos/xSkRTOS/System/inc"
+					"path" : "C:/Users/el/CLionProjects/Sparrow/mytryos/xSkRTOS/System/inc"
 				},
 				{
 					"backtrace" : 3,
-					"path" : "C:/Users/el/CLionProjects/mytryos/xSkRTOS/User/Inc"
+					"path" : "C:/Users/el/CLionProjects/Sparrow/mytryos/xSkRTOS/User/Inc"
 				}
 			],
 			"language" : "C",
@@ -105,23 +105,23 @@
 			[
 				{
 					"backtrace" : 2,
-					"path" : "C:/Users/el/CLionProjects/mytryos/xSkRTOS/SkRTOS/include"
+					"path" : "C:/Users/el/CLionProjects/Sparrow/mytryos/xSkRTOS/SkRTOS/include"
 				},
 				{
 					"backtrace" : 3,
-					"path" : "C:/Users/el/CLionProjects/mytryos/xSkRTOS/Library/inc"
+					"path" : "C:/Users/el/CLionProjects/Sparrow/mytryos/xSkRTOS/Library/inc"
 				},
 				{
 					"backtrace" : 3,
-					"path" : "C:/Users/el/CLionProjects/mytryos/xSkRTOS/Start/inc"
+					"path" : "C:/Users/el/CLionProjects/Sparrow/mytryos/xSkRTOS/Start/inc"
 				},
 				{
 					"backtrace" : 3,
-					"path" : "C:/Users/el/CLionProjects/mytryos/xSkRTOS/System/inc"
+					"path" : "C:/Users/el/CLionProjects/Sparrow/mytryos/xSkRTOS/System/inc"
 				},
 				{
 					"backtrace" : 3,
-					"path" : "C:/Users/el/CLionProjects/mytryos/xSkRTOS/User/Inc"
+					"path" : "C:/Users/el/CLionProjects/Sparrow/mytryos/xSkRTOS/User/Inc"
 				}
 			],
 			"language" : "ASM",

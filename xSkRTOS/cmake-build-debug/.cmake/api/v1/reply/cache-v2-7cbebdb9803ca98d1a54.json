@@ -179,7 +179,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "c:/Users/el/CLionProjects/mytryos/xSkRTOS/cmake-build-debug"
+			"value" : "c:/Users/el/CLionProjects/Sparrow/mytryos/xSkRTOS/cmake-build-debug"
 		},
 		{
 			"name" : "CMAKE_CACHE_MAJOR_VERSION",
@@ -311,10 +311,10 @@
 				},
 				{
 					"name" : "HELPSTRING",
-					"value" : "No help, variable specified on the command line."
+					"value" : "CXX compiler"
 				}
 			],
-			"type" : "UNINITIALIZED",
+			"type" : "STRING",
 			"value" : "D:/all/devemcu/gcc_arm/gccarm/bin/arm-none-eabi-g++.exe"
 		},
 		{
@@ -719,7 +719,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "C:/Users/el/CLionProjects/mytryos/xSkRTOS/cmake-build-debug/CMakeFiles/pkgRedirects"
+			"value" : "C:/Users/el/CLionProjects/Sparrow/mytryos/xSkRTOS/cmake-build-debug/CMakeFiles/pkgRedirects"
 		},
 		{
 			"name" : "CMAKE_GENERATOR",
@@ -779,7 +779,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "C:/Users/el/CLionProjects/mytryos/xSkRTOS"
+			"value" : "C:/Users/el/CLionProjects/Sparrow/mytryos/xSkRTOS"
 		},
 		{
 			"name" : "CMAKE_INSTALL_PREFIX",
@@ -1427,7 +1427,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "C:/Users/el/CLionProjects/mytryos/xSkRTOS/cmake-build-debug"
+			"value" : "C:/Users/el/CLionProjects/Sparrow/mytryos/xSkRTOS/cmake-build-debug"
 		},
 		{
 			"name" : "xSkRTOS_IS_TOP_LEVEL",
@@ -1451,7 +1451,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "C:/Users/el/CLionProjects/mytryos/xSkRTOS"
+			"value" : "C:/Users/el/CLionProjects/Sparrow/mytryos/xSkRTOS"
 		}
 	],
 	"kind" : "cache",

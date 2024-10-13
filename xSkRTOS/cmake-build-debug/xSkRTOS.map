@@ -356,8 +356,8 @@ Discarded input sections
  .debug_macro   0x00000000       0x6a CMakeFiles/xSkRTOS.dir/Start/src/core_cm3.c.obj
  .debug_macro   0x00000000      0x1df CMakeFiles/xSkRTOS.dir/Start/src/core_cm3.c.obj
  .debug_macro   0x00000000      0x174 CMakeFiles/xSkRTOS.dir/Start/src/core_cm3.c.obj
- .debug_line    0x00000000      0x429 CMakeFiles/xSkRTOS.dir/Start/src/core_cm3.c.obj
- .debug_str     0x00000000     0x4071 CMakeFiles/xSkRTOS.dir/Start/src/core_cm3.c.obj
+ .debug_line    0x00000000      0x431 CMakeFiles/xSkRTOS.dir/Start/src/core_cm3.c.obj
+ .debug_str     0x00000000     0x4081 CMakeFiles/xSkRTOS.dir/Start/src/core_cm3.c.obj
  .comment       0x00000000       0x4a CMakeFiles/xSkRTOS.dir/Start/src/core_cm3.c.obj
  .debug_frame   0x00000000      0x320 CMakeFiles/xSkRTOS.dir/Start/src/core_cm3.c.obj
  .ARM.attributes
@@ -1199,30 +1199,30 @@ LOAD d:/all/devemcu/gcc_arm/gccarm/bin/../lib/gcc/arm-none-eabi/10.3.1/thumb/v7-
  .debug_macro   0x0000dd6c      0x3dc CMakeFiles/xSkRTOS.dir/Library/src/stm32f10x_rcc.c.obj
  .debug_macro   0x0000e148      0x17b CMakeFiles/xSkRTOS.dir/System/src/Delay.c.obj
 
-.debug_line     0x00000000     0x2db2
- .debug_line    0x00000000      0xb12 CMakeFiles/xSkRTOS.dir/User/src/main.c.obj
- .debug_line    0x00000b12      0x4ed CMakeFiles/xSkRTOS.dir/User/src/stm32f10x_it.c.obj
- .debug_line    0x00000fff       0xa8 CMakeFiles/xSkRTOS.dir/Start/src/startup_stm32f103xb.s.obj
- .debug_line    0x000010a7      0x5e2 CMakeFiles/xSkRTOS.dir/Start/src/system_stm32f10x.c.obj
- .debug_line    0x00001689      0x83f CMakeFiles/xSkRTOS.dir/Library/src/stm32f10x_gpio.c.obj
- .debug_line    0x00001ec8      0x9db CMakeFiles/xSkRTOS.dir/Library/src/stm32f10x_rcc.c.obj
- .debug_line    0x000028a3      0x50f CMakeFiles/xSkRTOS.dir/System/src/Delay.c.obj
+.debug_line     0x00000000     0x2e82
+ .debug_line    0x00000000      0xb3a CMakeFiles/xSkRTOS.dir/User/src/main.c.obj
+ .debug_line    0x00000b3a      0x50d CMakeFiles/xSkRTOS.dir/User/src/stm32f10x_it.c.obj
+ .debug_line    0x00001047       0xb0 CMakeFiles/xSkRTOS.dir/Start/src/startup_stm32f103xb.s.obj
+ .debug_line    0x000010f7      0x602 CMakeFiles/xSkRTOS.dir/Start/src/system_stm32f10x.c.obj
+ .debug_line    0x000016f9      0x85f CMakeFiles/xSkRTOS.dir/Library/src/stm32f10x_gpio.c.obj
+ .debug_line    0x00001f58      0x9fb CMakeFiles/xSkRTOS.dir/Library/src/stm32f10x_rcc.c.obj
+ .debug_line    0x00002953      0x52f CMakeFiles/xSkRTOS.dir/System/src/Delay.c.obj
 
-.debug_str      0x00000000    0x52a6e
- .debug_str     0x00000000    0x517a7 CMakeFiles/xSkRTOS.dir/User/src/main.c.obj
-                              0x519e9 (size before relaxing)
- .debug_str     0x000517a7       0xb9 CMakeFiles/xSkRTOS.dir/User/src/stm32f10x_it.c.obj
-                              0x4d616 (size before relaxing)
- .debug_str     0x00051860       0x58 CMakeFiles/xSkRTOS.dir/Start/src/startup_stm32f103xb.s.obj
-                                 0x94 (size before relaxing)
- .debug_str     0x000518b8      0x151 CMakeFiles/xSkRTOS.dir/Start/src/system_stm32f10x.c.obj
-                              0x4d74f (size before relaxing)
- .debug_str     0x00051a09      0x4d9 CMakeFiles/xSkRTOS.dir/Library/src/stm32f10x_gpio.c.obj
-                              0x4db9c (size before relaxing)
- .debug_str     0x00051ee2      0xb0d CMakeFiles/xSkRTOS.dir/Library/src/stm32f10x_rcc.c.obj
-                              0x4e182 (size before relaxing)
- .debug_str     0x000529ef       0x7f CMakeFiles/xSkRTOS.dir/System/src/Delay.c.obj
-                              0x4d62c (size before relaxing)
+.debug_str      0x00000000    0x52aae
+ .debug_str     0x00000000    0x517b7 CMakeFiles/xSkRTOS.dir/User/src/main.c.obj
+                              0x519f9 (size before relaxing)
+ .debug_str     0x000517b7       0xc1 CMakeFiles/xSkRTOS.dir/User/src/stm32f10x_it.c.obj
+                              0x4d626 (size before relaxing)
+ .debug_str     0x00051878       0x60 CMakeFiles/xSkRTOS.dir/Start/src/startup_stm32f103xb.s.obj
+                                 0xa4 (size before relaxing)
+ .debug_str     0x000518d8      0x159 CMakeFiles/xSkRTOS.dir/Start/src/system_stm32f10x.c.obj
+                              0x4d75f (size before relaxing)
+ .debug_str     0x00051a31      0x4e1 CMakeFiles/xSkRTOS.dir/Library/src/stm32f10x_gpio.c.obj
+                              0x4dbac (size before relaxing)
+ .debug_str     0x00051f12      0xb15 CMakeFiles/xSkRTOS.dir/Library/src/stm32f10x_rcc.c.obj
+                              0x4e192 (size before relaxing)
+ .debug_str     0x00052a27       0x87 CMakeFiles/xSkRTOS.dir/System/src/Delay.c.obj
+                              0x4d63c (size before relaxing)
 
 .comment        0x00000000       0x49
  .comment       0x00000000       0x49 CMakeFiles/xSkRTOS.dir/User/src/main.c.obj

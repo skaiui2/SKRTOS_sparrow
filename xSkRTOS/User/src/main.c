@@ -500,7 +500,7 @@ void led_bright( )
 {
     while (1) {
         GPIO_ResetBits(GPIOC, GPIO_Pin_13);
-        TaskDelay(2000);
+        TaskDelay(1000);
     }
 }
 
@@ -508,7 +508,7 @@ void led_extinguish( )
 {
     while (1) {
         GPIO_SetBits(GPIOC, GPIO_Pin_13);
-        TaskDelay(1000);
+        TaskDelay(500);
     }
 }
 

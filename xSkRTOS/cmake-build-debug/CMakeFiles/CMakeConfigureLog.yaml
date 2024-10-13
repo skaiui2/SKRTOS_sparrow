@@ -49,7 +49,7 @@ events:
       Compilation of the C compiler identification source "CMakeCCompilerId.c" produced "CMakeCCompilerId.o"
       
       The C compiler identification is GNU, found in:
-        C:/Users/el/CLionProjects/mytryos/xSkRTOS/cmake-build-debug/CMakeFiles/3.28.6/CompilerIdC/CMakeCCompilerId.o
+        C:/Users/el/CLionProjects/Sparrow/mytryos/xSkRTOS/cmake-build-debug/CMakeFiles/3.28.6/CompilerIdC/CMakeCCompilerId.o
       
   -
     kind: "message-v1"
@@ -104,6 +104,6 @@ events:
       Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "CMakeCXXCompilerId.o"
       
       The CXX compiler identification is GNU, found in:
-        C:/Users/el/CLionProjects/mytryos/xSkRTOS/cmake-build-debug/CMakeFiles/3.28.6/CompilerIdCXX/CMakeCXXCompilerId.o
+        C:/Users/el/CLionProjects/Sparrow/mytryos/xSkRTOS/cmake-build-debug/CMakeFiles/3.28.6/CompilerIdCXX/CMakeCXXCompilerId.o
       
 ...

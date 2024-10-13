@@ -8,27 +8,27 @@
 		<Option virtualFolders="CMake Files\;CMake Files\cmake\;"/>
 		<Build>
 			<Target title="all">
-				<Option working_dir="C:/Users/el/CLionProjects/mytryos/xSkRTOS/cmake-build-debug"/>
+				<Option working_dir="C:/Users/el/CLionProjects/Sparrow/mytryos/xSkRTOS/cmake-build-debug"/>
 				<Option type="4"/>
 				<MakeCommands>
-					<Build command="D:/all/devemcu/MinGW/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/el/CLionProjects/mytryos/xSkRTOS/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
-					<CompileFile command="D:/all/devemcu/MinGW/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/el/CLionProjects/mytryos/xSkRTOS/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="D:/all/devemcu/MinGW/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/el/CLionProjects/mytryos/xSkRTOS/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="D:/all/devemcu/MinGW/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/el/CLionProjects/mytryos/xSkRTOS/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="D:/all/devemcu/MinGW/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/el/CLionProjects/Sparrow/mytryos/xSkRTOS/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="D:/all/devemcu/MinGW/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/el/CLionProjects/Sparrow/mytryos/xSkRTOS/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="D:/all/devemcu/MinGW/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/el/CLionProjects/Sparrow/mytryos/xSkRTOS/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="D:/all/devemcu/MinGW/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/el/CLionProjects/Sparrow/mytryos/xSkRTOS/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="xSkRTOS">
-				<Option output="C:/Users/el/CLionProjects/mytryos/xSkRTOS/cmake-build-debug/xSkRTOS.elf" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="C:/Users/el/CLionProjects/mytryos/xSkRTOS/cmake-build-debug"/>
+				<Option output="C:/Users/el/CLionProjects/Sparrow/mytryos/xSkRTOS/cmake-build-debug/xSkRTOS.elf" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="C:/Users/el/CLionProjects/Sparrow/mytryos/xSkRTOS/cmake-build-debug"/>
 				<Option object_output="./"/>
 				<Option type="1"/>
 				<Option compiler="gcc"/>
 				<Compiler>
-					<Add directory="C:/Users/el/CLionProjects/mytryos/xSkRTOS/SkRTOS/include"/>
-					<Add directory="C:/Users/el/CLionProjects/mytryos/xSkRTOS/Library/inc"/>
-					<Add directory="C:/Users/el/CLionProjects/mytryos/xSkRTOS/Start/inc"/>
-					<Add directory="C:/Users/el/CLionProjects/mytryos/xSkRTOS/System/inc"/>
-					<Add directory="C:/Users/el/CLionProjects/mytryos/xSkRTOS/User/Inc"/>
+					<Add directory="C:/Users/el/CLionProjects/Sparrow/mytryos/xSkRTOS/SkRTOS/include"/>
+					<Add directory="C:/Users/el/CLionProjects/Sparrow/mytryos/xSkRTOS/Library/inc"/>
+					<Add directory="C:/Users/el/CLionProjects/Sparrow/mytryos/xSkRTOS/Start/inc"/>
+					<Add directory="C:/Users/el/CLionProjects/Sparrow/mytryos/xSkRTOS/System/inc"/>
+					<Add directory="C:/Users/el/CLionProjects/Sparrow/mytryos/xSkRTOS/User/Inc"/>
 					<Add directory="d:\all\devemcu\gcc_arm\gccarm\bin\../lib/gcc/arm-none-eabi/10.3.1/../../../../arm-none-eabi/include/c++/10.3.1"/>
 					<Add directory="d:\all\devemcu\gcc_arm\gccarm\bin\../lib/gcc/arm-none-eabi/10.3.1/../../../../arm-none-eabi/include/c++/10.3.1/arm-none-eabi"/>
 					<Add directory="d:\all\devemcu\gcc_arm\gccarm\bin\../lib/gcc/arm-none-eabi/10.3.1/../../../../arm-none-eabi/include/c++/10.3.1/backward"/>
@@ -37,24 +37,24 @@
 					<Add directory="d:\all\devemcu\gcc_arm\gccarm\bin\../lib/gcc/arm-none-eabi/10.3.1/../../../../arm-none-eabi/include"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="D:/all/devemcu/MinGW/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/el/CLionProjects/mytryos/xSkRTOS/cmake-build-debug/Makefile&quot;  VERBOSE=1 xSkRTOS"/>
-					<CompileFile command="D:/all/devemcu/MinGW/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/el/CLionProjects/mytryos/xSkRTOS/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="D:/all/devemcu/MinGW/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/el/CLionProjects/mytryos/xSkRTOS/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="D:/all/devemcu/MinGW/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/el/CLionProjects/mytryos/xSkRTOS/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="D:/all/devemcu/MinGW/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/el/CLionProjects/Sparrow/mytryos/xSkRTOS/cmake-build-debug/Makefile&quot;  VERBOSE=1 xSkRTOS"/>
+					<CompileFile command="D:/all/devemcu/MinGW/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/el/CLionProjects/Sparrow/mytryos/xSkRTOS/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="D:/all/devemcu/MinGW/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/el/CLionProjects/Sparrow/mytryos/xSkRTOS/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="D:/all/devemcu/MinGW/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/el/CLionProjects/Sparrow/mytryos/xSkRTOS/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="xSkRTOS/fast">
-				<Option output="C:/Users/el/CLionProjects/mytryos/xSkRTOS/cmake-build-debug/xSkRTOS.elf" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="C:/Users/el/CLionProjects/mytryos/xSkRTOS/cmake-build-debug"/>
+				<Option output="C:/Users/el/CLionProjects/Sparrow/mytryos/xSkRTOS/cmake-build-debug/xSkRTOS.elf" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="C:/Users/el/CLionProjects/Sparrow/mytryos/xSkRTOS/cmake-build-debug"/>
 				<Option object_output="./"/>
 				<Option type="1"/>
 				<Option compiler="gcc"/>
 				<Compiler>
-					<Add directory="C:/Users/el/CLionProjects/mytryos/xSkRTOS/SkRTOS/include"/>
-					<Add directory="C:/Users/el/CLionProjects/mytryos/xSkRTOS/Library/inc"/>
-					<Add directory="C:/Users/el/CLionProjects/mytryos/xSkRTOS/Start/inc"/>
-					<Add directory="C:/Users/el/CLionProjects/mytryos/xSkRTOS/System/inc"/>
-					<Add directory="C:/Users/el/CLionProjects/mytryos/xSkRTOS/User/Inc"/>
+					<Add directory="C:/Users/el/CLionProjects/Sparrow/mytryos/xSkRTOS/SkRTOS/include"/>
+					<Add directory="C:/Users/el/CLionProjects/Sparrow/mytryos/xSkRTOS/Library/inc"/>
+					<Add directory="C:/Users/el/CLionProjects/Sparrow/mytryos/xSkRTOS/Start/inc"/>
+					<Add directory="C:/Users/el/CLionProjects/Sparrow/mytryos/xSkRTOS/System/inc"/>
+					<Add directory="C:/Users/el/CLionProjects/Sparrow/mytryos/xSkRTOS/User/Inc"/>
 					<Add directory="d:\all\devemcu\gcc_arm\gccarm\bin\../lib/gcc/arm-none-eabi/10.3.1/../../../../arm-none-eabi/include/c++/10.3.1"/>
 					<Add directory="d:\all\devemcu\gcc_arm\gccarm\bin\../lib/gcc/arm-none-eabi/10.3.1/../../../../arm-none-eabi/include/c++/10.3.1/arm-none-eabi"/>
 					<Add directory="d:\all\devemcu\gcc_arm\gccarm\bin\../lib/gcc/arm-none-eabi/10.3.1/../../../../arm-none-eabi/include/c++/10.3.1/backward"/>
@@ -63,64 +63,64 @@
 					<Add directory="d:\all\devemcu\gcc_arm\gccarm\bin\../lib/gcc/arm-none-eabi/10.3.1/../../../../arm-none-eabi/include"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="D:/all/devemcu/MinGW/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/el/CLionProjects/mytryos/xSkRTOS/cmake-build-debug/Makefile&quot;  VERBOSE=1 xSkRTOS/fast"/>
-					<CompileFile command="D:/all/devemcu/MinGW/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/el/CLionProjects/mytryos/xSkRTOS/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="D:/all/devemcu/MinGW/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/el/CLionProjects/mytryos/xSkRTOS/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="D:/all/devemcu/MinGW/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/el/CLionProjects/mytryos/xSkRTOS/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="D:/all/devemcu/MinGW/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/el/CLionProjects/Sparrow/mytryos/xSkRTOS/cmake-build-debug/Makefile&quot;  VERBOSE=1 xSkRTOS/fast"/>
+					<CompileFile command="D:/all/devemcu/MinGW/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/el/CLionProjects/Sparrow/mytryos/xSkRTOS/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="D:/all/devemcu/MinGW/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/el/CLionProjects/Sparrow/mytryos/xSkRTOS/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="D:/all/devemcu/MinGW/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/el/CLionProjects/Sparrow/mytryos/xSkRTOS/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="edit_cache">
-				<Option working_dir="C:/Users/el/CLionProjects/mytryos/xSkRTOS/cmake-build-debug"/>
+				<Option working_dir="C:/Users/el/CLionProjects/Sparrow/mytryos/xSkRTOS/cmake-build-debug"/>
 				<Option type="4"/>
 				<MakeCommands>
-					<Build command="D:/all/devemcu/MinGW/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/el/CLionProjects/mytryos/xSkRTOS/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
-					<CompileFile command="D:/all/devemcu/MinGW/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/el/CLionProjects/mytryos/xSkRTOS/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="D:/all/devemcu/MinGW/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/el/CLionProjects/mytryos/xSkRTOS/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="D:/all/devemcu/MinGW/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/el/CLionProjects/mytryos/xSkRTOS/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="D:/all/devemcu/MinGW/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/el/CLionProjects/Sparrow/mytryos/xSkRTOS/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="D:/all/devemcu/MinGW/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/el/CLionProjects/Sparrow/mytryos/xSkRTOS/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="D:/all/devemcu/MinGW/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/el/CLionProjects/Sparrow/mytryos/xSkRTOS/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="D:/all/devemcu/MinGW/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/el/CLionProjects/Sparrow/mytryos/xSkRTOS/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="rebuild_cache">
-				<Option working_dir="C:/Users/el/CLionProjects/mytryos/xSkRTOS/cmake-build-debug"/>
+				<Option working_dir="C:/Users/el/CLionProjects/Sparrow/mytryos/xSkRTOS/cmake-build-debug"/>
 				<Option type="4"/>
 				<MakeCommands>
-					<Build command="D:/all/devemcu/MinGW/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/el/CLionProjects/mytryos/xSkRTOS/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
-					<CompileFile command="D:/all/devemcu/MinGW/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/el/CLionProjects/mytryos/xSkRTOS/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="D:/all/devemcu/MinGW/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/el/CLionProjects/mytryos/xSkRTOS/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="D:/all/devemcu/MinGW/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/el/CLionProjects/mytryos/xSkRTOS/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="D:/all/devemcu/MinGW/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/el/CLionProjects/Sparrow/mytryos/xSkRTOS/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="D:/all/devemcu/MinGW/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/el/CLionProjects/Sparrow/mytryos/xSkRTOS/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="D:/all/devemcu/MinGW/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/el/CLionProjects/Sparrow/mytryos/xSkRTOS/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="D:/all/devemcu/MinGW/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/el/CLionProjects/Sparrow/mytryos/xSkRTOS/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 		</Build>
-		<Unit filename="C:/Users/el/CLionProjects/mytryos/xSkRTOS/Library/src/stm32f10x_gpio.c">
+		<Unit filename="C:/Users/el/CLionProjects/Sparrow/mytryos/xSkRTOS/Library/src/stm32f10x_gpio.c">
 			<Option target="xSkRTOS"/>
 		</Unit>
-		<Unit filename="C:/Users/el/CLionProjects/mytryos/xSkRTOS/Library/src/stm32f10x_rcc.c">
+		<Unit filename="C:/Users/el/CLionProjects/Sparrow/mytryos/xSkRTOS/Library/src/stm32f10x_rcc.c">
 			<Option target="xSkRTOS"/>
 		</Unit>
-		<Unit filename="C:/Users/el/CLionProjects/mytryos/xSkRTOS/Start/src/core_cm3.c">
+		<Unit filename="C:/Users/el/CLionProjects/Sparrow/mytryos/xSkRTOS/Start/src/core_cm3.c">
 			<Option target="xSkRTOS"/>
 		</Unit>
-		<Unit filename="C:/Users/el/CLionProjects/mytryos/xSkRTOS/Start/src/startup_stm32f103xb.s">
+		<Unit filename="C:/Users/el/CLionProjects/Sparrow/mytryos/xSkRTOS/Start/src/startup_stm32f103xb.s">
 			<Option target="xSkRTOS"/>
 		</Unit>
-		<Unit filename="C:/Users/el/CLionProjects/mytryos/xSkRTOS/Start/src/system_stm32f10x.c">
+		<Unit filename="C:/Users/el/CLionProjects/Sparrow/mytryos/xSkRTOS/Start/src/system_stm32f10x.c">
 			<Option target="xSkRTOS"/>
 		</Unit>
-		<Unit filename="C:/Users/el/CLionProjects/mytryos/xSkRTOS/System/inc/Delay.h">
+		<Unit filename="C:/Users/el/CLionProjects/Sparrow/mytryos/xSkRTOS/System/inc/Delay.h">
 			<Option target="xSkRTOS"/>
 		</Unit>
-		<Unit filename="C:/Users/el/CLionProjects/mytryos/xSkRTOS/System/src/Delay.c">
+		<Unit filename="C:/Users/el/CLionProjects/Sparrow/mytryos/xSkRTOS/System/src/Delay.c">
 			<Option target="xSkRTOS"/>
 		</Unit>
-		<Unit filename="C:/Users/el/CLionProjects/mytryos/xSkRTOS/User/src/main.c">
+		<Unit filename="C:/Users/el/CLionProjects/Sparrow/mytryos/xSkRTOS/User/src/main.c">
 			<Option target="xSkRTOS"/>
 		</Unit>
-		<Unit filename="C:/Users/el/CLionProjects/mytryos/xSkRTOS/User/src/stm32f10x_it.c">
+		<Unit filename="C:/Users/el/CLionProjects/Sparrow/mytryos/xSkRTOS/User/src/stm32f10x_it.c">
 			<Option target="xSkRTOS"/>
 		</Unit>
-		<Unit filename="C:/Users/el/CLionProjects/mytryos/xSkRTOS/CMakeLists.txt">
+		<Unit filename="C:/Users/el/CLionProjects/Sparrow/mytryos/xSkRTOS/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\"/>
 		</Unit>
-		<Unit filename="C:/Users/el/CLionProjects/mytryos/xSkRTOS/cmake/gcc-arm-none-eabi.cmake">
+		<Unit filename="C:/Users/el/CLionProjects/Sparrow/mytryos/xSkRTOS/cmake/gcc-arm-none-eabi.cmake">
 			<Option virtualFolder="CMake Files\cmake\"/>
 		</Unit>
 	</Project>
