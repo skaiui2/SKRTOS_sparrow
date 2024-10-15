@@ -89,7 +89,7 @@ void heap_init()
     heap_node *firstnode;
     uint32_t start_heap ,end_heap;
     //get start address
-    start_heap =(uint32_t) allheap;
+    //start_heap =(uint32_t) allheap; error!!!
     if( (start_heap & aligment_byte) != 0){
         start_heap += aligment_byte ;
         start_heap &= ~aligment_byte;
