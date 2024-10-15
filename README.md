@@ -1,12 +1,7 @@
 # SKRTOS_sparrow
-Lightweight rtos inspired by SKRTOS
+这里是内存管理算法的源码
 
+MemDebug是笔者修改后，错误的内存管理算法。笔者通过调试错误的程序为大家讲解gdb在嵌入式调试中的使用，希望大家能够自己一行行敲命令来学习gdb调试。
 
+heapmem.c和heapmem.h笔者进行了简单的修改使得它可以作为一个库被广泛使用在嵌入式单片机程序中，并且比通用的c语言malloc效率更高，执行时间也相对固定，能够提高程序的性能。
 
-这里是sparrow已经移植好了的工程，适用于arm cm3架构（例如stm32f103c8t6），使用的编辑器是clion。
-
-SparrowHAL是hal库的移植，SparrowStdlib是标准库的移植。
-
-关于Sparrow的文档教程将会在知乎等平台持续更新，敬请期待。
-
-知乎链接：[400行程序写一个实时操作系统（开篇） - 知乎 (zhihu.com)](https://zhuanlan.zhihu.com/p/963319443)
