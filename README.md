@@ -1,3 +1,4 @@
 ## 参考手册
 
-arm cm3和arm cortex cm4 的参考手册。
+arm cortex m3和arm cortex m4 的参考手册。
+
