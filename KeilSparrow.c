@@ -266,11 +266,6 @@ uint32_t SuspendBitTable = 0;
 //the table is defined for signal mechanism
 uint32_t BlockedBitTable = 0;
 
-void SetTaskPriority( TCB_t *self )
-{
-    TcbTaskTable[self->uxPriority] = self;
-}
-
 /*The RTOS delay will switch the task.It is used to liberate low-priority task*/
 void TaskDelay( uint16_t ticks )
 {
@@ -310,24 +305,29 @@ void CheckTicks( void )
 }
 
 
-__attribute__((always_inline)) uint32_t xEnterCritical( void )
+
+__attribute__((always_inline)) inline uint32_t  xEnterCritical( void )
 {
     uint32_t xReturn;
-		uint32_t BarrierPriority = configShieldInterPriority;
+    uint32_t temp;
 
     __asm volatile(
             " cpsid i               \n"
-            " mrs xReturn, basepri       \n"
-            " msr basepri, BarrierPriority       \n"
+            " mrs %0, basepri       \n"
+            " mov %1, %2			\n"
+            " msr basepri, %1       \n"
             " dsb                   \n"
             " isb                   \n"
             " cpsie i               \n"
+            : "=r" (xReturn), "=r"(temp)
+            : "r" (configShieldInterPriority)
+            : "memory"
             );
 
     return xReturn;
 }
 
-__attribute__((always_inline)) void xEixtCritical( uint32_t xReturn )
+__attribute__((always_inline)) inline void xExitCritical( uint32_t xReturn )
 {
     __asm volatile(
             " cpsid i               \n"
@@ -343,7 +343,7 @@ void SysTick_Handler(void)
 {
     uint32_t xre = xEnterCritical();
     CheckTicks();
-    xEixtCritical(xre);
+    xExitCritical(xre);
 }
 
 uint32_t * pxPortInitialiseStack( uint32_t * pxTopOfStack,
@@ -448,7 +448,7 @@ __asm void prvStartFirstTask( void )
 	  nop
 }
 
-void __attribute__( ( always_inline ) ) SchedulerStart( void )
+__attribute__( ( always_inline ) ) inline void SchedulerStart( void )
 {
     /* Start the timer that generates the tick ISR.  Interrupts are disabled
      * here already. */
