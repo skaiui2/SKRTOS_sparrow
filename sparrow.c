@@ -8,7 +8,7 @@
 #define configTickRateHz			( ( uint32_t ) 1000 )
 #define configShieldInterPriority 	191
 #define config_heap   8*1024
-#define configMaxPriori  4
+#define configMaxPriori  32
 
 
 #define Class(class)    \
@@ -185,7 +185,7 @@ typedef void (* TaskFunction_t)( void * );
 #define vPortSVCHandler SVC_Handler
 #define xPortPendSVHandler PendSV_Handler
 
-void __attribute__( ( naked ) )  vPortSVCHandler( void )
+__attribute__( ( naked ) )  void  vPortSVCHandler( void )
 {
     __asm volatile (
             "	ldr	r3, pxCurrentTCBConst2		\n"
@@ -204,7 +204,7 @@ void __attribute__( ( naked ) )  vPortSVCHandler( void )
             );
 }
 
-void __attribute__( ( naked ) )  xPortPendSVHandler( void )
+__attribute__( ( naked ) )  void  xPortPendSVHandler( void )
 {
     __asm volatile
             (
@@ -395,14 +395,14 @@ void xTaskCreate( TaskFunction_t pxTaskCode,
 __attribute__( ( always_inline ) ) static inline uint8_t FindHighestPriority( void )
 {
     uint8_t TopZeroNumber;
+    uint8_t temp;
     __asm volatile
             (
-            "clz %0, %1\n"
-            "mov r3, #31\n"
-            "sub %0, r3, %0\n"
-            :"=r" (TopZeroNumber)
+            "clz %0, %2\n"
+            "mov %1, #31\n"
+            "sub %0, %1, %0\n"
+            :"=r" (TopZeroNumber),"=r"(temp)
             :"r" (ReadyBitTable)
-            :"r3"
             );
     return TopZeroNumber;
 }

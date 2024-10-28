@@ -306,28 +306,24 @@ void CheckTicks( void )
 
 
 
-__attribute__((always_inline)) inline uint32_t  xEnterCritical( void )
+__attribute__((always_inline)) uint32_t xEnterCritical( void )
 {
     uint32_t xReturn;
-    uint32_t temp;
+	uint32_t BarrierPriority = configShieldInterPriority;
 
     __asm volatile(
             " cpsid i               \n"
-            " mrs %0, basepri       \n"
-            " mov %1, %2			\n"
-            " msr basepri, %1       \n"
+            " mrs xReturn, basepri       \n"
+            " msr basepri, BarrierPriority       \n"
             " dsb                   \n"
             " isb                   \n"
             " cpsie i               \n"
-            : "=r" (xReturn), "=r"(temp)
-            : "r" (configShieldInterPriority)
-            : "memory"
             );
 
     return xReturn;
 }
 
-__attribute__((always_inline)) inline void xExitCritical( uint32_t xReturn )
+__attribute__((always_inline)) void xEixtCritical( uint32_t xReturn )
 {
     __asm volatile(
             " cpsid i               \n"
@@ -385,10 +381,11 @@ void xTaskCreate( TaskFunction_t pxTaskCode,
 
 __attribute__((always_inline)) static inline uint8_t FindHighestPriority(void) {
     uint8_t TopZeroNumber;
+    uint8_t temp;
     __asm {
         clz TopZeroNumber, ReadyBitTable
-        mov r3, #31
-        sub TopZeroNumber, r3, TopZeroNumber
+        mov temp, #31
+        sub TopZeroNumber, temp, TopZeroNumber
     }
     return TopZeroNumber;
 }
