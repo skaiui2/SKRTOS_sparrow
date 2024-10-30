@@ -1,0 +1,128 @@
+[
+{
+  "directory": "C:/Users/el/CLionProjects/stm32f1/cmake-build-debug",
+  "command": "D:\\all\\devemcu\\gcc_arm\\gccarm\\bin\\arm-none-eabi-gcc.exe -DDEBUG -DSTM32F103xB -DUSE_HAL_DRIVER -IC:\\Users\\el\\CLionProjects\\stm32f1\\cmake\\stm32cubemx\\..\\..\\Core\\Inc -IC:\\Users\\el\\CLionProjects\\stm32f1\\cmake\\stm32cubemx\\..\\..\\Drivers\\STM32F1xx_HAL_Driver\\Inc -IC:\\Users\\el\\CLionProjects\\stm32f1\\cmake\\stm32cubemx\\..\\..\\Drivers\\STM32F1xx_HAL_Driver\\Inc\\Legacy -IC:\\Users\\el\\CLionProjects\\stm32f1\\cmake\\stm32cubemx\\..\\..\\Drivers\\CMSIS\\Device\\ST\\STM32F1xx\\Include -IC:\\Users\\el\\CLionProjects\\stm32f1\\cmake\\stm32cubemx\\..\\..\\Drivers\\CMSIS\\Include  -mcpu=cortex-m3  -Wall -Wextra -Wpedantic -fdata-sections -ffunction-sections -O0 -g3 -g -std=gnu11 -fdiagnostics-color=always -o CMakeFiles\\stm32f1.dir\\Core\\Src\\main.c.obj -c C:\\Users\\el\\CLionProjects\\stm32f1\\Core\\Src\\main.c",
+  "file": "C:/Users/el/CLionProjects/stm32f1/Core/Src/main.c",
+  "output": "CMakeFiles/stm32f1.dir/Core/Src/main.c.obj"
+},
+{
+  "directory": "C:/Users/el/CLionProjects/stm32f1/cmake-build-debug",
+  "command": "D:\\all\\devemcu\\gcc_arm\\gccarm\\bin\\arm-none-eabi-gcc.exe -DDEBUG -DSTM32F103xB -DUSE_HAL_DRIVER -IC:\\Users\\el\\CLionProjects\\stm32f1\\cmake\\stm32cubemx\\..\\..\\Core\\Inc -IC:\\Users\\el\\CLionProjects\\stm32f1\\cmake\\stm32cubemx\\..\\..\\Drivers\\STM32F1xx_HAL_Driver\\Inc -IC:\\Users\\el\\CLionProjects\\stm32f1\\cmake\\stm32cubemx\\..\\..\\Drivers\\STM32F1xx_HAL_Driver\\Inc\\Legacy -IC:\\Users\\el\\CLionProjects\\stm32f1\\cmake\\stm32cubemx\\..\\..\\Drivers\\CMSIS\\Device\\ST\\STM32F1xx\\Include -IC:\\Users\\el\\CLionProjects\\stm32f1\\cmake\\stm32cubemx\\..\\..\\Drivers\\CMSIS\\Include  -mcpu=cortex-m3  -Wall -Wextra -Wpedantic -fdata-sections -ffunction-sections -O0 -g3 -g -std=gnu11 -fdiagnostics-color=always -o CMakeFiles\\stm32f1.dir\\Core\\Src\\stm32f1xx_it.c.obj -c C:\\Users\\el\\CLionProjects\\stm32f1\\Core\\Src\\stm32f1xx_it.c",
+  "file": "C:/Users/el/CLionProjects/stm32f1/Core/Src/stm32f1xx_it.c",
+  "output": "CMakeFiles/stm32f1.dir/Core/Src/stm32f1xx_it.c.obj"
+},
+{
+  "directory": "C:/Users/el/CLionProjects/stm32f1/cmake-build-debug",
+  "command": "D:\\all\\devemcu\\gcc_arm\\gccarm\\bin\\arm-none-eabi-gcc.exe -DDEBUG -DSTM32F103xB -DUSE_HAL_DRIVER -IC:\\Users\\el\\CLionProjects\\stm32f1\\cmake\\stm32cubemx\\..\\..\\Core\\Inc -IC:\\Users\\el\\CLionProjects\\stm32f1\\cmake\\stm32cubemx\\..\\..\\Drivers\\STM32F1xx_HAL_Driver\\Inc -IC:\\Users\\el\\CLionProjects\\stm32f1\\cmake\\stm32cubemx\\..\\..\\Drivers\\STM32F1xx_HAL_Driver\\Inc\\Legacy -IC:\\Users\\el\\CLionProjects\\stm32f1\\cmake\\stm32cubemx\\..\\..\\Drivers\\CMSIS\\Device\\ST\\STM32F1xx\\Include -IC:\\Users\\el\\CLionProjects\\stm32f1\\cmake\\stm32cubemx\\..\\..\\Drivers\\CMSIS\\Include  -mcpu=cortex-m3  -Wall -Wextra -Wpedantic -fdata-sections -ffunction-sections -O0 -g3 -g -std=gnu11 -fdiagnostics-color=always -o CMakeFiles\\stm32f1.dir\\Core\\Src\\stm32f1xx_hal_msp.c.obj -c C:\\Users\\el\\CLionProjects\\stm32f1\\Core\\Src\\stm32f1xx_hal_msp.c",
+  "file": "C:/Users/el/CLionProjects/stm32f1/Core/Src/stm32f1xx_hal_msp.c",
+  "output": "CMakeFiles/stm32f1.dir/Core/Src/stm32f1xx_hal_msp.c.obj"
+},
+{
+  "directory": "C:/Users/el/CLionProjects/stm32f1/cmake-build-debug",
+  "command": "D:\\all\\devemcu\\gcc_arm\\gccarm\\bin\\arm-none-eabi-gcc.exe -DDEBUG -DSTM32F103xB -DUSE_HAL_DRIVER -IC:\\Users\\el\\CLionProjects\\stm32f1\\cmake\\stm32cubemx\\..\\..\\Core\\Inc -IC:\\Users\\el\\CLionProjects\\stm32f1\\cmake\\stm32cubemx\\..\\..\\Drivers\\STM32F1xx_HAL_Driver\\Inc -IC:\\Users\\el\\CLionProjects\\stm32f1\\cmake\\stm32cubemx\\..\\..\\Drivers\\STM32F1xx_HAL_Driver\\Inc\\Legacy -IC:\\Users\\el\\CLionProjects\\stm32f1\\cmake\\stm32cubemx\\..\\..\\Drivers\\CMSIS\\Device\\ST\\STM32F1xx\\Include -IC:\\Users\\el\\CLionProjects\\stm32f1\\cmake\\stm32cubemx\\..\\..\\Drivers\\CMSIS\\Include  -mcpu=cortex-m3  -Wall -Wextra -Wpedantic -fdata-sections -ffunction-sections -O0 -g3 -g -std=gnu11 -fdiagnostics-color=always -o CMakeFiles\\stm32f1.dir\\Core\\Src\\stm32f1xx_hal_timebase_tim.c.obj -c C:\\Users\\el\\CLionProjects\\stm32f1\\Core\\Src\\stm32f1xx_hal_timebase_tim.c",
+  "file": "C:/Users/el/CLionProjects/stm32f1/Core/Src/stm32f1xx_hal_timebase_tim.c",
+  "output": "CMakeFiles/stm32f1.dir/Core/Src/stm32f1xx_hal_timebase_tim.c.obj"
+},
+{
+  "directory": "C:/Users/el/CLionProjects/stm32f1/cmake-build-debug",
+  "command": "D:\\all\\devemcu\\gcc_arm\\gccarm\\bin\\arm-none-eabi-gcc.exe -DDEBUG -DSTM32F103xB -DUSE_HAL_DRIVER -IC:\\Users\\el\\CLionProjects\\stm32f1\\cmake\\stm32cubemx\\..\\..\\Core\\Inc -IC:\\Users\\el\\CLionProjects\\stm32f1\\cmake\\stm32cubemx\\..\\..\\Drivers\\STM32F1xx_HAL_Driver\\Inc -IC:\\Users\\el\\CLionProjects\\stm32f1\\cmake\\stm32cubemx\\..\\..\\Drivers\\STM32F1xx_HAL_Driver\\Inc\\Legacy -IC:\\Users\\el\\CLionProjects\\stm32f1\\cmake\\stm32cubemx\\..\\..\\Drivers\\CMSIS\\Device\\ST\\STM32F1xx\\Include -IC:\\Users\\el\\CLionProjects\\stm32f1\\cmake\\stm32cubemx\\..\\..\\Drivers\\CMSIS\\Include  -mcpu=cortex-m3  -Wall -Wextra -Wpedantic -fdata-sections -ffunction-sections -O0 -g3 -g -std=gnu11 -fdiagnostics-color=always -o CMakeFiles\\stm32f1.dir\\Drivers\\STM32F1xx_HAL_Driver\\Src\\stm32f1xx_hal_gpio_ex.c.obj -c C:\\Users\\el\\CLionProjects\\stm32f1\\Drivers\\STM32F1xx_HAL_Driver\\Src\\stm32f1xx_hal_gpio_ex.c",
+  "file": "C:/Users/el/CLionProjects/stm32f1/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio_ex.c",
+  "output": "CMakeFiles/stm32f1.dir/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio_ex.c.obj"
+},
+{
+  "directory": "C:/Users/el/CLionProjects/stm32f1/cmake-build-debug",
+  "command": "D:\\all\\devemcu\\gcc_arm\\gccarm\\bin\\arm-none-eabi-gcc.exe -DDEBUG -DSTM32F103xB -DUSE_HAL_DRIVER -IC:\\Users\\el\\CLionProjects\\stm32f1\\cmake\\stm32cubemx\\..\\..\\Core\\Inc -IC:\\Users\\el\\CLionProjects\\stm32f1\\cmake\\stm32cubemx\\..\\..\\Drivers\\STM32F1xx_HAL_Driver\\Inc -IC:\\Users\\el\\CLionProjects\\stm32f1\\cmake\\stm32cubemx\\..\\..\\Drivers\\STM32F1xx_HAL_Driver\\Inc\\Legacy -IC:\\Users\\el\\CLionProjects\\stm32f1\\cmake\\stm32cubemx\\..\\..\\Drivers\\CMSIS\\Device\\ST\\STM32F1xx\\Include -IC:\\Users\\el\\CLionProjects\\stm32f1\\cmake\\stm32cubemx\\..\\..\\Drivers\\CMSIS\\Include  -mcpu=cortex-m3  -Wall -Wextra -Wpedantic -fdata-sections -ffunction-sections -O0 -g3 -g -std=gnu11 -fdiagnostics-color=always -o CMakeFiles\\stm32f1.dir\\Drivers\\STM32F1xx_HAL_Driver\\Src\\stm32f1xx_hal_tim.c.obj -c C:\\Users\\el\\CLionProjects\\stm32f1\\Drivers\\STM32F1xx_HAL_Driver\\Src\\stm32f1xx_hal_tim.c",
+  "file": "C:/Users/el/CLionProjects/stm32f1/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim.c",
+  "output": "CMakeFiles/stm32f1.dir/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim.c.obj"
+},
+{
+  "directory": "C:/Users/el/CLionProjects/stm32f1/cmake-build-debug",
+  "command": "D:\\all\\devemcu\\gcc_arm\\gccarm\\bin\\arm-none-eabi-gcc.exe -DDEBUG -DSTM32F103xB -DUSE_HAL_DRIVER -IC:\\Users\\el\\CLionProjects\\stm32f1\\cmake\\stm32cubemx\\..\\..\\Core\\Inc -IC:\\Users\\el\\CLionProjects\\stm32f1\\cmake\\stm32cubemx\\..\\..\\Drivers\\STM32F1xx_HAL_Driver\\Inc -IC:\\Users\\el\\CLionProjects\\stm32f1\\cmake\\stm32cubemx\\..\\..\\Drivers\\STM32F1xx_HAL_Driver\\Inc\\Legacy -IC:\\Users\\el\\CLionProjects\\stm32f1\\cmake\\stm32cubemx\\..\\..\\Drivers\\CMSIS\\Device\\ST\\STM32F1xx\\Include -IC:\\Users\\el\\CLionProjects\\stm32f1\\cmake\\stm32cubemx\\..\\..\\Drivers\\CMSIS\\Include  -mcpu=cortex-m3  -Wall -Wextra -Wpedantic -fdata-sections -ffunction-sections -O0 -g3 -g -std=gnu11 -fdiagnostics-color=always -o CMakeFiles\\stm32f1.dir\\Drivers\\STM32F1xx_HAL_Driver\\Src\\stm32f1xx_hal_tim_ex.c.obj -c C:\\Users\\el\\CLionProjects\\stm32f1\\Drivers\\STM32F1xx_HAL_Driver\\Src\\stm32f1xx_hal_tim_ex.c",
+  "file": "C:/Users/el/CLionProjects/stm32f1/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim_ex.c",
+  "output": "CMakeFiles/stm32f1.dir/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim_ex.c.obj"
+},
+{
+  "directory": "C:/Users/el/CLionProjects/stm32f1/cmake-build-debug",
+  "command": "D:\\all\\devemcu\\gcc_arm\\gccarm\\bin\\arm-none-eabi-gcc.exe -DDEBUG -DSTM32F103xB -DUSE_HAL_DRIVER -IC:\\Users\\el\\CLionProjects\\stm32f1\\cmake\\stm32cubemx\\..\\..\\Core\\Inc -IC:\\Users\\el\\CLionProjects\\stm32f1\\cmake\\stm32cubemx\\..\\..\\Drivers\\STM32F1xx_HAL_Driver\\Inc -IC:\\Users\\el\\CLionProjects\\stm32f1\\cmake\\stm32cubemx\\..\\..\\Drivers\\STM32F1xx_HAL_Driver\\Inc\\Legacy -IC:\\Users\\el\\CLionProjects\\stm32f1\\cmake\\stm32cubemx\\..\\..\\Drivers\\CMSIS\\Device\\ST\\STM32F1xx\\Include -IC:\\Users\\el\\CLionProjects\\stm32f1\\cmake\\stm32cubemx\\..\\..\\Drivers\\CMSIS\\Include  -mcpu=cortex-m3  -Wall -Wextra -Wpedantic -fdata-sections -ffunction-sections -O0 -g3 -g -std=gnu11 -fdiagnostics-color=always -o CMakeFiles\\stm32f1.dir\\Drivers\\STM32F1xx_HAL_Driver\\Src\\stm32f1xx_hal.c.obj -c C:\\Users\\el\\CLionProjects\\stm32f1\\Drivers\\STM32F1xx_HAL_Driver\\Src\\stm32f1xx_hal.c",
+  "file": "C:/Users/el/CLionProjects/stm32f1/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal.c",
+  "output": "CMakeFiles/stm32f1.dir/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal.c.obj"
+},
+{
+  "directory": "C:/Users/el/CLionProjects/stm32f1/cmake-build-debug",
+  "command": "D:\\all\\devemcu\\gcc_arm\\gccarm\\bin\\arm-none-eabi-gcc.exe -DDEBUG -DSTM32F103xB -DUSE_HAL_DRIVER -IC:\\Users\\el\\CLionProjects\\stm32f1\\cmake\\stm32cubemx\\..\\..\\Core\\Inc -IC:\\Users\\el\\CLionProjects\\stm32f1\\cmake\\stm32cubemx\\..\\..\\Drivers\\STM32F1xx_HAL_Driver\\Inc -IC:\\Users\\el\\CLionProjects\\stm32f1\\cmake\\stm32cubemx\\..\\..\\Drivers\\STM32F1xx_HAL_Driver\\Inc\\Legacy -IC:\\Users\\el\\CLionProjects\\stm32f1\\cmake\\stm32cubemx\\..\\..\\Drivers\\CMSIS\\Device\\ST\\STM32F1xx\\Include -IC:\\Users\\el\\CLionProjects\\stm32f1\\cmake\\stm32cubemx\\..\\..\\Drivers\\CMSIS\\Include  -mcpu=cortex-m3  -Wall -Wextra -Wpedantic -fdata-sections -ffunction-sections -O0 -g3 -g -std=gnu11 -fdiagnostics-color=always -o CMakeFiles\\stm32f1.dir\\Drivers\\STM32F1xx_HAL_Driver\\Src\\stm32f1xx_hal_rcc.c.obj -c C:\\Users\\el\\CLionProjects\\stm32f1\\Drivers\\STM32F1xx_HAL_Driver\\Src\\stm32f1xx_hal_rcc.c",
+  "file": "C:/Users/el/CLionProjects/stm32f1/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc.c",
+  "output": "CMakeFiles/stm32f1.dir/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc.c.obj"
+},
+{
+  "directory": "C:/Users/el/CLionProjects/stm32f1/cmake-build-debug",
+  "command": "D:\\all\\devemcu\\gcc_arm\\gccarm\\bin\\arm-none-eabi-gcc.exe -DDEBUG -DSTM32F103xB -DUSE_HAL_DRIVER -IC:\\Users\\el\\CLionProjects\\stm32f1\\cmake\\stm32cubemx\\..\\..\\Core\\Inc -IC:\\Users\\el\\CLionProjects\\stm32f1\\cmake\\stm32cubemx\\..\\..\\Drivers\\STM32F1xx_HAL_Driver\\Inc -IC:\\Users\\el\\CLionProjects\\stm32f1\\cmake\\stm32cubemx\\..\\..\\Drivers\\STM32F1xx_HAL_Driver\\Inc\\Legacy -IC:\\Users\\el\\CLionProjects\\stm32f1\\cmake\\stm32cubemx\\..\\..\\Drivers\\CMSIS\\Device\\ST\\STM32F1xx\\Include -IC:\\Users\\el\\CLionProjects\\stm32f1\\cmake\\stm32cubemx\\..\\..\\Drivers\\CMSIS\\Include  -mcpu=cortex-m3  -Wall -Wextra -Wpedantic -fdata-sections -ffunction-sections -O0 -g3 -g -std=gnu11 -fdiagnostics-color=always -o CMakeFiles\\stm32f1.dir\\Drivers\\STM32F1xx_HAL_Driver\\Src\\stm32f1xx_hal_rcc_ex.c.obj -c C:\\Users\\el\\CLionProjects\\stm32f1\\Drivers\\STM32F1xx_HAL_Driver\\Src\\stm32f1xx_hal_rcc_ex.c",
+  "file": "C:/Users/el/CLionProjects/stm32f1/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc_ex.c",
+  "output": "CMakeFiles/stm32f1.dir/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc_ex.c.obj"
+},
+{
+  "directory": "C:/Users/el/CLionProjects/stm32f1/cmake-build-debug",
+  "command": "D:\\all\\devemcu\\gcc_arm\\gccarm\\bin\\arm-none-eabi-gcc.exe -DDEBUG -DSTM32F103xB -DUSE_HAL_DRIVER -IC:\\Users\\el\\CLionProjects\\stm32f1\\cmake\\stm32cubemx\\..\\..\\Core\\Inc -IC:\\Users\\el\\CLionProjects\\stm32f1\\cmake\\stm32cubemx\\..\\..\\Drivers\\STM32F1xx_HAL_Driver\\Inc -IC:\\Users\\el\\CLionProjects\\stm32f1\\cmake\\stm32cubemx\\..\\..\\Drivers\\STM32F1xx_HAL_Driver\\Inc\\Legacy -IC:\\Users\\el\\CLionProjects\\stm32f1\\cmake\\stm32cubemx\\..\\..\\Drivers\\CMSIS\\Device\\ST\\STM32F1xx\\Include -IC:\\Users\\el\\CLionProjects\\stm32f1\\cmake\\stm32cubemx\\..\\..\\Drivers\\CMSIS\\Include  -mcpu=cortex-m3  -Wall -Wextra -Wpedantic -fdata-sections -ffunction-sections -O0 -g3 -g -std=gnu11 -fdiagnostics-color=always -o CMakeFiles\\stm32f1.dir\\Drivers\\STM32F1xx_HAL_Driver\\Src\\stm32f1xx_hal_gpio.c.obj -c C:\\Users\\el\\CLionProjects\\stm32f1\\Drivers\\STM32F1xx_HAL_Driver\\Src\\stm32f1xx_hal_gpio.c",
+  "file": "C:/Users/el/CLionProjects/stm32f1/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio.c",
+  "output": "CMakeFiles/stm32f1.dir/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio.c.obj"
+},
+{
+  "directory": "C:/Users/el/CLionProjects/stm32f1/cmake-build-debug",
+  "command": "D:\\all\\devemcu\\gcc_arm\\gccarm\\bin\\arm-none-eabi-gcc.exe -DDEBUG -DSTM32F103xB -DUSE_HAL_DRIVER -IC:\\Users\\el\\CLionProjects\\stm32f1\\cmake\\stm32cubemx\\..\\..\\Core\\Inc -IC:\\Users\\el\\CLionProjects\\stm32f1\\cmake\\stm32cubemx\\..\\..\\Drivers\\STM32F1xx_HAL_Driver\\Inc -IC:\\Users\\el\\CLionProjects\\stm32f1\\cmake\\stm32cubemx\\..\\..\\Drivers\\STM32F1xx_HAL_Driver\\Inc\\Legacy -IC:\\Users\\el\\CLionProjects\\stm32f1\\cmake\\stm32cubemx\\..\\..\\Drivers\\CMSIS\\Device\\ST\\STM32F1xx\\Include -IC:\\Users\\el\\CLionProjects\\stm32f1\\cmake\\stm32cubemx\\..\\..\\Drivers\\CMSIS\\Include  -mcpu=cortex-m3  -Wall -Wextra -Wpedantic -fdata-sections -ffunction-sections -O0 -g3 -g -std=gnu11 -fdiagnostics-color=always -o CMakeFiles\\stm32f1.dir\\Drivers\\STM32F1xx_HAL_Driver\\Src\\stm32f1xx_hal_dma.c.obj -c C:\\Users\\el\\CLionProjects\\stm32f1\\Drivers\\STM32F1xx_HAL_Driver\\Src\\stm32f1xx_hal_dma.c",
+  "file": "C:/Users/el/CLionProjects/stm32f1/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_dma.c",
+  "output": "CMakeFiles/stm32f1.dir/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_dma.c.obj"
+},
+{
+  "directory": "C:/Users/el/CLionProjects/stm32f1/cmake-build-debug",
+  "command": "D:\\all\\devemcu\\gcc_arm\\gccarm\\bin\\arm-none-eabi-gcc.exe -DDEBUG -DSTM32F103xB -DUSE_HAL_DRIVER -IC:\\Users\\el\\CLionProjects\\stm32f1\\cmake\\stm32cubemx\\..\\..\\Core\\Inc -IC:\\Users\\el\\CLionProjects\\stm32f1\\cmake\\stm32cubemx\\..\\..\\Drivers\\STM32F1xx_HAL_Driver\\Inc -IC:\\Users\\el\\CLionProjects\\stm32f1\\cmake\\stm32cubemx\\..\\..\\Drivers\\STM32F1xx_HAL_Driver\\Inc\\Legacy -IC:\\Users\\el\\CLionProjects\\stm32f1\\cmake\\stm32cubemx\\..\\..\\Drivers\\CMSIS\\Device\\ST\\STM32F1xx\\Include -IC:\\Users\\el\\CLionProjects\\stm32f1\\cmake\\stm32cubemx\\..\\..\\Drivers\\CMSIS\\Include  -mcpu=cortex-m3  -Wall -Wextra -Wpedantic -fdata-sections -ffunction-sections -O0 -g3 -g -std=gnu11 -fdiagnostics-color=always -o CMakeFiles\\stm32f1.dir\\Drivers\\STM32F1xx_HAL_Driver\\Src\\stm32f1xx_hal_cortex.c.obj -c C:\\Users\\el\\CLionProjects\\stm32f1\\Drivers\\STM32F1xx_HAL_Driver\\Src\\stm32f1xx_hal_cortex.c",
+  "file": "C:/Users/el/CLionProjects/stm32f1/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_cortex.c",
+  "output": "CMakeFiles/stm32f1.dir/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_cortex.c.obj"
+},
+{
+  "directory": "C:/Users/el/CLionProjects/stm32f1/cmake-build-debug",
+  "command": "D:\\all\\devemcu\\gcc_arm\\gccarm\\bin\\arm-none-eabi-gcc.exe -DDEBUG -DSTM32F103xB -DUSE_HAL_DRIVER -IC:\\Users\\el\\CLionProjects\\stm32f1\\cmake\\stm32cubemx\\..\\..\\Core\\Inc -IC:\\Users\\el\\CLionProjects\\stm32f1\\cmake\\stm32cubemx\\..\\..\\Drivers\\STM32F1xx_HAL_Driver\\Inc -IC:\\Users\\el\\CLionProjects\\stm32f1\\cmake\\stm32cubemx\\..\\..\\Drivers\\STM32F1xx_HAL_Driver\\Inc\\Legacy -IC:\\Users\\el\\CLionProjects\\stm32f1\\cmake\\stm32cubemx\\..\\..\\Drivers\\CMSIS\\Device\\ST\\STM32F1xx\\Include -IC:\\Users\\el\\CLionProjects\\stm32f1\\cmake\\stm32cubemx\\..\\..\\Drivers\\CMSIS\\Include  -mcpu=cortex-m3  -Wall -Wextra -Wpedantic -fdata-sections -ffunction-sections -O0 -g3 -g -std=gnu11 -fdiagnostics-color=always -o CMakeFiles\\stm32f1.dir\\Drivers\\STM32F1xx_HAL_Driver\\Src\\stm32f1xx_hal_pwr.c.obj -c C:\\Users\\el\\CLionProjects\\stm32f1\\Drivers\\STM32F1xx_HAL_Driver\\Src\\stm32f1xx_hal_pwr.c",
+  "file": "C:/Users/el/CLionProjects/stm32f1/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pwr.c",
+  "output": "CMakeFiles/stm32f1.dir/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pwr.c.obj"
+},
+{
+  "directory": "C:/Users/el/CLionProjects/stm32f1/cmake-build-debug",
+  "command": "D:\\all\\devemcu\\gcc_arm\\gccarm\\bin\\arm-none-eabi-gcc.exe -DDEBUG -DSTM32F103xB -DUSE_HAL_DRIVER -IC:\\Users\\el\\CLionProjects\\stm32f1\\cmake\\stm32cubemx\\..\\..\\Core\\Inc -IC:\\Users\\el\\CLionProjects\\stm32f1\\cmake\\stm32cubemx\\..\\..\\Drivers\\STM32F1xx_HAL_Driver\\Inc -IC:\\Users\\el\\CLionProjects\\stm32f1\\cmake\\stm32cubemx\\..\\..\\Drivers\\STM32F1xx_HAL_Driver\\Inc\\Legacy -IC:\\Users\\el\\CLionProjects\\stm32f1\\cmake\\stm32cubemx\\..\\..\\Drivers\\CMSIS\\Device\\ST\\STM32F1xx\\Include -IC:\\Users\\el\\CLionProjects\\stm32f1\\cmake\\stm32cubemx\\..\\..\\Drivers\\CMSIS\\Include  -mcpu=cortex-m3  -Wall -Wextra -Wpedantic -fdata-sections -ffunction-sections -O0 -g3 -g -std=gnu11 -fdiagnostics-color=always -o CMakeFiles\\stm32f1.dir\\Drivers\\STM32F1xx_HAL_Driver\\Src\\stm32f1xx_hal_flash.c.obj -c C:\\Users\\el\\CLionProjects\\stm32f1\\Drivers\\STM32F1xx_HAL_Driver\\Src\\stm32f1xx_hal_flash.c",
+  "file": "C:/Users/el/CLionProjects/stm32f1/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash.c",
+  "output": "CMakeFiles/stm32f1.dir/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash.c.obj"
+},
+{
+  "directory": "C:/Users/el/CLionProjects/stm32f1/cmake-build-debug",
+  "command": "D:\\all\\devemcu\\gcc_arm\\gccarm\\bin\\arm-none-eabi-gcc.exe -DDEBUG -DSTM32F103xB -DUSE_HAL_DRIVER -IC:\\Users\\el\\CLionProjects\\stm32f1\\cmake\\stm32cubemx\\..\\..\\Core\\Inc -IC:\\Users\\el\\CLionProjects\\stm32f1\\cmake\\stm32cubemx\\..\\..\\Drivers\\STM32F1xx_HAL_Driver\\Inc -IC:\\Users\\el\\CLionProjects\\stm32f1\\cmake\\stm32cubemx\\..\\..\\Drivers\\STM32F1xx_HAL_Driver\\Inc\\Legacy -IC:\\Users\\el\\CLionProjects\\stm32f1\\cmake\\stm32cubemx\\..\\..\\Drivers\\CMSIS\\Device\\ST\\STM32F1xx\\Include -IC:\\Users\\el\\CLionProjects\\stm32f1\\cmake\\stm32cubemx\\..\\..\\Drivers\\CMSIS\\Include  -mcpu=cortex-m3  -Wall -Wextra -Wpedantic -fdata-sections -ffunction-sections -O0 -g3 -g -std=gnu11 -fdiagnostics-color=always -o CMakeFiles\\stm32f1.dir\\Drivers\\STM32F1xx_HAL_Driver\\Src\\stm32f1xx_hal_flash_ex.c.obj -c C:\\Users\\el\\CLionProjects\\stm32f1\\Drivers\\STM32F1xx_HAL_Driver\\Src\\stm32f1xx_hal_flash_ex.c",
+  "file": "C:/Users/el/CLionProjects/stm32f1/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash_ex.c",
+  "output": "CMakeFiles/stm32f1.dir/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash_ex.c.obj"
+},
+{
+  "directory": "C:/Users/el/CLionProjects/stm32f1/cmake-build-debug",
+  "command": "D:\\all\\devemcu\\gcc_arm\\gccarm\\bin\\arm-none-eabi-gcc.exe -DDEBUG -DSTM32F103xB -DUSE_HAL_DRIVER -IC:\\Users\\el\\CLionProjects\\stm32f1\\cmake\\stm32cubemx\\..\\..\\Core\\Inc -IC:\\Users\\el\\CLionProjects\\stm32f1\\cmake\\stm32cubemx\\..\\..\\Drivers\\STM32F1xx_HAL_Driver\\Inc -IC:\\Users\\el\\CLionProjects\\stm32f1\\cmake\\stm32cubemx\\..\\..\\Drivers\\STM32F1xx_HAL_Driver\\Inc\\Legacy -IC:\\Users\\el\\CLionProjects\\stm32f1\\cmake\\stm32cubemx\\..\\..\\Drivers\\CMSIS\\Device\\ST\\STM32F1xx\\Include -IC:\\Users\\el\\CLionProjects\\stm32f1\\cmake\\stm32cubemx\\..\\..\\Drivers\\CMSIS\\Include  -mcpu=cortex-m3  -Wall -Wextra -Wpedantic -fdata-sections -ffunction-sections -O0 -g3 -g -std=gnu11 -fdiagnostics-color=always -o CMakeFiles\\stm32f1.dir\\Drivers\\STM32F1xx_HAL_Driver\\Src\\stm32f1xx_hal_exti.c.obj -c C:\\Users\\el\\CLionProjects\\stm32f1\\Drivers\\STM32F1xx_HAL_Driver\\Src\\stm32f1xx_hal_exti.c",
+  "file": "C:/Users/el/CLionProjects/stm32f1/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_exti.c",
+  "output": "CMakeFiles/stm32f1.dir/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_exti.c.obj"
+},
+{
+  "directory": "C:/Users/el/CLionProjects/stm32f1/cmake-build-debug",
+  "command": "D:\\all\\devemcu\\gcc_arm\\gccarm\\bin\\arm-none-eabi-gcc.exe -DDEBUG -DSTM32F103xB -DUSE_HAL_DRIVER -IC:\\Users\\el\\CLionProjects\\stm32f1\\cmake\\stm32cubemx\\..\\..\\Core\\Inc -IC:\\Users\\el\\CLionProjects\\stm32f1\\cmake\\stm32cubemx\\..\\..\\Drivers\\STM32F1xx_HAL_Driver\\Inc -IC:\\Users\\el\\CLionProjects\\stm32f1\\cmake\\stm32cubemx\\..\\..\\Drivers\\STM32F1xx_HAL_Driver\\Inc\\Legacy -IC:\\Users\\el\\CLionProjects\\stm32f1\\cmake\\stm32cubemx\\..\\..\\Drivers\\CMSIS\\Device\\ST\\STM32F1xx\\Include -IC:\\Users\\el\\CLionProjects\\stm32f1\\cmake\\stm32cubemx\\..\\..\\Drivers\\CMSIS\\Include  -mcpu=cortex-m3  -Wall -Wextra -Wpedantic -fdata-sections -ffunction-sections -O0 -g3 -g -std=gnu11 -fdiagnostics-color=always -o CMakeFiles\\stm32f1.dir\\Core\\Src\\system_stm32f1xx.c.obj -c C:\\Users\\el\\CLionProjects\\stm32f1\\Core\\Src\\system_stm32f1xx.c",
+  "file": "C:/Users/el/CLionProjects/stm32f1/Core/Src/system_stm32f1xx.c",
+  "output": "CMakeFiles/stm32f1.dir/Core/Src/system_stm32f1xx.c.obj"
+},
+{
+  "directory": "C:/Users/el/CLionProjects/stm32f1/cmake-build-debug",
+  "command": "D:\\all\\devemcu\\gcc_arm\\gccarm\\bin\\arm-none-eabi-gcc.exe -DDEBUG -DSTM32F103xB -DUSE_HAL_DRIVER -IC:\\Users\\el\\CLionProjects\\stm32f1\\cmake\\stm32cubemx\\..\\..\\Core\\Inc -IC:\\Users\\el\\CLionProjects\\stm32f1\\cmake\\stm32cubemx\\..\\..\\Drivers\\STM32F1xx_HAL_Driver\\Inc -IC:\\Users\\el\\CLionProjects\\stm32f1\\cmake\\stm32cubemx\\..\\..\\Drivers\\STM32F1xx_HAL_Driver\\Inc\\Legacy -IC:\\Users\\el\\CLionProjects\\stm32f1\\cmake\\stm32cubemx\\..\\..\\Drivers\\CMSIS\\Device\\ST\\STM32F1xx\\Include -IC:\\Users\\el\\CLionProjects\\stm32f1\\cmake\\stm32cubemx\\..\\..\\Drivers\\CMSIS\\Include  -mcpu=cortex-m3  -Wall -Wextra -Wpedantic -fdata-sections -ffunction-sections -O0 -g3 -g -std=gnu11 -fdiagnostics-color=always -o CMakeFiles\\stm32f1.dir\\Core\\Src\\sysmem.c.obj -c C:\\Users\\el\\CLionProjects\\stm32f1\\Core\\Src\\sysmem.c",
+  "file": "C:/Users/el/CLionProjects/stm32f1/Core/Src/sysmem.c",
+  "output": "CMakeFiles/stm32f1.dir/Core/Src/sysmem.c.obj"
+},
+{
+  "directory": "C:/Users/el/CLionProjects/stm32f1/cmake-build-debug",
+  "command": "D:\\all\\devemcu\\gcc_arm\\gccarm\\bin\\arm-none-eabi-gcc.exe -DDEBUG -DSTM32F103xB -DUSE_HAL_DRIVER -IC:\\Users\\el\\CLionProjects\\stm32f1\\cmake\\stm32cubemx\\..\\..\\Core\\Inc -IC:\\Users\\el\\CLionProjects\\stm32f1\\cmake\\stm32cubemx\\..\\..\\Drivers\\STM32F1xx_HAL_Driver\\Inc -IC:\\Users\\el\\CLionProjects\\stm32f1\\cmake\\stm32cubemx\\..\\..\\Drivers\\STM32F1xx_HAL_Driver\\Inc\\Legacy -IC:\\Users\\el\\CLionProjects\\stm32f1\\cmake\\stm32cubemx\\..\\..\\Drivers\\CMSIS\\Device\\ST\\STM32F1xx\\Include -IC:\\Users\\el\\CLionProjects\\stm32f1\\cmake\\stm32cubemx\\..\\..\\Drivers\\CMSIS\\Include  -mcpu=cortex-m3  -Wall -Wextra -Wpedantic -fdata-sections -ffunction-sections -O0 -g3 -g -std=gnu11 -fdiagnostics-color=always -o CMakeFiles\\stm32f1.dir\\Core\\Src\\syscalls.c.obj -c C:\\Users\\el\\CLionProjects\\stm32f1\\Core\\Src\\syscalls.c",
+  "file": "C:/Users/el/CLionProjects/stm32f1/Core/Src/syscalls.c",
+  "output": "CMakeFiles/stm32f1.dir/Core/Src/syscalls.c.obj"
+},
+{
+  "directory": "C:/Users/el/CLionProjects/stm32f1/cmake-build-debug",
+  "command": "D:\\all\\devemcu\\gcc_arm\\gccarm\\bin\\arm-none-eabi-gcc.exe -DDEBUG -DSTM32F103xB -DUSE_HAL_DRIVER -IC:\\Users\\el\\CLionProjects\\stm32f1\\cmake\\stm32cubemx\\..\\..\\Core\\Inc -IC:\\Users\\el\\CLionProjects\\stm32f1\\cmake\\stm32cubemx\\..\\..\\Drivers\\STM32F1xx_HAL_Driver\\Inc -IC:\\Users\\el\\CLionProjects\\stm32f1\\cmake\\stm32cubemx\\..\\..\\Drivers\\STM32F1xx_HAL_Driver\\Inc\\Legacy -IC:\\Users\\el\\CLionProjects\\stm32f1\\cmake\\stm32cubemx\\..\\..\\Drivers\\CMSIS\\Device\\ST\\STM32F1xx\\Include -IC:\\Users\\el\\CLionProjects\\stm32f1\\cmake\\stm32cubemx\\..\\..\\Drivers\\CMSIS\\Include  -mcpu=cortex-m3  -Wall -Wextra -Wpedantic -fdata-sections -ffunction-sections -O0 -g3 -x assembler-with-cpp -MMD -MP -g -o CMakeFiles\\stm32f1.dir\\startup_stm32f103xb.s.obj -c C:\\Users\\el\\CLionProjects\\stm32f1\\startup_stm32f103xb.s",
+  "file": "C:/Users/el/CLionProjects/stm32f1/startup_stm32f103xb.s",
+  "output": "CMakeFiles/stm32f1.dir/startup_stm32f103xb.s.obj"
+}
+]
