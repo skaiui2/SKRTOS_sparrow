@@ -19,6 +19,6 @@ KeilSparrow.c使用于keil v5版本的编译器。
 
 ### 教程
 
-关于Sparrow的文档教程将会在知乎等平台持续更新，敬请期待。
+关于Sparrow的文档教程已经完结了。
 
 知乎链接：[400行程序写一个实时操作系统（开篇） - 知乎 (zhihu.com)](https://zhuanlan.zhihu.com/p/963319443)
