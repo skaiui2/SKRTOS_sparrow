@@ -73,7 +73,7 @@ void *heap_malloc(size_t wantsize)
     wantsize += heapstructSize;
     if((wantsize & aligment_byte) != 0x00)
     {
-        aligmentrequisize = aligment_byte - (wantsize & aligment_byte);
+        aligmentrequisize = (aligment_byte + 1) - (wantsize & aligment_byte);///must 8-byte alignment
         wantsize += aligmentrequisize;
     }//I will add the TaskSuspend function ,that make here be a atomic operation
     if(theheap.tail== NULL )
