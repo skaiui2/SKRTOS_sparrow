@@ -203,10 +203,8 @@ uint32_t* OverWakeTicksTable;
     }
 
 uint32_t Suspend = 0;
-
 //the table is defined for signal mechanism
 uint32_t Block = 0;
-
 
 
 #define vPortSVCHandler SVC_Handler
