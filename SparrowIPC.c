@@ -50,7 +50,7 @@ void heap_init()
         start_heap += aligment_byte ;
         start_heap &= ~aligment_byte;
         theheap.allsize -=  (size_t)(start_heap - (uint32_t)allheap);//byte aligment means move to high address,so sub it!
-    }
+    }//Init head node
     theheap.head.next = (heap_node *)start_heap;
     theheap.head.blocksize = (size_t)0;
     end_heap  = ( start_heap + (uint32_t)config_heap);
@@ -58,7 +58,7 @@ void heap_init()
         end_heap += aligment_byte ;
         end_heap &= ~aligment_byte;
         theheap.allsize =  (size_t)(end_heap - start_heap );
-    }
+    }//Init tail node
     theheap.tail = (heap_node*)end_heap;
     theheap.tail->blocksize  = 0;
     theheap.tail->next =NULL;
@@ -76,7 +76,7 @@ void *heap_malloc(size_t wantsize)
     void *xReturn = NULL;
     wantsize += heapstructSize;
     if((wantsize & aligment_byte) != 0x00) {
-        aligmentrequisize = (aligment_byte + 1) - (wantsize & aligment_byte);//must 8-byte alignmentaligmentrequisize = aligment_byte - (wantsize & aligment_byte);
+        aligmentrequisize = (aligment_byte + 1) - (wantsize & aligment_byte);//must 8-byte alignment
         wantsize += aligmentrequisize;
     }//You can add the TaskSuspend function ,that make here be a atomic operation
     if(theheap.tail== NULL ) {
@@ -90,7 +90,7 @@ void *heap_malloc(size_t wantsize)
     }
     xReturn = (void*)( ( (uint8_t*)usenode ) + heapstructSize );
     prevnode->next = usenode->next ;
-    if( (usenode->blocksize - wantsize) > MIN_size ) {
+    if( (usenode->blocksize - wantsize) > MIN_size ) {//cut block
         newnode = (void *) (((uint8_t *) usenode) + wantsize);
         newnode->blocksize = usenode->blocksize - wantsize;
         usenode->blocksize = wantsize;
@@ -123,9 +123,9 @@ static void InsertFreeBlock(heap_node* xInsertBlock)
     { /*finding the fit node*/ }
 
     xInsertBlock->next = first_fitnode->next;
-    first_fitnode->next = xInsertBlock;
+    first_fitnode->next = xInsertBlock;//Insert Block
 
-    getaddr = (uint8_t*)xInsertBlock;
+    getaddr = (uint8_t*)xInsertBlock;//Check whether the addresses are adjacent,then decide whether to merge 
     if((getaddr + xInsertBlock->blocksize) == (uint8_t*)(xInsertBlock->next)) {
         if (xInsertBlock->next != theheap.tail) {
             xInsertBlock->blocksize += xInsertBlock->next->blocksize;
@@ -491,10 +491,8 @@ uint8_t CheckState( TCB_t *self,uint32_t State )// If task is the State,return t
     xExitCritical(xre2);
     return State;
 }
-
-
-
 // the abstraction layer is end
+
 
 
 Class(Semaphore_struct)
