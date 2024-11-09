@@ -515,13 +515,21 @@ void semaphore_delete(Semaphore_struct *semaphore)
     heap_free(semaphore);
 }
 
+
+/**In accordance with the principle of interfaces,
+ * the IPC layer needs to write its own functions to obtain the highest priority,
+ * here for convenience, choose to directly use the scheduling layer functions.
+ * */
+#define  GetTopTCBIndex    FindHighestPriority
+
+
 uint8_t semaphore_release( Semaphore_struct *semaphore)
 {
     uint32_t xre = xEnterCritical();
 
     if (semaphore->Block) {
-        uint8_t i =  FindHighestPriority(semaphore->Block);
-        StateRemove(TcbTaskTable[i],&semaphore->Block);
+        uint8_t i =  GetTopTCBIndex(semaphore->Block);
+        semaphore->Block &= ~(1 << TcbTaskTable[i]->uxPriority);//it belongs to the IPC layer,can't use State port!
         StateRemove(TcbTaskTable[i],&Block);// Also synchronize with the total blocking state
         StateRemove(TcbTaskTable[i],&Delay);
         StateAdd(TcbTaskTable[i], &Ready);
@@ -551,7 +559,7 @@ uint8_t semaphore_take(Semaphore_struct *semaphore,uint32_t Ticks)
     uint8_t volatile temp = PendSV;
     if(Ticks > 0){
         StateAdd(pxCurrentTCB,&Block);
-        StateAdd(pxCurrentTCB,&semaphore->Block);
+        semaphore->Block |= (1 << pxCurrentTCB->uxPriority);//it belongs to the IPC layer,can't use State port!
         TaskDelay(Ticks);
     }
     xExitCritical(xre);
@@ -561,7 +569,7 @@ uint8_t semaphore_take(Semaphore_struct *semaphore,uint32_t Ticks)
     uint32_t xReturn = xEnterCritical();
     //Check whether the wake is due to delay or due to semaphore availability
     if( CheckState(pxCurrentTCB,Block) ){//if true ,the task is Block!
-        StateRemove(pxCurrentTCB,&semaphore->Block);
+        semaphore->Block &= ~(1 << pxCurrentTCB->uxPriority);//it belongs to the IPC layer,can't use State port!
         StateRemove(pxCurrentTCB,&Block);
         xExitCritical(xReturn);
         return false;
@@ -572,5 +580,7 @@ uint8_t semaphore_take(Semaphore_struct *semaphore,uint32_t Ticks)
         return true;
     }
 }
+
+
 
 //Task Area!The user must create task handle manually because of debugging and specification
