@@ -13,6 +13,8 @@ KeilSparrow.c使用于keil v5版本的编译器。
 
 SparrowIPC.c是Sparrow.c的拓展，引入了IPC机制，使Sparrow成为一个较为完整的内核。
 
+Sparrow文件夹里的是对SparrowIPC.c源码进行分层封装并抽象后的源码版本。
+
 ### 移植注意
 
 在keil环境下，当移植完Sparrow RTOS后，如果编译没报错，但是程序不能运行，请尝试降低keil的编译器优化等级。这是因为hal生成的工程默认编译优化全开，可能导致出现bug。
