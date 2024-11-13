@@ -16,7 +16,8 @@
 #define Suspend     3
 #define Block       4
 
-
+//config
+#define IPC    0
 #define configSysTickClockHz			( ( unsigned long ) 72000000 )
 #define configTickRateHz			( ( uint32_t ) 1000 )
 

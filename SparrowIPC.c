@@ -9,7 +9,7 @@
 #define configTickRateHz			( ( uint32_t ) 1000 )
 
 #define aligment_byte               0x07
-#define config_heap   8*1024
+#define config_heap   (8*1024)
 #define configMaxPriori 32
 #define configShieldInterPriority 191
 
@@ -144,7 +144,7 @@ static void InsertFreeBlock(heap_node* xInsertBlock)
 
 Class(Stack_register)
 {
-    //automatic stacking
+    //manual stacking
     uint32_t r4;
     uint32_t r5;
     uint32_t r6;
@@ -153,7 +153,7 @@ Class(Stack_register)
     uint32_t r9;
     uint32_t r10;
     uint32_t r11;
-    //manual stacking
+     //automatic stacking
     uint32_t r0;
     uint32_t r1;
     uint32_t r2;

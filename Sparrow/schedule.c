@@ -7,7 +7,7 @@
 
 Class(Stack_register)
 {
-    //automatic stacking
+    //manual stacking  
     uint32_t r4;
     uint32_t r5;
     uint32_t r6;
@@ -16,7 +16,7 @@ Class(Stack_register)
     uint32_t r9;
     uint32_t r10;
     uint32_t r11;
-    //manual stacking
+    //automatic stacking
     uint32_t r0;
     uint32_t r1;
     uint32_t r2;
@@ -181,10 +181,15 @@ __attribute__( ( always_inline ) )  inline uint8_t FindHighestPriority( uint32_t
     return TopZeroNumber;
 }
 
+#if IPC
 uint8_t volatile PendSV = 0;
+#endif
+
 void vTaskSwitchContext( void )
 {
+    #if IPC
     PendSV++;
+    #endif
     schedule_currentTCB = TcbTaskTable[ FindHighestPriority(StateTable[Ready])];
 }
 
