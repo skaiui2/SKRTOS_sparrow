@@ -6,7 +6,7 @@
 #define STM32F1_SCHEDULE_H
 
 #include <stddef.h>
-#include <stdint-gcc.h>
+#include <stdint.h>
 
 #define true    1
 #define false   0
@@ -16,8 +16,8 @@
 #define Suspend     3
 #define Block       4
 
-//config
-#define IPC    0
+#define IPC 1
+
 #define configSysTickClockHz			( ( unsigned long ) 72000000 )
 #define configTickRateHz			( ( uint32_t ) 1000 )
 
@@ -48,6 +48,7 @@ void xTaskCreate( TaskFunction_t pxTaskCode,
                   void *pvParameters,
                   uint32_t uxPriority,
                   TaskHandle_t *self );
+TaskHandle_t TaskPrioritySet(TaskHandle_t taskHandle,uint8_t priority);
 
 void schedule( void );
 void SchedulerInit( void );
@@ -59,6 +60,9 @@ uint8_t CheckState( TaskHandle_t taskHandle,uint8_t State );
 
 TaskHandle_t GetTaskHandle( uint8_t i);
 uint8_t GetTaskPriority( TaskHandle_t taskHandle);
+
+TaskHandle_t GetCurrentTCB(void);
+
 
 
 

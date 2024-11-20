@@ -7,7 +7,7 @@
 
 Class(Stack_register)
 {
-    //manual stacking  
+    //automatic stacking
     uint32_t r4;
     uint32_t r5;
     uint32_t r6;
@@ -16,7 +16,7 @@ Class(Stack_register)
     uint32_t r9;
     uint32_t r10;
     uint32_t r11;
-    //automatic stacking
+    //manual stacking
     uint32_t r0;
     uint32_t r1;
     uint32_t r2;
@@ -37,6 +37,11 @@ Class(TCB_t)
 
 
 __attribute__( ( used ) )  TaskHandle_t volatile schedule_currentTCB = NULL;
+
+__attribute__( ( always_inline ) ) inline TaskHandle_t GetCurrentTCB(void)
+{
+    return schedule_currentTCB;
+}
 
 
 #define switchTask()\
@@ -71,6 +76,12 @@ uint32_t* OverWakeTicksTable;
 //the table is defined for signal mechanism
 uint32_t StateTable[5] = {0,0,0,0,0};
 
+void TcbTaskTableInit(void)
+{
+    for (int i = 0; i < 32; i++) {
+        TcbTaskTable[i] = NULL;
+    }
+}
 
 
 #define vPortSVCHandler SVC_Handler
@@ -79,7 +90,7 @@ uint32_t StateTable[5] = {0,0,0,0,0};
 __attribute__( ( naked ) ) void   vPortSVCHandler( void )
 {
     __asm volatile (
-            "	ldr	r3, schedule_currentTCBConst2		\n"
+            "	ldr	r3, CurrentTCBConst2		\n"
             "	ldr r1, [r3]					\n"
             "	ldr r0, [r1]					\n"
             "	ldmia r0!, {r4-r11}				\n"
@@ -91,9 +102,10 @@ __attribute__( ( naked ) ) void   vPortSVCHandler( void )
             "	bx r14							\n"
             "									\n"
             "	.align 4						\n"
-            "schedule_currentTCBConst2: .word schedule_currentTCB				\n"
+            "CurrentTCBConst2: .word schedule_currentTCB				\n"
             );
 }
+
 
 void __attribute__( ( naked ) )  xPortPendSVHandler( void )
 {
@@ -102,7 +114,7 @@ void __attribute__( ( naked ) )  xPortPendSVHandler( void )
             "	mrs r0, psp							\n"
             "	isb									\n"
             "										\n"
-            "	ldr	r3, schedule_currentTCBConst			\n"
+            "	ldr	r3, CurrentTCBConst			    \n"
             "	ldr	r2, [r3]						\n"
             "										\n"
             "	stmdb r0!, {r4-r11}					\n"
@@ -126,7 +138,7 @@ void __attribute__( ( naked ) )  xPortPendSVHandler( void )
             "	bx r14								\n"
             "	nop									\n"
             "	.align 4							\n"
-            "schedule_currentTCBConst: .word schedule_currentTCB	\n"
+            "CurrentTCBConst: .word schedule_currentTCB	\n"
             ::"i" ( configShieldInterPriority )
             );
 }
@@ -169,7 +181,8 @@ __attribute__((always_inline)) inline void xExitCritical( uint32_t xReturn )
 
 __attribute__( ( always_inline ) )  inline uint8_t FindHighestPriority( uint32_t Table )
 {
-    uint8_t temp,TopZeroNumber;
+    uint8_t temp;
+    uint8_t TopZeroNumber;
     __asm volatile
             (
             "clz %0, %2\n"
@@ -182,14 +195,22 @@ __attribute__( ( always_inline ) )  inline uint8_t FindHighestPriority( uint32_t
 }
 
 #if IPC
-uint8_t volatile PendSV = 0;
+uint8_t volatile schedule_PendSV = 0;
 #endif
+
+uint8_t GetPendSV(void)
+{
+    return schedule_PendSV;
+}
 
 void vTaskSwitchContext( void )
 {
-    #if IPC
-    PendSV++;
-    #endif
+
+#if IPC
+    schedule_PendSV++;
+
+#endif
+
     schedule_currentTCB = TcbTaskTable[ FindHighestPriority(StateTable[Ready])];
 }
 
@@ -211,6 +232,14 @@ void TaskDelay( uint16_t ticks )
     StateTable[Ready] &= ~(1 << (self->uxPriority) );
     switchTask();
 }
+
+TaskHandle_t TaskPrioritySet(TaskHandle_t taskHandle,uint8_t priority)
+{
+    taskHandle->uxPriority = priority;
+    TcbTaskTable[priority] = taskHandle;
+    return taskHandle;
+}
+
 
 
 void CheckTicks( void )
@@ -333,6 +362,7 @@ void leisureTask( void )
 
 void SchedulerInit( void )
 {
+    TcbTaskTableInit();
     TicksTableInit()
     xTaskCreate(    (TaskFunction_t)leisureTask,
                     128,
@@ -390,19 +420,19 @@ __attribute__( ( always_inline ) )  inline void SchedulerStart( void )
 
 
 //The abstraction layer of scheduling !!!
-TaskHandle_t GetTaskHandle( uint8_t i)
+__attribute__((always_inline)) inline TaskHandle_t GetTaskHandle( uint8_t i)
 {
     return TcbTaskTable[i];
 }
 
-uint8_t GetTaskPriority( TaskHandle_t taskHandle)
+__attribute__((always_inline)) inline uint8_t GetTaskPriority( TaskHandle_t taskHandle)
 {
     return taskHandle->uxPriority;
 }
 
 
 
-uint32_t StateAdd( TaskHandle_t taskHandle,uint8_t State)
+__attribute__((always_inline)) inline uint32_t StateAdd( TaskHandle_t taskHandle,uint8_t State)
 {
     uint32_t xre = xEnterCritical();
     StateTable[State] |= (1 << taskHandle->uxPriority);
@@ -410,7 +440,7 @@ uint32_t StateAdd( TaskHandle_t taskHandle,uint8_t State)
     return StateTable[State];
 }
 
-uint32_t StateRemove( TaskHandle_t taskHandle, uint8_t State)
+__attribute__((always_inline)) inline uint32_t StateRemove( TaskHandle_t taskHandle, uint8_t State)
 {
     uint32_t xre1 = xEnterCritical();
     StateTable[State] &= ~(1 << taskHandle->uxPriority);
@@ -418,7 +448,7 @@ uint32_t StateRemove( TaskHandle_t taskHandle, uint8_t State)
     return StateTable[State];
 }
 
-uint8_t CheckState( TaskHandle_t taskHandle,uint8_t State )// If task is the State,return the State
+__attribute__((always_inline)) inline uint8_t CheckState( TaskHandle_t taskHandle,uint8_t State )// If task is the State,return the State
 {
     uint32_t xre2 = xEnterCritical();
     StateTable[State] &= (1 << taskHandle->uxPriority);

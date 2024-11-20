@@ -35,6 +35,8 @@ extern uint8_t schedule_PendSV;
 uint8_t semaphore_release( Semaphore_Handle semaphore)
 {
     uint32_t xre = xEnterCritical();
+    TaskHandle_t CurrentTCB = GetCurrentTCB();
+    uint8_t CurrentTcbPriority = GetTaskPriority(CurrentTCB);
 
     if (semaphore->xBlock) {
         uint8_t uxPriority =  GetTopTCBIndex(semaphore->xBlock);
@@ -43,9 +45,11 @@ uint8_t semaphore_release( Semaphore_Handle semaphore)
         StateRemove(taskHandle,Block);// Also synchronize with the total blocking state
         StateRemove(taskHandle,Delay);
         StateAdd(taskHandle, Ready);
+        if(uxPriority > CurrentTcbPriority){
+            schedule();
+        }
     }
-    semaphore->value++;
-    schedule();
+    (semaphore->value)++;
 
     xExitCritical(xre);
     return true;
@@ -55,10 +59,11 @@ uint8_t semaphore_release( Semaphore_Handle semaphore)
 uint8_t semaphore_take(Semaphore_Handle semaphore,uint32_t Ticks)
 {
     uint32_t xre = xEnterCritical();
+    TaskHandle_t CurrentTCB = GetCurrentTCB();
+    uint8_t CurrentTcbPriority = GetTaskPriority(CurrentTCB);
 
     if( semaphore->value > 0) {
-        semaphore->value--;
-        schedule();
+        (semaphore->value)--;
         xExitCritical(xre);
         return true;
     }
@@ -68,12 +73,10 @@ uint8_t semaphore_take(Semaphore_Handle semaphore,uint32_t Ticks)
     }
 
     uint8_t volatile temp = schedule_PendSV;
-    TaskHandle_t CurrentTCB = GetCurrentTCB();
+
     if(Ticks > 0){
-        uint8_t uxPriority = GetTaskPriority(CurrentTCB);
-        TaskHandle_t taskHandle = GetTaskHandle(uxPriority);
-        StateAdd(taskHandle,Block);
-        semaphore->xBlock |= (1 << uxPriority);//it belongs to the IPC layer,can't use State port!
+        StateAdd(CurrentTCB,Block);
+        semaphore->xBlock |= (1 << CurrentTcbPriority);//it belongs to the IPC layer,can't use State port!
         TaskDelay(Ticks);
     }
     xExitCritical(xre);
@@ -82,16 +85,13 @@ uint8_t semaphore_take(Semaphore_Handle semaphore,uint32_t Ticks)
 
     uint32_t xReturn = xEnterCritical();
     //Check whether the wake is due to delay or due to semaphore availability
-    uint8_t uxPriority = GetTaskPriority(CurrentTCB);
-    TaskHandle_t taskHandle = GetTaskHandle(uxPriority);
-    if( CheckState(taskHandle,Block) ){//if true ,the task is Block!
-        semaphore->xBlock &= ~(1 << uxPriority);//it belongs to the IPC layer,can't use State port!
-        StateRemove(taskHandle,Block);
+    if( CheckState(CurrentTCB,Block) ){//if true ,the task is Block!
+        semaphore->xBlock &= ~(1 << CurrentTcbPriority);//it belongs to the IPC layer,can't use State port!
+        StateRemove(CurrentTCB,Block);
         xExitCritical(xReturn);
         return false;
     }else{
-        semaphore->value--;
-        schedule();
+        (semaphore->value)--;
         xExitCritical(xReturn);
         return true;
     }

@@ -4,7 +4,6 @@
 
 #include "heap.h"
 
-
 #define MIN_size     ((size_t) (HeapStructSize << 1))
 
 Class(heap_node){
