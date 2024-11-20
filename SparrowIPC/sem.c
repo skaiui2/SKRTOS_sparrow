@@ -31,7 +31,7 @@ void semaphore_delete(Semaphore_Handle semaphore)
  * */
 #define  GetTopTCBIndex    FindHighestPriority
 
-extern uint8_t PendSV;
+extern uint8_t schedule_PendSV;
 uint8_t semaphore_release( Semaphore_Handle semaphore)
 {
     uint32_t xre = xEnterCritical();
@@ -51,7 +51,7 @@ uint8_t semaphore_release( Semaphore_Handle semaphore)
     return true;
 }
 
-extern TaskHandle_t  schedule_currentTCB;
+
 uint8_t semaphore_take(Semaphore_Handle semaphore,uint32_t Ticks)
 {
     uint32_t xre = xEnterCritical();
@@ -67,9 +67,10 @@ uint8_t semaphore_take(Semaphore_Handle semaphore,uint32_t Ticks)
         return false;
     }
 
-    uint8_t volatile temp = PendSV;
+    uint8_t volatile temp = schedule_PendSV;
+    TaskHandle_t CurrentTCB = GetCurrentTCB();
     if(Ticks > 0){
-        uint8_t uxPriority = GetTaskPriority(schedule_currentTCB);
+        uint8_t uxPriority = GetTaskPriority(CurrentTCB);
         TaskHandle_t taskHandle = GetTaskHandle(uxPriority);
         StateAdd(taskHandle,Block);
         semaphore->xBlock |= (1 << uxPriority);//it belongs to the IPC layer,can't use State port!
@@ -77,11 +78,11 @@ uint8_t semaphore_take(Semaphore_Handle semaphore,uint32_t Ticks)
     }
     xExitCritical(xre);
 
-    while(temp == PendSV){ }//It loops until the schedule is start.
+    while(temp == schedule_PendSV){ }//It loops until the schedule is start.
 
     uint32_t xReturn = xEnterCritical();
     //Check whether the wake is due to delay or due to semaphore availability
-    uint8_t uxPriority = GetTaskPriority(schedule_currentTCB);
+    uint8_t uxPriority = GetTaskPriority(CurrentTCB);
     TaskHandle_t taskHandle = GetTaskHandle(uxPriority);
     if( CheckState(taskHandle,Block) ){//if true ,the task is Block!
         semaphore->xBlock &= ~(1 << uxPriority);//it belongs to the IPC layer,can't use State port!
