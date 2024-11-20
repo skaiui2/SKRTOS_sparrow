@@ -7,13 +7,13 @@
 
 
 
-Sparrow.c适用于clion的gcc编译器和keil v6版本的编译器。
+**Sparrow.c**适用于clion的gcc编译器和keil v6版本的编译器。
 
-KeilSparrow.c使用于keil v5版本的编译器。
+**KeilSparrow.c**使用于keil v5版本的编译器。
 
-SparrowIPC.c是Sparrow.c的拓展，引入了IPC机制，使Sparrow成为一个较为完整的内核。
+**SparrowIPC.c**是Sparrow.c的拓展，引入了IPC机制信号量，使Sparrow成为一个较为完整的内核。
 
-Sparrow文件夹里的是对SparrowIPC.c源码进行分层封装并抽象后的源码版本。
+**Sparrow**文件夹里的是对Sparrow源码进行**分层封装并抽象**后的源码版本，具有**消息队列、信号量、互斥锁**三个IPC机制。
 
 ### 移植注意
 
