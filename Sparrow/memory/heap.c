@@ -40,16 +40,15 @@ void heap_init( void )
     }
     TheHeap.head.next = (heap_node *)start_heap;
     TheHeap.head.BlockSize = (size_t)0;
-    end_heap  = ( start_heap + (uint32_t)config_heap);
+    end_heap = start_heap + (uint32_t)TheHeap.AllSize - (uint32_t)HeapStructSize;
     if( (end_heap & alignment_byte) != 0){
-        end_heap += alignment_byte ;
         end_heap &= ~alignment_byte;
         TheHeap.AllSize =  (size_t)(end_heap - start_heap );
     }
-    TheHeap.tail = (heap_node*)end_heap;
+    TheHeap.tail = (heap_node *)end_heap;
     TheHeap.tail->BlockSize  = 0;
     TheHeap.tail->next =NULL;
-    first_node = (heap_node*)start_heap;
+    first_node = (heap_node *)start_heap;
     first_node->next = TheHeap.tail;
     first_node->BlockSize = TheHeap.AllSize;
 }
@@ -71,9 +70,12 @@ void *heap_malloc(size_t WantSize)
     }//Resume
     prev_node = &TheHeap.head;
     use_node = TheHeap.head.next;
-    while((use_node->BlockSize) < WantSize ) {//check the size is fit
+    while((use_node->BlockSize) < WantSize) {//check the size is fit
         prev_node = use_node;
         use_node = use_node->next;
+        if(use_node == NULL){
+            return xReturn;
+        }
     }
     xReturn = (void*)( ( (uint8_t*)use_node ) + HeapStructSize );
     prev_node->next = use_node->next ;

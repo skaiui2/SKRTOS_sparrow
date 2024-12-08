@@ -40,31 +40,30 @@ static const size_t heapstructSize = (sizeof(heap_node) + (size_t)(aligment_byte
 
 
 
-void heap_init()
+void heap_init( void )
 {
-    heap_node *firstnode;
+    heap_node *first_node;
     uint32_t start_heap ,end_heap;
     //get start address
-    start_heap =(uint32_t) allheap;
-    if( (start_heap & aligment_byte) != 0){
-        start_heap += aligment_byte ;
-        start_heap &= ~aligment_byte;
-        theheap.allsize -=  (size_t)(start_heap - (uint32_t)allheap);//byte aligment means move to high address,so sub it!
-    }//Init head node
-    theheap.head.next = (heap_node *)start_heap;
-    theheap.head.blocksize = (size_t)0;
-    end_heap  = ( start_heap + (uint32_t)config_heap);
-    if( (end_heap & aligment_byte) != 0){
-        end_heap += aligment_byte ;
-        end_heap &= ~aligment_byte;
-        theheap.allsize =  (size_t)(end_heap - start_heap );
-    }//Init tail node
-    theheap.tail = (heap_node*)end_heap;
-    theheap.tail->blocksize  = 0;
-    theheap.tail->next =NULL;
-    firstnode = (heap_node*)start_heap;
-    firstnode->next = theheap.tail;
-    firstnode->blocksize = theheap.allsize;
+    start_heap =(uint32_t) AllHeap;
+    if( (start_heap & alignment_byte) != 0){
+        start_heap += alignment_byte ;
+        start_heap &= ~alignment_byte;
+        TheHeap.AllSize -=  (size_t)(start_heap - (uint32_t)AllHeap);//byte alignment means move to high address,so sub it!
+    }
+    TheHeap.head.next = (heap_node *)start_heap;
+    TheHeap.head.BlockSize = (size_t)0;
+    end_heap = start_heap + (uint32_t)TheHeap.AllSize - (uint32_t)HeapStructSize;
+    if( (end_heap & alignment_byte) != 0){
+        end_heap &= ~alignment_byte;
+        TheHeap.AllSize =  (size_t)(end_heap - start_heap );
+    }
+    TheHeap.tail = (heap_node *)end_heap;
+    TheHeap.tail->BlockSize  = 0;
+    TheHeap.tail->next =NULL;
+    first_node = (heap_node *)start_heap;
+    first_node->next = TheHeap.tail;
+    first_node->BlockSize = TheHeap.AllSize;
 }
 
 void *heap_malloc(size_t wantsize)
@@ -84,9 +83,12 @@ void *heap_malloc(size_t wantsize)
     }//Resume
     prevnode = &theheap.head;
     usenode = theheap.head.next;
-    while((usenode->blocksize) < wantsize ) {//check the size is fit
-        prevnode = usenode;
-        usenode = usenode->next;
+    while((use_node->BlockSize) < WantSize) {//check the size is fit
+        prev_node = use_node;
+        use_node = use_node->next;
+        if(use_node == NULL){
+            return xReturn;
+        }
     }
     xReturn = (void*)( ( (uint8_t*)usenode ) + heapstructSize );
     prevnode->next = usenode->next ;
