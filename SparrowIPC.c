@@ -5,39 +5,38 @@
 #define true    1
 #define false   0
 
+
+#define alignment_byte               0x07
 #define configSysTickClockHz			( ( unsigned long ) 72000000 )
 #define configTickRateHz			( ( uint32_t ) 1000 )
-
-#define aligment_byte               0x07
-#define config_heap   (8*1024)
-#define configMaxPriori 32
-#define configShieldInterPriority 191
+#define configShieldInterPriority 	191
+#define config_heap   8*1024
+#define configMaxPriori  32
 
 #define Class(class)    \
 typedef struct  class  class;\
 struct class
 
-#define MIN_size     ((size_t) (heapstructSize << 1))
+#define MIN_size     ((size_t) (HeapStructSize << 1))
 
 Class(heap_node){
     heap_node *next;
-    size_t blocksize;
+    size_t BlockSize;
 };
 
 Class(xheap){
     heap_node head;
     heap_node *tail;
-    size_t allsize;
+    size_t AllSize;
 };
 
-xheap theheap = {
+xheap TheHeap = {
         .tail = NULL,
-        .allsize = config_heap,
+        .AllSize = config_heap,
 };
 
-static  uint8_t allheap[config_heap];
-static const size_t heapstructSize = (sizeof(heap_node) + (size_t)(aligment_byte)) &~(aligment_byte);
-
+static  uint8_t AllHeap[config_heap];
+static const size_t HeapStructSize = (sizeof(heap_node) + (size_t)(alignment_byte)) &~(alignment_byte);
 
 
 void heap_init( void )
@@ -66,23 +65,25 @@ void heap_init( void )
     first_node->BlockSize = TheHeap.AllSize;
 }
 
-void *heap_malloc(size_t wantsize)
+
+
+void *heap_malloc(size_t WantSize)
 {
-    heap_node *prevnode;
-    heap_node *usenode;
-    heap_node *newnode;
-    size_t aligmentrequisize;
+    heap_node *prev_node;
+    heap_node *use_node;
+    heap_node *new_node;
+    size_t alignment_require_size;
     void *xReturn = NULL;
-    wantsize += heapstructSize;
-    if((wantsize & aligment_byte) != 0x00) {
-        aligmentrequisize = (aligment_byte + 1) - (wantsize & aligment_byte);//must 8-byte alignment
-        wantsize += aligmentrequisize;
-    }//You can add the TaskSuspend function ,that make here be a atomic operation
-    if(theheap.tail== NULL ) {
+    WantSize += HeapStructSize;
+    if((WantSize & alignment_byte) != 0x00) {
+        alignment_require_size = (alignment_byte + 1) - (WantSize & alignment_byte);//must 8-byte alignment
+        WantSize += alignment_require_size;
+    }//You can add the TaskSuspend function ,that make here be an atomic operation
+    if(TheHeap.tail== NULL ) {
         heap_init();
     }//Resume
-    prevnode = &theheap.head;
-    usenode = theheap.head.next;
+    prev_node = &TheHeap.head;
+    use_node = TheHeap.head.next;
     while((use_node->BlockSize) < WantSize) {//check the size is fit
         prev_node = use_node;
         use_node = use_node->next;
@@ -90,56 +91,56 @@ void *heap_malloc(size_t wantsize)
             return xReturn;
         }
     }
-    xReturn = (void*)( ( (uint8_t*)usenode ) + heapstructSize );
-    prevnode->next = usenode->next ;
-    if( (usenode->blocksize - wantsize) > MIN_size ) {//cut block
-        newnode = (void *) (((uint8_t *) usenode) + wantsize);
-        newnode->blocksize = usenode->blocksize - wantsize;
-        usenode->blocksize = wantsize;
-        newnode->next = prevnode->next;
-        prevnode->next = newnode;
+    xReturn = (void*)( ( (uint8_t*)use_node ) + HeapStructSize );
+    prev_node->next = use_node->next ;
+    if( (use_node->BlockSize - WantSize) > MIN_size ) {
+        new_node = (void *) (((uint8_t *) use_node) + WantSize);
+        new_node->BlockSize = use_node->BlockSize - WantSize;
+        use_node->BlockSize = WantSize;
+        new_node->next = prev_node->next;
+        prev_node->next = new_node;
     }//Finish cutting
-    theheap.allsize-= usenode->blocksize;
-    usenode->next = NULL;
+    TheHeap.AllSize-= use_node->BlockSize;
+    use_node->next = NULL;
     return xReturn;
 }
 
 static void InsertFreeBlock(heap_node* xInsertBlock);
-void heap_free(void *xret)
+void heap_free(void *xReturn)
 {
     heap_node *xlink;
-    uint8_t *xFree = (uint8_t*)xret;
+    uint8_t *xFree = (uint8_t*)xReturn;
 
-    xFree -= heapstructSize;//get the start address of the heap struct
+    xFree -= HeapStructSize;//get the start address of the heap struct
     xlink = (void*)xFree;
-    theheap.allsize += xlink->blocksize;
+    TheHeap.AllSize += xlink->BlockSize;
     InsertFreeBlock((heap_node*)xlink);
 }
 
 static void InsertFreeBlock(heap_node* xInsertBlock)
 {
-    heap_node *first_fitnode;
+    heap_node *first_fit_node;
     uint8_t* getaddr;
 
-    for(first_fitnode = &theheap.head;first_fitnode->next < xInsertBlock;first_fitnode = first_fitnode->next)
+    for(first_fit_node = &TheHeap.head;first_fit_node->next < xInsertBlock;first_fit_node = first_fit_node->next)
     { /*finding the fit node*/ }
 
-    xInsertBlock->next = first_fitnode->next;
-    first_fitnode->next = xInsertBlock;//Insert Block
+    xInsertBlock->next = first_fit_node->next;
+    first_fit_node->next = xInsertBlock;
 
-    getaddr = (uint8_t*)xInsertBlock;//Check whether the addresses are adjacent,then decide whether to merge 
-    if((getaddr + xInsertBlock->blocksize) == (uint8_t*)(xInsertBlock->next)) {
-        if (xInsertBlock->next != theheap.tail) {
-            xInsertBlock->blocksize += xInsertBlock->next->blocksize;
+    getaddr = (uint8_t*)xInsertBlock;
+    if((getaddr + xInsertBlock->BlockSize) == (uint8_t*)(xInsertBlock->next)) {
+        if (xInsertBlock->next != TheHeap.tail) {
+            xInsertBlock->BlockSize += xInsertBlock->next->BlockSize;
             xInsertBlock->next = xInsertBlock->next->next;
         } else {
-            xInsertBlock->next = theheap.tail;
+            xInsertBlock->next = TheHeap.tail;
         }
     }
-    getaddr = (uint8_t*)first_fitnode;
-    if((getaddr + first_fitnode->blocksize) == (uint8_t*) xInsertBlock) {
-        first_fitnode->blocksize += xInsertBlock->blocksize;
-        first_fitnode->next = xInsertBlock->next;
+    getaddr = (uint8_t*)first_fit_node;
+    if((getaddr + first_fit_node->BlockSize) == (uint8_t*) xInsertBlock) {
+        first_fit_node->BlockSize += xInsertBlock->BlockSize;
+        first_fit_node->next = xInsertBlock->next;
     }
 }
 
@@ -404,7 +405,7 @@ void xTaskCreate( TaskFunction_t pxTaskCode,
     NewTcb->uxPriority = uxPriority;
     NewTcb->pxStack = ( uint32_t *) heap_malloc( ( ( ( size_t ) usStackDepth ) * sizeof( uint32_t * ) ) );
     topStack =  NewTcb->pxStack + (usStackDepth - (uint32_t)1) ;
-    topStack = ( uint32_t *) (((uint32_t)topStack) & (~((uint32_t) aligment_byte)));
+    topStack = ( uint32_t *) (((uint32_t)topStack) & (~((uint32_t) alignment_byte)));
     NewTcb->pxTopOfStack = pxPortInitialiseStack(topStack,pxTaskCode,pvParameters,self);
     pxCurrentTCB = NewTcb;
 
