@@ -7,19 +7,27 @@ Lightweight rtos inspired by SKRTOS
 
 这里是sparrow已经移植好了的工程，适用于arm cm3架构（例如stm32f103c8t6）。
 
-**开发环境是clion**
+**开发环境是clion：**
 
 **SparrowHAL**是hal库的移植，**SparrowStdlib**是标准库的移植。
 
 
 
-**开发环境是Keil**
+**开发环境是Keil：**
 
 **SparrowKeilStd**是在keil环境下能稳定运行的标准库工程，适用于keil v5.06版本的编译器。**SparrowKeilHal**是在keil环境下能稳定运行的HAL库工程,	适用于Keil V6版本的编译器。
 
 如果编译没问题但是运行错误，请尝试降低keil的编译器优化等级。这是因为hal生成的工程默认编译优化全开，可能导致出现bug。
 
-**以上四个文件夹的Sparrow都是400行源代码的版本**
+
+
+**开发环境是IAR：**
+
+**SparrowIAR**是在IAR环境下能稳定运行的hal库版本。
+
+
+
+**以上文件夹的Sparrow RTOS都是400行源代码的版本**
 
 ### 其余三个文件夹
 
