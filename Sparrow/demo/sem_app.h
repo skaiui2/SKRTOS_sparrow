@@ -25,7 +25,11 @@ int Mm_remove(Mm_buffer_handle Mm_buffer1);
 
 
 typedef struct MrMw_control *MrMw_control_handle;
-
+MrMw_control_handle MrOw_creat(void);
+void read_acquire(MrMw_control_handle MrMw_control1);
+void read_release(MrMw_control_handle MrMw_control1);
+void write_acquire(MrMw_control_handle MrMw_control1);
+void write_release(MrMw_control_handle MrMw_control1);
 
 
 

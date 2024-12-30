@@ -364,7 +364,7 @@ void xTaskCreate( TaskFunction_t pxTaskCode,
                   TaskHandle_t * const self )
 {
     uint32_t *topStack =NULL;
-    TCB_t *NewTcb = (TCB_t *)heap_malloc(sizeof(TCB_t *));
+    TCB_t *NewTcb = (TCB_t *)heap_malloc(sizeof(TCB_t));
     *self = ( TCB_t *) NewTcb;
     TcbTaskTable[uxPriority] = NewTcb;
     NewTcb->uxPriority = uxPriority;

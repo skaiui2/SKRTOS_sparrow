@@ -1,6 +1,3 @@
-//
-// Created by el on 2024/11/9.
-//
 #include "schedule.h"
 #include<stdint.h>
 #include "heap.h"
@@ -300,7 +297,7 @@ void xTaskCreate( TaskFunction_t pxTaskCode,
                   TaskHandle_t * const self )
 {
     uint32_t *topStack = NULL;
-    TCB_t *NewTcb = (TCB_t *)heap_malloc(sizeof(TCB_t *));
+    TCB_t *NewTcb = (TCB_t *)heap_malloc(sizeof(TCB_t));
     *self = ( TCB_t *) NewTcb;
 
     TcbTaskTable[uxPriority] = NewTcb;//
