@@ -13,6 +13,6 @@ CMake Deprecation Warning:
 -- Found assembler: D:/all/devemcu/gcc_arm/gccarm/bin/arm-none-eabi-gcc.exe
 -- The CXX compiler identification is GNU 10.3.1
 Build type: Debug
--- Configuring done (5.9s)
+-- Configuring done (2.0s)
 -- Generating done (0.1s)
 -- Build files have been written to: C:/Users/el/CLionProjects/Sparrow/project/SparrowHAL/cmake-build-debug

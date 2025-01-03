@@ -300,7 +300,7 @@ void xTaskCreate( TaskFunction_t pxTaskCode,
                   TaskHandle_t * const self )
 {
     uint32_t *topStack = NULL;
-    TCB_t *NewTcb = (TCB_t *)heap_malloc(sizeof(TCB_t *));
+    TCB_t *NewTcb = (TCB_t *)heap_malloc(sizeof(TCB_t));
     *self = ( TCB_t *) NewTcb;
 
     TcbTaskTable[uxPriority] = NewTcb;//
@@ -451,9 +451,10 @@ __attribute__((always_inline)) inline uint32_t StateRemove( TaskHandle_t taskHan
 __attribute__((always_inline)) inline uint8_t CheckState( TaskHandle_t taskHandle,uint8_t State )// If task is the State,return the State
 {
     uint32_t xre2 = xEnterCritical();
-    StateTable[State] &= (1 << taskHandle->uxPriority);
+    uint32_t temp = StateTable[State];
+    temp &= (1 << taskHandle->uxPriority);
     xExitCritical(xre2);
-    return StateTable[State];
+    return temp;
 }
 
 // the abstraction layer is end
