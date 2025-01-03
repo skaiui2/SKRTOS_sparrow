@@ -487,12 +487,13 @@ uint32_t StateRemove( TCB_t *self, uint32_t *State)
     return *State;
 }
 
-uint8_t CheckState( TCB_t *self,uint32_t State )// If task is the State,return the State
+uint8_t CheckState( TCB_t *self,uint32_t State )// If task is the State,return true.
 {
     uint32_t xre2 = xEnterCritical();
-    State &= (1 << self->uxPriority);
+    uint32_t temp = StateTable[State];
+    temp &= (1 << taskHandle->uxPriority);
     xExitCritical(xre2);
-    return State;
+    return temp;
 }
 // the abstraction layer is end
 

@@ -445,12 +445,13 @@ __attribute__((always_inline)) inline uint32_t StateRemove( TaskHandle_t taskHan
     return StateTable[State];
 }
 
-__attribute__((always_inline)) inline uint8_t CheckState( TaskHandle_t taskHandle,uint8_t State )// If task is the State,return the State
+__attribute__((always_inline)) inline uint8_t CheckState( TaskHandle_t taskHandle,uint8_t State )// If task is the State,return true.
 {
     uint32_t xre2 = xEnterCritical();
-    StateTable[State] &= (1 << taskHandle->uxPriority);
+    uint32_t temp = StateTable[State];
+    temp &= (1 << taskHandle->uxPriority);
     xExitCritical(xre2);
-    return StateTable[State];
+    return temp;
 }
 
 // the abstraction layer is end
