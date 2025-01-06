@@ -3,7 +3,7 @@
 #define LIST_H
 
 #include<stdint.h>
-#include "class.h"
+#include "schedule.h"
 
 
 /*this is public*/

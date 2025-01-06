@@ -48,7 +48,7 @@ xEnterCritical、 xExitCritical临界区函数也与具体架构的中断屏蔽�
 
 #### 汇编接口：
 
-FindHighestPriority函数使用clz指令寻找最高优先级任务，可以修改C语言版本，也可以结合具体编译器进行修改，例如：
+FindHighestPriority函数使用clz指令寻找最高优先级任务，可以结合具体编译器进行修改，也可以修改为C语言版本，例如：
 
 **gcc版本**
 
@@ -367,6 +367,14 @@ int main(void)
     SchedulerStart();
 }
 ```
+
+
+
+### 中断中使用注意
+
+只有任务对象才有延时等待，但中断并不是任务，所以不能设置tick等待时间，在中断中使用时，应当把ticks设置为0。
+
+
 
 ### 信号量
 
