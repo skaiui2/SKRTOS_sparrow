@@ -29,7 +29,7 @@ Lightweight rtos inspired by SKRTOS
 
 **以上文件夹的Sparrow RTOS都是400行源代码的版本**
 
-### 其余三个文件夹
+### 其余四个文件夹
 
 **SparrowMeque**是**消息队列**的测试工程
 
@@ -37,7 +37,9 @@ Lightweight rtos inspired by SKRTOS
 
 **SparrowMutex**是**互斥量**的测试工程
 
-三个文件夹均带有Sparrow的**消息队列、信号量、互斥锁**三个IPC机制，是Sparrow的**拓展版本**，IPC机制的源码都具有良好的可移植性。
+**SparrowRTOS_Lis**t是**链表版本**的内核，为**消息队列**的测试工程。
+
+四个文件夹均带有Sparrow的**消息队列、信号量、互斥锁**三个IPC机制，是Sparrow的**拓展版本**，IPC机制的源码都具有良好的可移植性。
 
 带有IPC机制的工程中的Sparrow文件夹是Sparrow分层封装并进行抽象后的工程，将调度层与IPC层隔离开来，调度层实现任务相关的接口，IPC层仅仅利用线程状态转移相关的接口实现线程通信机制。
 

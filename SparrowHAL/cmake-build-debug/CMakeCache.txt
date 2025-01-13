@@ -87,6 +87,9 @@ CMAKE_CXX_FLAGS_RELEASE:STRING=-O3 -DNDEBUG
 //Flags used by the CXX compiler during RELWITHDEBINFO builds.
 CMAKE_CXX_FLAGS_RELWITHDEBINFO:STRING=-O2 -g -DNDEBUG
 
+//C compiler
+CMAKE_C_COMPILER:STRING=D:/all/devemcu/gcc_arm/gccarm/bin/arm-none-eabi-gcc.exe
+
 //A wrapper around 'ar' adding the appropriate '--plugin' option
 // for the GCC compiler
 CMAKE_C_COMPILER_AR:FILEPATH=D:/all/devemcu/gcc_arm/gccarm/bin/arm-none-eabi-gcc-ar.exe
@@ -339,6 +342,8 @@ CMAKE_CXX_FLAGS_MINSIZEREL-ADVANCED:INTERNAL=1
 CMAKE_CXX_FLAGS_RELEASE-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_CXX_FLAGS_RELWITHDEBINFO
 CMAKE_CXX_FLAGS_RELWITHDEBINFO-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CMAKE_C_COMPILER
+CMAKE_C_COMPILER-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_C_COMPILER_AR
 CMAKE_C_COMPILER_AR-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_C_COMPILER_RANLIB
