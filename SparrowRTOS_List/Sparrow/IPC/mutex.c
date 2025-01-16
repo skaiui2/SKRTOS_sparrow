@@ -95,6 +95,7 @@ uint8_t mutex_lock(Mutex_Handle mutex,uint32_t Ticks)
     uint32_t xReturn = xEnterCritical();
     //Check whether the wake is due to delay or due to mutex availability
     if(!CheckIPCState(CurrentTCB)){//if true ,the task is Block!
+        Remove_IPC(CurrentTCB);
         xExitCritical(xReturn);
         return false;
     }else{

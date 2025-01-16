@@ -198,6 +198,7 @@ uint8_t queue_receive( Queue_struct *queue, uint32_t *buf, uint32_t Ticks )
     uint32_t xReturn  = xEnterCritical();
     //Check whether the wake is due to delay or due to semaphore availability
     if(!CheckIPCState(CurrentTCB)){//if true ,the task is Block!
+        Remove_IPC(CurrentTCB);
         xExitCritical(xReturn);
         return false;
     }else{

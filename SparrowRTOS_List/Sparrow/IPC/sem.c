@@ -98,6 +98,7 @@ uint8_t semaphore_take(Semaphore_Handle semaphore,uint32_t Ticks)
     uint32_t xReturn = xEnterCritical();
     //Check whether the wake is due to delay or due to semaphore availability
     if(!CheckIPCState(CurrentTCB)){//if true ,the task is Block!
+        Remove_IPC(CurrentTCB);
         xExitCritical(xReturn);
         return false;
     }else{
