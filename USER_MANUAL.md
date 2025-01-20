@@ -645,3 +645,197 @@ int main() {
 总API功能如上，Sparrow RTOS只是一个多任务调度内核，并不具有丰富的服务，不过读者可以根据需要添加或修改某些功能。
 
 如果读者在使用过程中发现了某些bug，或者有某些建议，欢迎反馈！
+
+
+
+
+
+## 附加:链表版本内核
+
+链表版本内核是在数表版本内核上的拓展，增加功能如下：
+
+### 链表
+
+提供基本的加入和删除链表节点功能
+
+```
+void ListInit(TheList *xList);
+void ListAdd(TheList *xList, ListNode *new_node);
+void ListRemove(TheList *xList, ListNode *rm_node);
+```
+
+创建的链表为环形链表。
+
+
+
+### 时间片
+
+可自定义时间片，设置时间片的周期是1ms，时间片用完后再会轮转到下一个任务。时间片只针对同优先级任务有效
+
+```
+
+void xTaskCreate( TaskFunction_t pxTaskCode,
+                  const uint16_t usStackDepth,
+                  void * const pvParameters,
+                  uint32_t uxPriority,//可设置同优先级
+                  TaskHandle_t * const self,
+                  uint8_t TimeSlice)//可设置不同时间片
+
+```
+
+### 优先级
+
+链表版本内核支持同优先级,且启动第一个任务时会选择优先级最高的任务启动，而数表版本则是选择最后一个创建的任务启动。
+
+### 互斥锁
+
+正常使用互斥锁即可，发生优先级反转时持有锁的任务会暂时提升优先级至阻塞任务中最大优先级。
+
+### 任务
+
+支持任务删除功能：
+
+```
+void xTaskDelete(TaskHandle_t self);
+```
+
+使用如下：
+
+```
+TaskHandle_t tcbTask1 = NULL;
+TaskHandle_t tcbTask3 = NULL;
+
+void taskA( )
+{
+    while (1) {
+   
+    }
+}
+
+void APP( )
+{
+    xTaskCreate(....);
+    xTaskDelete(tcbTask3);//删除启动线程
+}
+
+int main(void)
+{
+	省略初始化代码
+    xTaskCreate(    (TaskFunction_t)APP,
+                    128,
+                    NULL,
+                    1,
+                    &tcbTask3,
+                    0
+    );
+    SchedulerStart();
+}
+```
+
+### 原子操作
+
+```
+void atomic_add( uint32_t i,uint32_t *v)        //不带return版本，i为操作值，v为被操作数的地址
+int atomic_add_return( uint32_t i,uint32_t *v)     
+
+void atomic_sub( uint32_t i,uint32_t *v)        
+int atomic_sub_return( uint32_t i,uint32_t *v)  
+
+atomic_inc_return(v)//自增
+atomic_dec_return(v) //自减
+
+uint32_t atomic_set_return(uint32_t i, uint32_t *v) //设置被操作数的值
+uint32_t atomic_set(uint32_t i, uint32_t *v) 
+```
+
+#### 注意
+
+请务必确保被操作数的地址是字节对齐的。
+
+
+
+### 定时器
+
+支持定时器，
+
+总API如下：
+
+```
+TaskHandle_t xTimerInit(uint8_t timer_priority, uint16_t stack);
+TimerHandle xTimerCreat(TimerFunction_t CallBackFun, uint32_t period, uint8_t timer_flag);
+uint8_t TimerRerun(TimerHandle timer);
+uint8_t TimerStop(TimerHandle timer);
+```
+
+
+
+使用如下：
+
+设置flag参数为0(stop),定时器只会执行一次，设置为1(run)，定时器默认会永远执行，但可以使用TimerRerun和TimerStop决定定时器任务何时启动，何时停止。
+
+```
+
+int a=0;
+void count(void)
+{
+    a++;
+}
+
+void APP( )
+{
+    TaskHandle_t tcbTask3 = xTimerInit(4, 128);//设置定时器的优先级和栈大小
+    xTaskCreate(    (TaskFunction_t)taskA,
+                    128,
+                    NULL,
+                    3,
+                    &tcbTask1,
+                    0
+    );
+    xTaskCreate(    (TaskFunction_t)taskB,
+                    128,
+                    NULL,
+                    2,
+                    &tcbTask2,
+                    0
+    );
+    TimerHandle timerHandle = xTimerCreat((TimerFunction_t)count,1,stop);
+}
+
+```
+
+### 内存池
+
+总API如下：
+
+```
+PoolHeadHandle memPool_creat(uint16_t size,uint8_t amount);
+void *memPool_apl(PoolHeadHandle ThePool);
+void memPool_free(void *xRet);
+void memPool_delete(PoolHeadHandle ThePool);
+```
+
+推荐写法：
+
+```
+void taskA()
+{
+	while(1){
+		int *a = memPool_apl(pool);//从内存池中获得内存块
+		*a = 1;
+		memPool_free(a);//释放内存块
+		
+		memPool_delete(pool);//删除内存池
+	}
+}
+
+
+void APP( )
+{
+	PoolHeadHandle pool = memPool_creat(80,10);//设置内存池大小和个数
+    //创建任务等
+    TaskCreat(......)
+
+}
+
+```
+

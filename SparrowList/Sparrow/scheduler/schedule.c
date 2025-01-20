@@ -24,6 +24,7 @@
  */
 
 
+#include <memory.h>
 #include "schedule.h"
 #include "heap.h"
 #include "port.h"
@@ -75,6 +76,7 @@ static volatile uint32_t NowTickCount = ( uint32_t ) 0;
 
 TheList SuspendList;
 TheList BlockList;
+TheList DeleteList;
 
 void ReadyListInit( void )
 {
@@ -125,6 +127,7 @@ void BlockListRemove(ListNode *node)
 }
 
 
+
 void TaskListAdd(TaskHandle_t self, uint8_t State)
 {
     uint32_t xReturn = xEnterCritical();
@@ -132,8 +135,7 @@ void TaskListAdd(TaskHandle_t self, uint8_t State)
     void (*ListAdd[])(ListNode *node) = {
             ReadyListAdd,
             SuspendListAdd,
-            BlockListAdd
-
+            BlockListAdd,
     };
     ListAdd[State](node);
     xExitCritical(xReturn);
@@ -148,7 +150,7 @@ void TaskListRemove(TaskHandle_t self, uint8_t State)
     void (*ListRemove[])(ListNode *node) = {
             ReadyListRemove,
             SuspendListRemove,
-            BlockListRemove
+            BlockListRemove,
     };
     ListRemove[State](node);
     xExitCritical(xReturn);
@@ -216,6 +218,7 @@ Class(Stack_register)
 __attribute__( ( always_inline ) ) inline void schedule( void )
 {
     switchTask();
+
 }
 
 
@@ -280,21 +283,30 @@ void TaskDelay( uint16_t ticks )
     schedule();
 }
 
+/*
+ * If the program runs here, there is a problem with the use of the RTOS,
+ * such as the stack allocation space is too small, and the use of undefined operations
+ */
+void ErrorHandle(void)
+{
+    while (1){
+
+    }
+}
 
 
 
 uint32_t * pxPortInitialiseStack( uint32_t * pxTopOfStack,
                                   TaskFunction_t pxCode,
-                                  void * pvParameters ,
-                                  TaskHandle_t * const self)
+                                  void * pvParameters)
 {
     pxTopOfStack -= 16;
     Stack_register *Stack = (Stack_register *)pxTopOfStack;
 
     Stack->xPSR = 0x01000000UL;
     Stack->PC = ( ( uint32_t ) pxCode ) & ( ( uint32_t ) 0xfffffffeUL );
-    Stack->LR = ( uint32_t ) pvParameters;
-    Stack->r0 = ( uint32_t ) self;
+    Stack->LR = ( uint32_t ) ErrorHandle;
+    Stack->r0 = ( uint32_t ) pvParameters;
 
     return pxTopOfStack;
 }
@@ -309,21 +321,28 @@ void xTaskCreate( TaskFunction_t pxTaskCode,
                   uint8_t TimeSlice)
 {
     uint32_t *topStack = NULL;
+    uint32_t *pxStack = ( uint32_t *) heap_malloc( ( ( ( size_t ) usStackDepth ) * sizeof( uint32_t * ) ) );
     TCB_t *NewTcb = (TCB_t *)heap_malloc(sizeof(TCB_t));
+    memset( ( void * ) NewTcb, 0x00, sizeof( TCB_t ) );
     *self = ( TCB_t *) NewTcb;
-    NewTcb->TimeSlice = TimeSlice;
-    NewTcb->uxPriority = uxPriority;
-    NewTcb->pxStack = ( uint32_t *) heap_malloc( ( ( ( size_t ) usStackDepth ) * sizeof( uint32_t * ) ) );
+    *NewTcb = (TCB_t){
+        .state = Ready,
+        .uxPriority = uxPriority,
+        .TimeSlice = TimeSlice,
+        .pxStack = pxStack
+    };
     topStack =  NewTcb->pxStack + (usStackDepth - (uint32_t)1) ;
     topStack = ( uint32_t *) (((uint32_t)topStack) & (~((uint32_t) alignment_byte)));
-    NewTcb->pxTopOfStack = pxPortInitialiseStack(topStack,pxTaskCode,pvParameters,self);
-    schedule_currentTCB = NewTcb;
-
+    NewTcb->pxTopOfStack = pxPortInitialiseStack(topStack,pxTaskCode,pvParameters);
     TaskListAdd(NewTcb, Ready);
-    StateSet(NewTcb, Ready);
 }
 
-
+void xTaskDelete(TaskHandle_t self)
+{
+    TaskListRemove(self, Ready);
+    ListAdd(&DeleteList, &self->task_node);
+    schedule();
+}
 
 
 void ListDelayInit(void)
@@ -335,13 +354,23 @@ void ListDelayInit(void)
 }
 
 
+void TaskFree(void)
+{
+    if (DeleteList.count != 0) {
+        TaskHandle_t self = container_of(DeleteList.head, TCB_t, task_node);
+        ListRemove(&DeleteList, &self->task_node);
+        heap_free((void *)self->pxStack);
+        heap_free((void *)self);
+    }
+}
+
 //Task handle can be hide, but in order to debug, it must be created manually by the user
 TaskHandle_t leisureTcb = NULL;
 
 void leisureTask( void )
 {//leisureTask content can be manually modified as needed
     while (1) {
-
+        TaskFree();
     }
 }
 
@@ -406,6 +435,7 @@ void HandlerInit(void)
 __attribute__( ( always_inline ) )  inline void SchedulerStart( void )
 {
     HandlerInit();
+    vTaskSwitchContext();
     StartFirstTask();
 }
 
@@ -457,10 +487,11 @@ void CheckTicks(void)
 
 
 
-
+extern uint64_t AbsoluteClock;
 void SysTick_Handler(void)
 {
     uint32_t xre = xEnterCritical();
+    AbsoluteClock++;
     // If the idle task is suspended, the scheduler is suspended
     if(CheckTaskState(leisureTcb, Suspend) == 0) {
         CheckTicks();

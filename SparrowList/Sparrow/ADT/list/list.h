@@ -23,24 +23,34 @@
  *  https://github.com/skaiui2/SKRTOS_sparrow
  */
 
-#ifndef CLASS_H
-#define CLASS_H
-#include "stddef.h"
-#include "stdint.h"
+#ifndef LIST_H
+#define LIST_H
 
-#define Class(class)    \
-typedef struct  class  class;\
-struct class
-
-//get father struct address
-//how to use it:struct parent *parent_ptr = container_of(child_ptr, struct parent, child)
-#define container_of(ptr, type, member) \
-    ((type *)((char *)(ptr) - offsetof(type, member)))
+#include<stdint.h>
+#include "class.h"
 
 
+/*this is public*/
+Class(ListNode)
+{
+    uint32_t value;
+    ListNode* prev;
+    ListNode* next;
+    void    *TheList;
+};
+
+Class(TheList)
+{
+    uint8_t count;
+    ListNode *head;
+    ListNode *tail;
+    ListNode *SaveNode;
+    uint8_t SwitchFlag;
+};
+
+
+void ListInit(TheList *xList);
+void ListAdd(TheList *xList, ListNode *new_node);
+void ListRemove(TheList *xList, ListNode *rm_node);
 
 #endif
-
-
-
-

@@ -23,35 +23,20 @@
  *  https://github.com/skaiui2/SKRTOS_sparrow
  */
 
-#ifndef LIST_H
-#define LIST_H
-
-#include<stdint.h>
+#ifndef MEMPOOL_H
+#define MEMPOOL_H
 #include "class.h"
+#include "schedule.h"
 
+typedef struct PoolHead * PoolHeadHandle;
 
-/*this is public*/
-Class(ListNode)
-{
-    uint32_t value;
-    ListNode* prev;
-    ListNode* next;
-    void    *TheList;
-};
-
-Class(TheList)
-{
-    uint8_t count;
-    ListNode *head;
-    ListNode *tail;
-    ListNode *SaveNode;
-    uint8_t SwitchFlag;
-};
+PoolHeadHandle memPool_creat(uint16_t size,uint8_t amount);
+void *memPool_apl(PoolHeadHandle ThePool);
+void memPool_free(void *xRet);
+void memPool_delete(PoolHeadHandle ThePool);
 
 
 
-void ListInit(TheList *xList);
-void ListAdd(TheList *xList, ListNode *new_node);
-void ListRemove(TheList *xList, ListNode *rm_node);
+
 
 #endif
