@@ -1,7 +1,7 @@
 #include<stdint.h>
 #include<stdlib.h>
 
-#define aligment_byte               0x07
+#define alignment_byte               0x07
 #define config_heap   8*1024
 
 
@@ -10,26 +10,26 @@
 typedef struct  class  class;\
 struct class
 
-#define MIN_size     ((size_t) (heapstructSize << 1))
+#define MIN_size     ((size_t) (HeapStructSize << 1))
 
 Class(heap_node){
     heap_node *next;
-    size_t blocksize;
+    size_t BlockSize;
 };
 
 Class(xheap){
     heap_node head;
     heap_node *tail;
-    size_t allsize;
+    size_t AllSize;
 };
 
-xheap theheap = {
+xheap TheHeap = {
         .tail = NULL,
-        .allsize = config_heap,
+        .AllSize = config_heap,
 };
 
-static  uint8_t allheap[config_heap];
-static const size_t heapstructSize = (sizeof(heap_node) + (size_t)(aligment_byte)) &~(aligment_byte);
+static  uint8_t AllHeap[config_heap];
+static const size_t HeapStructSize = (sizeof(heap_node) + (size_t)(alignment_byte)) &~(alignment_byte);
 
 void heap_init( void )
 {
@@ -60,42 +60,42 @@ void heap_init( void )
 void *pvPortMalloc(size_t wantsize)
 {
     heap_node *prevnode;
-    heap_node *usenode;
+    heap_node *use_node;
     heap_node *newnode;
     size_t aligmentrequisize;
     void *xReturn = NULL;
-    wantsize += heapstructSize;
-    if((wantsize & aligment_byte) != 0x00)
+    wantsize += HeapStructSize;
+    if((wantsize & alignment_byte) != 0x00)
     {
-        aligmentrequisize = (aligment_byte + 1) - (wantsize & aligment_byte);//must 8-byte alignment
+        aligmentrequisize = (alignment_byte + 1) - (wantsize & alignment_byte);//must 8-byte alignment
         wantsize += aligmentrequisize;
     }//You can add the TaskSuspend function ,that make here be a atomic operation
-    if(theheap.tail== NULL )
+    if(TheHeap.tail== NULL )
     {
         heap_init();
     }//Resume
-    prevnode = &theheap.head;
-    usenode = theheap.head.next;
-    while((usenode->blocksize) < wantsize )
+    prevnode = &TheHeap.head;
+    use_node = TheHeap.head.next;
+    while((use_node->BlockSize) < wantsize )
     {
-        prevnode = usenode;
-        usenode = usenode ->next;
+        prevnode = use_node;
+        use_node = use_node ->next;
         if(use_node == NULL){
             return xReturn;
         }
     }
-    xReturn = (void*)( ( (uint8_t*)usenode ) + heapstructSize );
-    prevnode->next = usenode->next ;
-    if( (usenode->blocksize - wantsize) > MIN_size )
+    xReturn = (void*)( ( (uint8_t*)use_node ) + HeapStructSize );
+    prevnode->next = use_node->next ;
+    if( (use_node->BlockSize - wantsize) > MIN_size )
     {
-        newnode = (void*)( ( (uint8_t*)usenode ) + wantsize );
-        newnode->blocksize = usenode->blocksize - wantsize;
-        usenode->blocksize = wantsize;
+        newnode = (void*)( ( (uint8_t*)use_node ) + wantsize );
+        newnode->BlockSize = use_node->BlockSize - wantsize;
+        use_node->BlockSize = wantsize;
         newnode->next = prevnode->next ;
         prevnode->next = newnode;
     }
-    theheap.allsize-= usenode->blocksize;
-    usenode->next = NULL;
+    TheHeap.AllSize-= use_node->BlockSize;
+    use_node->next = NULL;
     return xReturn;
 }
 
@@ -105,9 +105,9 @@ void vPortFree(void *xret)
     heap_node *xlink;
     uint8_t *xFree = (uint8_t*)xret;
 
-    xFree -= heapstructSize;
+    xFree -= HeapStructSize;
     xlink = (void*)xFree;
-    theheap.allsize += xlink->blocksize;
+    TheHeap.AllSize += xlink->BlockSize;
     InsertFreeBlock((heap_node*)xlink);
 }
 
@@ -116,29 +116,29 @@ static void InsertFreeBlock(heap_node* xInsertBlock)
     heap_node *first_fitnode;
     uint8_t* getaddr;
 
-    for(first_fitnode = &theheap.head;first_fitnode->next < xInsertBlock;first_fitnode = first_fitnode->next)
+    for(first_fitnode = &TheHeap.head;first_fitnode->next < xInsertBlock;first_fitnode = first_fitnode->next)
     { /*finding the fit node*/ }
 
     xInsertBlock->next = first_fitnode->next;
     first_fitnode->next = xInsertBlock;
 
     getaddr = (uint8_t*)xInsertBlock;
-    if((getaddr + xInsertBlock->blocksize) == (uint8_t*)(xInsertBlock->next))
+    if((getaddr + xInsertBlock->BlockSize) == (uint8_t*)(xInsertBlock->next))
     {
-        if(xInsertBlock->next != theheap.tail )
+        if(xInsertBlock->next != TheHeap.tail )
         {
-            xInsertBlock->blocksize += xInsertBlock->next->blocksize;
+            xInsertBlock->BlockSize += xInsertBlock->next->BlockSize;
             xInsertBlock->next = xInsertBlock->next->next;
         }
         else
         {
-            xInsertBlock->next = theheap.tail;
+            xInsertBlock->next = TheHeap.tail;
         }
     }
     getaddr = (uint8_t*)first_fitnode;
-    if((getaddr + first_fitnode->blocksize) == (uint8_t*) xInsertBlock)
+    if((getaddr + first_fitnode->BlockSize) == (uint8_t*) xInsertBlock)
     {
-        first_fitnode->blocksize += xInsertBlock->blocksize;
+        first_fitnode->BlockSize += xInsertBlock->BlockSize;
         first_fitnode->next = xInsertBlock->next;
     }
 }
