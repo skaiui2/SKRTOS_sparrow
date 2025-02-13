@@ -49,7 +49,6 @@ __attribute__( ( always_inline ) ) inline void schedule( void )
     switchTask();
 }
 
-uint32_t  NextTicks = ~(uint32_t)0;
 uint32_t  TicksBase = 0;
 
 TaskHandle_t TcbTaskTable[configMaxPriori];
@@ -75,7 +74,7 @@ uint32_t StateTable[5] = {0,0,0,0,0};
 
 void TcbTaskTableInit(void)
 {
-    for (int i = 0; i < 32; i++) {
+    for (uint8_t i = 0; i < configMaxPriori; i++) {
         TcbTaskTable[i] = NULL;
     }
 }
