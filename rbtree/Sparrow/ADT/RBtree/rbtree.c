@@ -146,8 +146,9 @@ static void rb_erase_color( rb_node *node,  rb_node *parent,
                 if (!other->rb_right ||
                     other->rb_right->rb_color == RB_BLACK) {
                     register rb_node *o_left;
-                    if ((o_left = other->rb_left))
+                    if ((o_left = other->rb_left)) {
                         o_left->rb_color = RB_BLACK;
+                    }
                     other->rb_color = RB_RED;
                     rb_rotate_right(other, root);
                     other = parent->rb_right;
@@ -181,8 +182,9 @@ static void rb_erase_color( rb_node *node,  rb_node *parent,
                 if (!other->rb_left ||
                     other->rb_left->rb_color == RB_BLACK) {
                     register rb_node *o_right;
-                    if ((o_right = other->rb_right))
+                    if ((o_right = other->rb_right)) {
                         o_right->rb_color = RB_BLACK;
+                    }
                     other->rb_color = RB_RED;
                     rb_rotate_left(other, root);
                     other = parent->rb_left;
@@ -387,7 +389,31 @@ void rb_replace_node( rb_node *victim,  rb_node *new,
 }
 
 
+void rb_root_init(rb_root_handle root)
+{
+    *root = (rb_root){
+        .rb_node = NULL,
+        .save_node = NULL,
+        .count = 0
+    };
+}
 
+
+void rb_node_init(rb_node_handle node)
+{
+    *node = (rb_node){
+            .rb_left = NULL,
+            .rb_color = RB_RED,
+            .rb_right = NULL,
+            .rb_parent = NULL,
+            .value = 0,
+            .root = NULL
+    };
+}
+
+/*
+ * The nodes that are added subsequently are positioned at the rear of the tree structure.
+ */
 void rb_Insert_node(rb_root_handle root,  rb_node *new_node) {
     rb_node **link = &(root->rb_node), *parent = NULL;
 
@@ -399,15 +425,28 @@ void rb_Insert_node(rb_root_handle root,  rb_node *new_node) {
             link = &((*link)->rb_right);
         }
     }
+    if (root->count == 0) {
+        root->save_node = new_node;
+    }
+
+    if (new_node->value >= root->save_node->value) {
+        root->save_node = new_node;
+    }
 
     rb_link_node(new_node, parent, link);
     rb_insert_color(new_node, root);
+    root->count++;
 }
 
 
 void rb_remove_node(rb_root *root,  rb_node *node)
 {
+    if (node == root->save_node) {
+        root->save_node = rb_prev(node);
+    }
     rb_erase(node, root);
+
+    root->count--;
 }
 
 

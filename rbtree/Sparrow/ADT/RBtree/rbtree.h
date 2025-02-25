@@ -14,7 +14,7 @@ Class(rb_node)
 {
     rb_node *rb_parent;
     rb_root_handle root;
-    uint8_t rb_color;
+    uint8_t rb_color : 1;
     rb_node *rb_right;
     rb_node *rb_left;
     uint32_t value;
@@ -23,13 +23,13 @@ Class(rb_node)
 Class(rb_root)
 {
     rb_node *rb_node;
-    rb_node *SaveNode;
-    uint8_t SwitchFlag;
+    rb_node *save_node;
     uint32_t count;
 };
 
 
-
+void rb_root_init(rb_root_handle root);
+void rb_node_init(rb_node_handle node);
 void rb_Insert_node(rb_root_handle root,  rb_node *new_node);
 void rb_remove_node(rb_root *root,  rb_node *node);
 

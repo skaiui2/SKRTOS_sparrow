@@ -90,7 +90,7 @@ void ReadyListInit( void )
 
 
 
-void ReadyListAdd(ListNode *node)
+static void ReadyListAdd(ListNode *node)
 {
     TaskHandle_t self = container_of(node, TCB_t, task_node);
     self->task_node.value = self->TimeSlice;
@@ -98,34 +98,21 @@ void ReadyListAdd(ListNode *node)
 }
 
 
-void ReadyListRemove(ListNode *node)
+static void ReadyListRemove(ListNode *node)
 {
     TaskHandle_t self = container_of(node, TCB_t, task_node);
     ListRemove( &(ReadyListArray[self->uxPriority]), node);
 }
 
-void SuspendListAdd(ListNode *node)
+static void SuspendListAdd(ListNode *node)
 {
     ListAdd( &SuspendList, node);
 }
 
-void SuspendListRemove(ListNode *node)
+static void SuspendListRemove(ListNode *node)
 {
     ListRemove( &SuspendList, node);
 }
-
-
-void BlockListAdd(ListNode *node)
-{
-    ListAdd( &BlockList, node);
-}
-
-
-void BlockListRemove(ListNode *node)
-{
-    ListRemove( &BlockList, node);
-}
-
 
 
 void TaskListAdd(TaskHandle_t self, uint8_t State)
@@ -134,8 +121,7 @@ void TaskListAdd(TaskHandle_t self, uint8_t State)
     ListNode *node = &(self->task_node);
     void (*ListAdd[])(ListNode *node) = {
             ReadyListAdd,
-            SuspendListAdd,
-            BlockListAdd,
+            SuspendListAdd
     };
     ListAdd[State](node);
     xExitCritical(xReturn);
@@ -149,8 +135,7 @@ void TaskListRemove(TaskHandle_t self, uint8_t State)
     ListNode *node = &(self->task_node);
     void (*ListRemove[])(ListNode *node) = {
             ReadyListRemove,
-            SuspendListRemove,
-            BlockListRemove,
+            SuspendListRemove
     };
     ListRemove[State](node);
     xExitCritical(xReturn);
