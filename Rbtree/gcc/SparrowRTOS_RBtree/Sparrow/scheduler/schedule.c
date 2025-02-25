@@ -39,7 +39,6 @@ Class(TCB_t)
     uint8_t state;
     uint8_t uxPriority;
     uint32_t * pxStack;
-    uint8_t TimeSlice;
 };
 
 __attribute__( ( used ) )  TaskHandle_t volatile schedule_currentTCB = NULL;
@@ -52,13 +51,14 @@ __attribute__( ( always_inline ) ) inline TaskHandle_t GetCurrentTCB(void)
 
 __attribute__( ( always_inline ) ) inline TaskHandle_t TaskHighestPriority(rb_root_handle root)
 {
-    rb_node *rb_highest_node = rb_last(root);
+    rb_node *rb_highest_node = root->save_node;
+    //rb_node *rb_highest_node = rb_last(root);
     return container_of(rb_highest_node, TCB_t, task_node);
 }
 
 __attribute__( ( always_inline ) ) inline TaskHandle_t IPCHighestPriorityTask(rb_root_handle root)
 {
-    rb_node *rb_highest_node = rb_last(root);
+    rb_node *rb_highest_node = root->save_node;
     return container_of(rb_highest_node, TCB_t, IPC_node);
 }
 
@@ -84,6 +84,8 @@ static volatile uint32_t NowTickCount = ( uint32_t ) 0;
 
 void ReadyTreeAdd(rb_node *node)
 {
+    TaskHandle_t self = container_of(node, TCB_t, task_node);
+    node->value = self->uxPriority;
     rb_Insert_node( &ReadyTree, node);
 }
 
@@ -149,9 +151,9 @@ void Remove_IPC(TaskHandle_t self)
 
 void ADTTreeInit(void)
 {
-    ReadyTree = (rb_root){NULL, NULL, 0, 0};
-    SuspendTree = (rb_root){NULL, NULL, 0, 0};
-    DeleteTree = (rb_root){NULL, NULL, 0, 0};
+    rb_root_init(&ReadyTree);
+    rb_root_init(&SuspendTree);
+    rb_root_init(&DeleteTree);
 }
 
 
@@ -222,9 +224,8 @@ void RecordWakeTime(uint16_t ticks)
     uint32_t wakeTime = constTicks + ticks;
     self->task_node.value = wakeTime;
 
-    if( wakeTime < constTicks)
-    {
-        rb_Insert_node(OverWakeTicksTree , &(self->task_node) );
+    if( wakeTime < constTicks) {
+        rb_Insert_node(OverWakeTicksTree, &(self->task_node));
     }
     else{
         rb_Insert_node( WakeTicksTree , &(self->task_node) );
@@ -274,8 +275,8 @@ void xTaskCreate( TaskFunction_t pxTaskCode,
                   const uint16_t usStackDepth,
                   void * const pvParameters,//You can use it for debugging
                   uint32_t uxPriority,
-                  TaskHandle_t * const self,
-                  uint8_t TimeSlice)
+                  TaskHandle_t * const self
+                  )
 {
     uint32_t *topStack = NULL;
     uint32_t *pxStack = ( uint32_t *) heap_malloc( ( ( ( size_t ) usStackDepth ) * sizeof( uint32_t * ) ) );
@@ -285,12 +286,13 @@ void xTaskCreate( TaskFunction_t pxTaskCode,
     *NewTcb = (TCB_t){
         .state = Ready,
         .uxPriority = uxPriority,
-        .TimeSlice = TimeSlice,
         .pxStack = pxStack
     };
     topStack =  NewTcb->pxStack + (usStackDepth - (uint32_t)1) ;
     topStack = ( uint32_t *) (((uint32_t)topStack) & (~((uint32_t) alignment_byte)));
     NewTcb->pxTopOfStack = pxPortInitialiseStack(topStack,pxTaskCode,pvParameters);
+    rb_node_init(&NewTcb->task_node);
+    rb_node_init(&NewTcb->IPC_node);
     TaskTreeAdd(NewTcb, Ready);
 }
 
@@ -304,8 +306,8 @@ void xTaskDelete(TaskHandle_t self)
 
 void TreeDelayInit(void)
 {
-    OneDelayTree = (rb_root){NULL, NULL, 0, 0};
-    TwoDelayTree = (rb_root){NULL, NULL, 0, 0};
+    rb_root_init(&OneDelayTree);
+    rb_root_init(&TwoDelayTree);
     WakeTicksTree = NULL;
     OverWakeTicksTree = NULL;
     WakeTicksTree = &OneDelayTree;
@@ -340,9 +342,7 @@ void LeisureTaskCreat(void)
                     128,
                     NULL,
                     0,
-                    &leisureTcb,
-                    0
-    );
+                    &leisureTcb );
 }
 
 

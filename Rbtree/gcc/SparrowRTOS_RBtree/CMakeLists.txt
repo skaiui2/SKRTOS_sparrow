@@ -40,15 +40,17 @@ message("Build type: " ${CMAKE_BUILD_TYPE})
 # Create an executable object type
 add_executable(${CMAKE_PROJECT_NAME}
         Sparrow/scheduler/schedule.c
-        #Sparrow/IPC/semaphore/sem.c
         Sparrow/memory/heap.c
-        #Sparrow/IPC/mequeue/mequeue.c
-        #Sparrow/IPC/mutex/mutex.c
+        Sparrow/IPC/mequeue.c
+        Sparrow/IPC/mutex.c
         Sparrow/port/port.c
-        #Sparrow/demo/sem_app.c
         Sparrow/opt/mempool/mempool.c
-        #Sparrow/timer/timer.c
+        Sparrow/timer/timer.c
         Sparrow/ADT/RBtree/rbtree.c
+        Sparrow/timer/timer.c
+        Sparrow/IPC/sem.c
+        Sparrow/IPC/PCqueue.c
+        Sparrow/IPC/RWlock.c
 
 
 )
@@ -60,10 +62,9 @@ include_directories(
         Sparrow/scheduler
         Sparrow/ADT/list
         Sparrow/port
-        Sparrow/demo
         Sparrow/opt/atomic
         Sparrow/opt/mempool
-        #Sparrow/timer
+        Sparrow/timer
         Sparrow/ADT/RBtree
 )
 

@@ -59,11 +59,14 @@ static void MX_GPIO_Init(void);
 TaskHandle_t tcbTask1 = NULL;
 TaskHandle_t tcbTask2 = NULL;
 
+int a=0;
+int b=0;
 void led_bright( )
 {
     while (1) {
         HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_RESET);
-        TaskDelay(500);
+        a++;
+        TaskDelay(1000);
     }
 }
 
@@ -71,7 +74,11 @@ void led_extinguish( )
 {
     while (1) {
         HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_SET);
-        TaskDelay(1000);
+        b++;
+        if(b == 100){
+            tcbTask2 = NULL;
+        }
+        TaskDelay(500);
     }
 }
 
@@ -82,19 +89,17 @@ void APP( )
 {
 
     xTaskCreate(    (TaskFunction_t)led_bright,
-                    256,
+                    512,
                     NULL,
                     2,
-                    &tcbTask1,
-                    0
+                    &tcbTask1
     );
 
     xTaskCreate(    (TaskFunction_t)led_extinguish,
-                    256,
+                    512,
                     NULL,
                     3,
-                    &tcbTask2,
-                    0
+                    &tcbTask2
     );
 }
 

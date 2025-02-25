@@ -50,7 +50,7 @@
 #define configTickRateHz			( ( uint32_t ) 1000 )
 
 #define alignment_byte               0x07
-#define config_heap   (13*1024)
+#define config_heap   (14*1024)
 #define configMaxPriority 32
 #define configShieldInterPriority 191
 
@@ -65,15 +65,14 @@ void xTaskCreate( TaskFunction_t pxTaskCode,
                   uint16_t usStackDepth,
                   void *pvParameters,
                   uint32_t uxPriority,
-                  TaskHandle_t *self,
-                  uint8_t TimeSlice);
+                  TaskHandle_t *self );
 void xTaskDelete(TaskHandle_t self);
 
 uint8_t TaskPrioritySet(TaskHandle_t taskHandle,uint8_t priority);
 
-void TaskListAdd(TaskHandle_t self, uint8_t State);
-void TaskListRemove(TaskHandle_t self, uint8_t State);
-void DelayListRemove(TaskHandle_t self);
+void TaskTreeAdd(TaskHandle_t self, uint8_t State);
+void TaskTreeRemove(TaskHandle_t self, uint8_t State);
+void DelayTreeRemove(TaskHandle_t self);
 void Insert_IPC(TaskHandle_t self, rb_root *root);
 void Remove_IPC(TaskHandle_t self);
 
