@@ -262,14 +262,24 @@ void CheckTicks( void )
 void SysTick_Handler(void)
 {
     uint32_t xre = xEnterCritical();
-    uint32_t temp = StateTable[Suspend];
-    temp &= 1;// If the idle task is suspended, the scheduler is suspended
-    if(temp != 1) {
+    // If the idle task is suspended, the scheduler is suspended
+    if( !(StateTable[Suspend] & 0x01) ) {
         CheckTicks();
     }
     xExitCritical(xre);
 }
 
+
+/*
+ * If the program runs here, there is a problem with the use of the RTOS,
+ * such as the stack allocation space is too small, and the use of undefined operations
+ */
+void ErrorHandle(void)
+{
+    while (1){
+
+    }
+}
 
 
 uint32_t * pxPortInitialiseStack( uint32_t * pxTopOfStack,
@@ -282,8 +292,8 @@ uint32_t * pxPortInitialiseStack( uint32_t * pxTopOfStack,
 
     Stack->xPSR = 0x01000000UL;
     Stack->PC = ( ( uint32_t ) pxCode ) & ( ( uint32_t ) 0xfffffffeUL );
-    Stack->LR = ( uint32_t ) pvParameters;
-    Stack->r0 = ( uint32_t ) self;
+    Stack->LR = ( uint32_t ) ErrorHandle;
+    Stack->r0 = ( uint32_t ) pvParameters;
     (*self)->self_stack = Stack;
 
     return pxTopOfStack;
@@ -299,7 +309,7 @@ void xTaskCreate( TaskFunction_t pxTaskCode,
     TCB_t *NewTcb = (TCB_t *)heap_malloc(sizeof(TCB_t));
     *self = ( TCB_t *) NewTcb;
 
-    TcbTaskTable[uxPriority] = NewTcb;//
+    TcbTaskTable[uxPriority] = NewTcb;
 
     NewTcb->uxPriority = uxPriority;
     NewTcb->pxStack = ( uint32_t *) heap_malloc( ( ( ( size_t ) usStackDepth ) * sizeof( uint32_t * ) ) );
@@ -308,7 +318,7 @@ void xTaskCreate( TaskFunction_t pxTaskCode,
     NewTcb->pxTopOfStack = pxPortInitialiseStack(topStack,pxTaskCode,pvParameters,self);
     schedule_currentTCB = NewTcb;
 
-    StateTable[Ready] |= (1 << uxPriority); //
+    StateTable[Ready] |= (1 << uxPriority);
 }
 
 Class(SCB_Type)

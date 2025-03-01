@@ -22,7 +22,7 @@
 #define configTickRateHz			( ( uint32_t ) 1000 )
 
 #define alignment_byte               0x07
-#define config_heap   (8*1024)
+#define config_heap   (10240)
 #define configMaxPriori 32
 #define configShieldInterPriority 191
 
