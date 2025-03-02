@@ -409,7 +409,7 @@ void DelayTreeRemove(TaskHandle_t self)
 void CheckTicks(void)
 {
     uint32_t UpdateTickCount;
-    rb_node *rb_node,*next_node,*tail_node;
+    rb_node *rb_node,*next_node;
 
     UpdateTickCount = NowTickCount + 1;
     NowTickCount = UpdateTickCount;
@@ -422,25 +422,14 @@ void CheckTicks(void)
     }
     
     rb_node = rb_first(WakeTicksTree);
-    if (rb_node == NULL) {
-        schedule();
-        return;
-    }
-
-    while(rb_node->value <= UpdateTickCount ) {
+    while ( (rb_node) && (rb_node->value <= UpdateTickCount)) {
         next_node = rb_next(rb_node);
-        tail_node = rb_last(WakeTicksTree);
-
         TaskHandle_t self = container_of(rb_node, TCB_t, task_node);
         DelayTreeRemove(self);
         TaskTreeAdd(self, Ready);
-
-        if (rb_node != tail_node) {
-            rb_node = next_node;
-        } else {
-            break;
-        }
+        rb_node = next_node;
     }
+
     schedule();
 }
 

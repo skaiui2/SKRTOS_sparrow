@@ -434,7 +434,7 @@ void DelayListRemove(TaskHandle_t self)
 void CheckTicks(void)
 {
     uint32_t UpdateTickCount;
-    ListNode *list_node,*next_node,*tail_node;
+    ListNode *list_node;
 
     UpdateTickCount = NowTickCount + 1;
     NowTickCount = UpdateTickCount;
@@ -446,26 +446,12 @@ void CheckTicks(void)
         OverWakeTicksList = temp;
     }
 
-    list_node = WakeTicksList->head;
-    if(  list_node == NULL ) {
-        schedule();
-        return;
-    }
-
-    while( list_node->value <= UpdateTickCount ) {
-        next_node = list_node->next;
-        tail_node = WakeTicksList->tail;
-
+    while ( (list_node = WakeTicksList->head) && (list_node->value <= UpdateTickCount) ) {
         TaskHandle_t self = container_of(list_node, TCB_t, task_node);
         DelayListRemove(self);
         TaskListAdd(self, Ready);
-
-        if (list_node != tail_node) {
-            list_node = next_node;
-        } else {
-            break;
-        }
     }
+
     schedule();
 }
 
