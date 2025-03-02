@@ -787,18 +787,24 @@ uint32_t atomic_set(uint32_t i, uint32_t *v)
 
 ### 定时器
 
-支持定时器，
+支持定时器，其中定时器的全部回调函数都会由一个线程执行，该线程的优先级、栈大小、多久检查一次都由用户决定。
 
 总API如下：
 
 ```
-TaskHandle_t xTimerInit(uint8_t timer_priority, uint16_t stack);
-TimerHandle xTimerCreat(TimerFunction_t CallBackFun, uint32_t period, uint8_t timer_flag);
-uint8_t TimerRerun(TimerHandle timer);
-uint8_t TimerStop(TimerHandle timer);
+TaskHandle_t xTimerInit(uint8_t timer_priority, uint16_t stack, uint8_t check_period);//初始化创建定时器
+TimerHandle xTimerCreat(TimerFunction_t CallBackFun, uint32_t period, uint8_t timer_flag);//创建并添加定时任务
+uint8_t TimerRerun(TimerHandle timer);//定时器重新启动
+uint8_t TimerStop(TimerHandle timer);//定时器停止
 ```
 
+参数：
 
+**timer_priority**： 定时器线程的优先级。
+
+**stack**： 定时器线程的栈大小。
+
+**check_period**：定时器检查周期，单位为ms，推荐设置为不同定时任务周期的**最大公约数**。
 
 使用如下：
 
@@ -814,7 +820,7 @@ void count(void)
 
 void APP( )
 {
-    TaskHandle_t tcbTask3 = xTimerInit(4, 128);//设置定时器的优先级和栈大小
+    TaskHandle_t tcbTask3 = xTimerInit(4, 128, 1);//设置定时器的优先级和栈大小，以及检查周期
     xTaskCreate(    (TaskFunction_t)taskA,
                     128,
                     NULL,

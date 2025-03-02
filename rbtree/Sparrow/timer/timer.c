@@ -38,6 +38,7 @@ Class(timer_struct)
 };
 
 rb_root ClockTree;
+static uint16_t TimerCheckPeriod = 0;
 
 extern uint64_t AbsoluteClock;
 
@@ -55,24 +56,22 @@ void timer_check(void)
 {
     while (1) {
         rb_node *node = rb_first(&ClockTree);
-        if (node != NULL) {
-            while (node->value <= AbsoluteClock) {
-                timer_struct *timer = container_of(node, timer_struct, TimerNode);
-                timer->CallBackFun(timer);
-                node->value += timer->TimerPeriod;
-                if (timer->TimerStopFlag == stop) {
-                    rb_remove_node(&ClockTree, &timer->TimerNode);
-                }
-                if (node != ClockTree.save_node) {
-                    node = rb_next(node);
-                }
+        while ( (node != NULL) && (node->value <= AbsoluteClock) ) {
+            timer_struct *timer = container_of(node, timer_struct, TimerNode);
+            timer->CallBackFun(timer);
+            node->value += timer->TimerPeriod;
+            if (timer->TimerStopFlag == stop) {
+                rb_remove_node(&ClockTree, &timer->TimerNode);
             }
+            node = rb_next(node);
         }
+
+        TaskDelay(TimerCheckPeriod);//User-defined periodic check.
     }
 }
 
 
-TaskHandle_t xTimerInit(uint8_t timer_priority, uint16_t stack)
+TaskHandle_t xTimerInit(uint8_t timer_priority, uint16_t stack, uint8_t check_period)
 {
     TaskHandle_t self = NULL;
     rb_root_init(&ClockTree);
@@ -81,6 +80,7 @@ TaskHandle_t xTimerInit(uint8_t timer_priority, uint16_t stack)
                 NULL,
                 timer_priority,
                 &self);
+    TimerCheckPeriod = check_period;
     return self;
 }
 

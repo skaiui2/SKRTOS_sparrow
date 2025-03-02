@@ -38,6 +38,7 @@ Class(timer_struct)
 };
 
 TheList ClockList;
+static uint16_t TimerCheckPeriod = 0;
 volatile uint64_t AbsoluteClock = 0;
 
 void ClockListAdd(timer_struct *timer)
@@ -54,24 +55,21 @@ void timer_check(void)
 {
     while (1) {
         ListNode *node = ClockList.head;
-        if (node != NULL) {
-            while (node->value <= AbsoluteClock) {
-                timer_struct *timer = container_of(node, timer_struct, TimerNode);
-                timer->CallBackFun(timer);
-                node->value += timer->TimerPeriod;
-                if (timer->TimerStopFlag == stop) {
-                    ListRemove(&ClockList, &timer->TimerNode);
-                }
-                if (node != ClockList.tail) {
-                    node = node->next;
-                }
+        while ((node != NULL) && (node->value <= AbsoluteClock)) {
+            timer_struct *timer = container_of(node, timer_struct, TimerNode);
+            timer->CallBackFun(timer);
+            node->value += timer->TimerPeriod;
+            if (timer->TimerStopFlag == stop) {
+                ListRemove(&ClockList, &timer->TimerNode);
             }
+            node = node->next;
         }
+        TaskDelay(TimerCheckPeriod);
     }
 }
 
 
-TaskHandle_t xTimerInit(uint8_t timer_priority, uint16_t stack)
+TaskHandle_t xTimerInit(uint8_t timer_priority, uint16_t stack, uint8_t check_period)
 {
     TaskHandle_t self = NULL;
     ListInit(&ClockList);
@@ -81,6 +79,8 @@ TaskHandle_t xTimerInit(uint8_t timer_priority, uint16_t stack)
                 timer_priority,
                 &self,
                 0);
+    TimerCheckPeriod = check_period;
+
     return self;
 }
 
