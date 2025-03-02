@@ -50,6 +50,7 @@ Class(TheList)
 
 
 void ListInit(TheList *xList);
+void ListNodeInit(ListNode *node);
 void ListAdd(TheList *xList, ListNode *new_node);
 void ListRemove(TheList *xList, ListNode *rm_node);
 

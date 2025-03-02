@@ -55,14 +55,17 @@ void timer_check(void)
 {
     while (1) {
         rb_node *node = rb_first(&ClockTree);
-        while ( node->value <= AbsoluteClock ) {
-            timer_struct *timer = container_of( node,timer_struct,TimerNode);
-            timer->CallBackFun(timer);
-            if(timer->TimerStopFlag == stop) {
-                rb_remove_node(&ClockTree, &timer->TimerNode);
-            }
-            if( node != ClockTree.save_node ) {
-                node = rb_next(node);
+        if (node != NULL) {
+            while (node->value <= AbsoluteClock) {
+                timer_struct *timer = container_of(node, timer_struct, TimerNode);
+                timer->CallBackFun(timer);
+                node->value += timer->TimerPeriod;
+                if (timer->TimerStopFlag == stop) {
+                    rb_remove_node(&ClockTree, &timer->TimerNode);
+                }
+                if (node != ClockTree.save_node) {
+                    node = rb_next(node);
+                }
             }
         }
     }
@@ -90,8 +93,8 @@ timer_struct *xTimerCreat(TimerFunction_t CallBackFun, uint32_t period, uint8_t 
             .CallBackFun = CallBackFun,
             .TimerStopFlag = timer_flag
     };
+    rb_node_init(&(timer->TimerNode));
     timer->TimerNode.value = period;
-    rb_root_init(&ClockTree);
     ClockTreeAdd(timer);
     return timer;
 }
