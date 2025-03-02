@@ -35,6 +35,14 @@ void ListInit(TheList *xList)
     xList->SaveNode = NULL;
 }
 
+void ListNodeInit(ListNode *node)
+{
+    node->prev = NULL;
+    node->next = NULL;
+    node->value = 0;
+    node->TheList = NULL;
+}
+
 
 void InsertFirst(TheList *xList, ListNode *new_node)
 {

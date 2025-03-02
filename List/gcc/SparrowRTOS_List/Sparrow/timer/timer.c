@@ -31,40 +31,39 @@
 
 Class(timer_struct)
 {
-    rb_node           TimerNode;
+    ListNode            TimerNode;
     uint32_t            TimerPeriod;
     TimerFunction_t     CallBackFun;
     uint8_t             TimerStopFlag ;
 };
 
-rb_root ClockTree;
+TheList ClockList;
+volatile uint64_t AbsoluteClock = 0;
 
-extern uint64_t AbsoluteClock;
-
-void ClockTreeAdd(timer_struct *timer)
+void ClockListAdd(timer_struct *timer)
 {
     const uint32_t constTicks = AbsoluteClock;
     uint32_t wakeTime = constTicks + timer->TimerNode.value;
     timer->TimerNode.value = wakeTime;
 
-    rb_Insert_node(&ClockTree, &timer->TimerNode);
+    ListAdd(&ClockList, &timer->TimerNode);
 }
 
 
 void timer_check(void)
 {
     while (1) {
-        rb_node *node = rb_first(&ClockTree);
+        ListNode *node = ClockList.head;
         if (node != NULL) {
             while (node->value <= AbsoluteClock) {
                 timer_struct *timer = container_of(node, timer_struct, TimerNode);
                 timer->CallBackFun(timer);
                 node->value += timer->TimerPeriod;
                 if (timer->TimerStopFlag == stop) {
-                    rb_remove_node(&ClockTree, &timer->TimerNode);
+                    ListRemove(&ClockList, &timer->TimerNode);
                 }
-                if (node != ClockTree.save_node) {
-                    node = rb_next(node);
+                if (node != ClockList.tail) {
+                    node = node->next;
                 }
             }
         }
@@ -75,12 +74,13 @@ void timer_check(void)
 TaskHandle_t xTimerInit(uint8_t timer_priority, uint16_t stack)
 {
     TaskHandle_t self = NULL;
-    rb_root_init(&ClockTree);
+    ListInit(&ClockList);
     xTaskCreate((TaskFunction_t)timer_check,
                 stack,
                 NULL,
                 timer_priority,
-                &self);
+                &self,
+                0);
     return self;
 }
 
@@ -93,9 +93,9 @@ timer_struct *xTimerCreat(TimerFunction_t CallBackFun, uint32_t period, uint8_t 
             .CallBackFun = CallBackFun,
             .TimerStopFlag = timer_flag
     };
-    rb_node_init(&(timer->TimerNode));
+    ListNodeInit(&(timer->TimerNode));
     timer->TimerNode.value = period;
-    ClockTreeAdd(timer);
+    ClockListAdd(timer);
     return timer;
 }
 
@@ -103,7 +103,7 @@ timer_struct *xTimerCreat(TimerFunction_t CallBackFun, uint32_t period, uint8_t 
 uint8_t TimerRerun(timer_struct *timer)
 {
     atomic_set(run, (uint32_t *)&(timer->TimerStopFlag));
-    ClockTreeAdd(timer);
+    ClockListAdd(timer);
     return timer->TimerStopFlag;
 }
 
@@ -112,7 +112,7 @@ uint8_t TimerRerun(timer_struct *timer)
 uint8_t TimerStop(timer_struct *timer)
 {
     atomic_set(stop, (uint32_t *)&(timer->TimerStopFlag));
-    rb_node_init(&timer->TimerNode);
+    ListRemove(&ClockList,&timer->TimerNode);
     return timer->TimerStopFlag;
 }
 

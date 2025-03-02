@@ -23,24 +23,20 @@
  *  https://github.com/skaiui2/SKRTOS_sparrow
  */
 
-#ifndef CLASS_H
-#define CLASS_H
-#include "stddef.h"
-#include "stdint.h"
+#ifndef MEMPOOL_H
+#define MEMPOOL_H
+#include "class.h"
+#include "schedule.h"
 
-#define Class(class)    \
-typedef struct  class  class;\
-struct class
+typedef struct PoolHead * PoolHeadHandle;
 
-//get father struct address
-//how to use it:struct parent *parent_ptr = container_of(child_ptr, struct parent, child)
-#define container_of(ptr, type, member) \
-    ((type *)((char *)(ptr) - offsetof(type, member)))
+PoolHeadHandle memPool_creat(uint16_t size,uint8_t amount);
+void *memPool_apl(PoolHeadHandle ThePool);
+void memPool_free(void *xRet);
+void memPool_delete(PoolHeadHandle ThePool);
+
+
 
 
 
 #endif
-
-
-
-

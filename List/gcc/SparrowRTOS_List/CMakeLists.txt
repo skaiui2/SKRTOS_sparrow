@@ -44,9 +44,12 @@ add_executable(${CMAKE_PROJECT_NAME}
         Sparrow/memory/heap.c
         Sparrow/IPC/mequeue.c
         Sparrow/IPC/mutex.c
-        Sparrow/opt/list/list.c
         Sparrow/port/port.c
-        Sparrow/demo/sem_app.c
+        Sparrow/opt/mempool/mempool.c
+        Sparrow/timer/timer.c
+        Sparrow/ADT/list/list.c
+        Sparrow/IPC/RWlock.c
+        Sparrow/IPC/PCqueue.c
 )
 
 include_directories(
@@ -54,10 +57,11 @@ include_directories(
         Sparrow/demo
         Sparrow/memory
         Sparrow/scheduler
-        Sparrow/opt/list
+        Sparrow/ADT/list
         Sparrow/port
-        Sparrow/demo
         Sparrow/opt/atomic
+        Sparrow/opt/mempool
+        Sparrow/timer
 )
 
 file(GLOB_RECURSE SOURCES

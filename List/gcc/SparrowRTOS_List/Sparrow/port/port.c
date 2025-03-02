@@ -25,7 +25,7 @@ __attribute__( ( naked ) ) void  SVC_Handler( void )
 }
 
 extern void vTaskSwitchContext(void);
-void __attribute__( ( naked ) )  PendSV_Handler( void )
+__attribute__( ( naked ) ) void PendSV_Handler( void )
 {
     __asm volatile
             (
@@ -98,7 +98,7 @@ __attribute__((always_inline)) inline void xExitCritical( uint32_t xReturn )
 }
 
 
-__attribute__( ( always_inline ) )  inline void StartFirstTask(void)
+__attribute__( ( naked ) )  void StartFirstTask(void)
 {
     /* Start the first task. */
     __asm volatile (

@@ -23,36 +23,35 @@
  *  https://github.com/skaiui2/SKRTOS_sparrow
  */
 
-#ifndef SEM_APP_H
-#define SEM_APP_H
+#ifndef LIST_H
+#define LIST_H
+
+#include<stdint.h>
+#include "class.h"
 
 
-typedef struct Oo_buffer *Oo_buffer_handle;
-Oo_buffer_handle Oo_buffer_creat(void);
-void Oo_insert(Oo_buffer_handle Oo_buffer1, int object);
-int Oo_remove(Oo_buffer_handle Oo_buffer1);
+/*this is public*/
+Class(ListNode)
+{
+    uint32_t value;
+    ListNode* prev;
+    ListNode* next;
+    void    *TheList;
+};
+
+Class(TheList)
+{
+    uint8_t count;
+    ListNode *head;
+    ListNode *tail;
+    ListNode *SaveNode;
+    uint8_t SwitchFlag;
+};
 
 
-typedef struct Mo_buffer *Mo_buffer_handle;
-Mo_buffer_handle Mo_buffer_creat(void);
-void Mo_insert(Mo_buffer_handle Mo_buffer1, int object);
-int Mo_remove(Mo_buffer_handle Mo_buffer1);
-
-
-typedef struct Mm_buffer *Mm_buffer_handle;
-Mm_buffer_handle Mm_buffer_creat(void);
-void Mm_insert(Mm_buffer_handle Mm_buffer1, int object);
-int Mm_remove(Mm_buffer_handle Mm_buffer1);
-
-
-typedef struct MrMw_control *MrMw_control_handle;
-MrMw_control_handle MrOw_creat(void);
-void read_acquire(MrMw_control_handle MrMw_control1);
-void read_release(MrMw_control_handle MrMw_control1);
-void write_acquire(MrMw_control_handle MrMw_control1);
-void write_release(MrMw_control_handle MrMw_control1);
-
-
-
+void ListInit(TheList *xList);
+void ListNodeInit(ListNode *node);
+void ListAdd(TheList *xList, ListNode *new_node);
+void ListRemove(TheList *xList, ListNode *rm_node);
 
 #endif

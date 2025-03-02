@@ -40,9 +40,9 @@
 #define Ready       0
 #define Suspend     1
 #define Block       2
-#define BlockDelay  3  //task wait incident happen within a certain time frame.
+#define Dead        3
 #define Delay       4
-#define Dead        5
+#define BlockDelay  5  //task wait incident happen within a certain time frame.
 #define StateLess   6
 
 
@@ -67,6 +67,7 @@ void xTaskCreate( TaskFunction_t pxTaskCode,
                   uint32_t uxPriority,
                   TaskHandle_t *self,
                   uint8_t TimeSlice);
+void xTaskDelete(TaskHandle_t self);
 
 uint8_t TaskPrioritySet(TaskHandle_t taskHandle,uint8_t priority);
 

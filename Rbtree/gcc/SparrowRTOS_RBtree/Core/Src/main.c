@@ -53,54 +53,31 @@ static void MX_GPIO_Init(void);
 
 #include "schedule.h"
 #include "port.h"
+#include "timer.h"
 
 
 //Task Area!The user must create task handle manually because of debugging and specification
-TaskHandle_t tcbTask1 = NULL;
-TaskHandle_t tcbTask2 = NULL;
 
 int a=0;
 int b=0;
-void led_bright( )
+
+
+
+void count1( )
 {
-    while (1) {
-        HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_RESET);
-        a++;
-        TaskDelay(1000);
-    }
+    a++;
 }
 
-void led_extinguish( )
+void count2( )
 {
-    while (1) {
-        HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_SET);
-        b++;
-        if(b == 100){
-            tcbTask2 = NULL;
-        }
-        TaskDelay(500);
-    }
+    b++;
 }
-
-
-
 
 void APP( )
 {
-
-    xTaskCreate(    (TaskFunction_t)led_bright,
-                    512,
-                    NULL,
-                    2,
-                    &tcbTask1
-    );
-
-    xTaskCreate(    (TaskFunction_t)led_extinguish,
-                    512,
-                    NULL,
-                    3,
-                    &tcbTask2
-    );
+    TaskHandle_t tcbTask3 = xTimerInit(4, 128);
+    TimerHandle timerHandle1 = xTimerCreat((TimerFunction_t)count1,1,run);
+    TimerHandle timerHandle2 = xTimerCreat((TimerFunction_t)count2,1,run);
 }
 
 

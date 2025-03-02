@@ -52,89 +52,31 @@ static void MX_GPIO_Init(void);
 /* USER CODE BEGIN PFP */
 
 #include "schedule.h"
-#include "mequeue.h"
-
-
-
-/* Define a variable of type struct AMMessage. The examples below demonstrate
-   how to pass the whole variable through the queue, and as the structure is
-   moderately large, also how to pass a reference to the variable through a queue. */
-struct AMessage
-{
-    char ucMessageID;
-    char ucData[ 20 ];
-};
-struct AMessage xMessage;
-struct AMessage aMessage;
-
-/* Queue used to send and receive complete struct AMessage structures. */
-Queue_Handle xStructQueue = NULL;
-
-
-void vCreateQueues( void )
-{
-    xMessage.ucMessageID = 0xab;
-    aMessage.ucMessageID = 0x01;
-    memset( &( xMessage.ucData ), 0x12, 20 );
-
-    xStructQueue = queue_creat(1,sizeof( xMessage ) );
-
-}
-
+#include "port.h"
+#include "timer.h"
 
 
 //Task Area!The user must create task handle manually because of debugging and specification
-TaskHandle_t tcbTask1 = NULL;
-TaskHandle_t tcbTask2 = NULL;
+
+int a=0;
+int b=0;
 
 
-void led_extinguish( )
+void count1( )
 {
-    while (1) {
-        queue_send(xStructQueue,( void * ) &xMessage,1 );
-        queue_send(xStructQueue, (void *) &aMessage, 1);
-
-        /*
-        HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_RESET);
-        TaskDelay(1000);*/
-
-    }
+    a++;
 }
 
-void led_bright( )
+void count2( )
 {
-    struct AMessage xRxedStructure;
-    while (1) {
-        queue_receive( xStructQueue,(void*)(&xRxedStructure),1);
-        //Now the xRxedStructure.ucMessageID = 171(0xab)
-        queue_receive( xStructQueue,(void*)(&xRxedStructure),1);
-        //Now the xRxedStructure.ucMessageID = 0x01
-        TaskDelay(1);
-        /*
-        HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_SET);
-        TaskDelay(500);*/
-    }
+    b++;
 }
-
 
 void APP( )
 {
-    vCreateQueues();
-    xTaskCreate(    led_bright,
-                    256,
-                    NULL,
-                    3,
-                    &tcbTask1,
-                    0
-    );
-
-    xTaskCreate(    led_extinguish,
-                    256,
-                    NULL,
-                    2,
-                    &tcbTask2,
-                    0
-    );
+    TaskHandle_t tcbTask3 = xTimerInit(4, 128);
+    TimerHandle timerHandle1 = xTimerCreat((TimerFunction_t)count1,1,stop);
+    TimerHandle timerHandle2 = xTimerCreat((TimerFunction_t)count2,1,run);
 }
 
 
@@ -147,7 +89,6 @@ int main(void)
     MX_GPIO_Init();
     SchedulerInit();
     APP();
-
     SchedulerStart();
 
     while (1)

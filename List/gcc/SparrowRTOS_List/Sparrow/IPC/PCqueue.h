@@ -23,35 +23,34 @@
  *  https://github.com/skaiui2/SKRTOS_sparrow
  */
 
-#ifndef LIST_H
-#define LIST_H
-
-#include<stdint.h>
+#ifndef PCQUEUE_H
+#define PCQUEUE_H
 #include "class.h"
 
 
-/*this is public*/
-Class(ListNode)
-{
-    uint32_t value;
-    ListNode* prev;
-    ListNode* next;
-    void    *TheList;
-};
-
-Class(TheList)
-{
-    uint8_t count;
-    ListNode *head;
-    ListNode *tail;
-    ListNode *SaveNode;
-    uint8_t SwitchFlag;
-};
+typedef struct Oo_buffer *Oo_buffer_handle;
+Oo_buffer_handle Oo_buffer_creat(uint8_t buffer_size);
+void Oo_insert(Oo_buffer_handle Oo_buffer1, int object);
+int Oo_remove(Oo_buffer_handle Oo_buffer1);
+void Oo_buffer_delete(Oo_buffer_handle Oo_buffer1);
 
 
+typedef struct Mo_buffer *Mo_buffer_handle;
+Mo_buffer_handle Mo_buffer_creat(uint8_t buffer_size);
+void Mo_insert(Mo_buffer_handle Mo_buffer1, int object);
+int Mo_remove(Mo_buffer_handle Mo_buffer1);
+void Mo_buffer_delete(Mo_buffer_handle Mo_buffer1);
 
-void ListInit(TheList *xList);
-void ListAdd(TheList *xList, ListNode *new_node);
-void ListRemove(TheList *xList, ListNode *rm_node);
+
+typedef struct Mm_buffer *Mm_buffer_handle;
+Mm_buffer_handle Mm_buffer_creat(uint8_t buffer_size);
+void Mm_insert(Mm_buffer_handle Mm_buffer1, int object);
+int Mm_remove(Mm_buffer_handle Mm_buffer1);
+void Mm_buffer_delete(Mm_buffer_handle Mm_buffer1);
+
+
+
+
+
 
 #endif
