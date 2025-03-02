@@ -159,8 +159,7 @@ void ADTTreeInit(void)
 
 
 
-Class(Stack_register)
-{
+struct Stack_register {
     //automatic stacking
     uint32_t r4;
     uint32_t r5;
@@ -259,7 +258,7 @@ uint32_t * pxPortInitialiseStack( uint32_t * pxTopOfStack,
                                   void * pvParameters)
 {
     pxTopOfStack -= 16;
-    Stack_register *Stack = (Stack_register *)pxTopOfStack;
+    struct Stack_register *Stack = (struct Stack_register *)pxTopOfStack;
 
     Stack->xPSR = 0x01000000UL;
     Stack->PC = ( ( uint32_t ) pxCode ) & ( ( uint32_t ) 0xfffffffeUL );
@@ -354,7 +353,7 @@ void SchedulerInit(void)
 }
 
 
-Class(SysTicks){
+struct SysTicks {
     uint32_t CTRL;
     uint32_t LOAD;
     uint32_t VAL;
@@ -371,15 +370,15 @@ void SysTickInit(void)
 {
     ( *( ( volatile uint32_t * ) 0xe000ed20 ) ) |= ( ( ( uint32_t ) 255UL ) << 24UL );
 
-    SysTicks *SysTick = ( SysTicks * volatile)0xe000e010;
+    struct SysTicks *SysTick = ( struct SysTicks * volatile)0xe000e010;
 
     /* Stop and clear the SysTick. */
-    *SysTick = (SysTicks){
+    *SysTick = (struct SysTicks){
             .CTRL = 0UL,
             .VAL  = 0UL,
     };
     /* Configure SysTick to interrupt at the requested rate. */
-    *SysTick = (SysTicks){
+    *SysTick = (struct SysTicks){
             .LOAD = ( configSysTickClockHz / configTickRateHz ) - 1UL,
             .CTRL  = ( ( 1UL << 2UL ) | ( 1UL << 1UL ) | ( 1UL << 0UL ) )
     };

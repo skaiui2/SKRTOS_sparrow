@@ -2,8 +2,7 @@
 #include<stdint.h>
 #include "heap.h"
 
-Class(Stack_register)
-{
+struct Stack_register {
     //automatic stacking
     uint32_t r4;
     uint32_t r5;
@@ -29,7 +28,7 @@ Class(TCB_t)
     volatile uint32_t * pxTopOfStack;
     uint8_t uxPriority;
     uint32_t * pxStack;
-    Stack_register *self_stack;//Save the status of the stack in the task !You can use gdb to debug it!
+    struct Stack_register *self_stack;//Save the status of the stack in the task !You can use gdb to debug it!
 };
 
 
@@ -288,7 +287,7 @@ uint32_t * pxPortInitialiseStack( uint32_t * pxTopOfStack,
                                   TaskHandle_t * const self)
 {
     pxTopOfStack -= 16;
-    Stack_register *Stack = (Stack_register *)pxTopOfStack;
+    struct Stack_register *Stack = (struct Stack_register *)pxTopOfStack;
 
     Stack->xPSR = 0x01000000UL;
     Stack->PC = ( ( uint32_t ) pxCode ) & ( ( uint32_t ) 0xfffffffeUL );
@@ -321,8 +320,7 @@ void xTaskCreate( TaskFunction_t pxTaskCode,
     StateTable[Ready] |= (1 << uxPriority);
 }
 
-Class(SCB_Type)
-{
+struct SCB_Type {
     uint32_t CPUID;                  /*!< Offset: 0x000 (R/ )  CPUID Base Register */
     uint32_t ICSR;                   /*!< Offset: 0x004 (R/W)  Interrupt Control and State Register */
     uint32_t VTOR;                   /*!< Offset: 0x008 (R/W)  Vector Table Offset Register */
@@ -349,8 +347,8 @@ Class(SCB_Type)
 
 void EnterSleepMode(void)
 {
-    SCB_Type *SCB;
-    SCB =  (SCB_Type * volatile)0xE000ED00UL;
+    struct SCB_Type *SCB;
+    SCB =  (struct SCB_Type * volatile)0xE000ED00UL;
     SCB->SCR &= ~(1UL << 2UL) ;
     __asm volatile ("wfi");
 }
@@ -378,12 +376,11 @@ void SchedulerInit( void )
     );
 }
 
-Class(SysTicks){
+struct SysTicks {
      uint32_t CTRL;
      uint32_t LOAD;
      uint32_t VAL;
      uint32_t CALIB;
-
 };
 
 
@@ -393,15 +390,15 @@ __attribute__( ( always_inline ) )  inline void SchedulerStart( void )
     ( *( ( volatile uint32_t * ) 0xe000ed20 ) ) |= ( ( ( uint32_t ) 255UL ) << 16UL );
     ( *( ( volatile uint32_t * ) 0xe000ed20 ) ) |= ( ( ( uint32_t ) 255UL ) << 24UL );
 
-    SysTicks *SysTick = ( SysTicks * volatile)0xe000e010;
+    struct SysTicks *SysTick = (struct SysTicks * volatile)0xe000e010;
 
     /* Stop and clear the SysTick. */
-    *SysTick = (SysTicks){
+    *SysTick = (struct SysTicks){
         .CTRL = 0UL,
         .VAL  = 0UL,
     };
     /* Configure SysTick to interrupt at the requested rate. */
-    *SysTick = (SysTicks){
+    *SysTick = (struct SysTicks){
         .LOAD = ( configSysTickClockHz / configTickRateHz ) - 1UL,
         .CTRL  = ( ( 1UL << 2UL ) | ( 1UL << 1UL ) | ( 1UL << 0UL ) )
     };

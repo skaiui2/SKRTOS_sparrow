@@ -16,6 +16,8 @@
 
 程序模块化基本设计：短，小，块。
 
+
+
 ## 面向对象和模块化
 
 面向对象和模块化是SKRTOS_sparrow的主要设计思想。
@@ -197,6 +199,102 @@ SKRTOS_sparrow通过面向对象思想，把内核中的各个结构体用.c与.
 对于耦合性非常低的模块，采用严格的模块化设计，尽量避免依赖，此时可以使用面向对象思想。但是对于重要的程序区域，需要仔细思考程序的设计。
 
 程序的性能与可维护性是第一重要的，但在内核设计中，笔者偏向性能这一端。
+
+
+
+
+
+
+
+## Class宏使用规范
+
+### 使用
+
+内核中的Class关键字是通过struct封装的，目的是为了说明编写程序使用的是面向对象思想，因此，程序做出规范如下：
+
+1.使用面向对象编写的程序，结构体应使用Class关键字。
+
+2.使用面向过程编写的程序，结构体仍然使用struct。
+
+就比如对链表来说，有：初始化、添加、删除等操作，如果程序需要对链表进行改动，还可能需要继承当前链表。因此，如果我们把链表看成一个对象，围绕它的行为来编写程序的话，需要加上struct关键字。
+
+例如：
+
+TCB_t是任务控制块，
+
+```
+Class(TCB_t)
+{
+    volatile uint32_t *pxTopOfStack;
+    rb_node task_node;
+    rb_node IPC_node;
+    uint8_t state;
+    uint8_t uxPriority;
+    uint32_t * pxStack;
+};
+```
+
+围绕任务的行为有:
+
+```
+
+void xTaskCreate( TaskFunction_t pxTaskCode,
+                  uint16_t usStackDepth,
+                  void *pvParameters,
+                  uint32_t uxPriority,
+                  TaskHandle_t *self );
+void xTaskDelete(TaskHandle_t self);
+
+uint8_t TaskPrioritySet(TaskHandle_t taskHandle,uint8_t priority);
+void StateSet( TaskHandle_t taskHandle,uint8_t State);
+uint8_t CheckIPCState( TaskHandle_t taskHandle);
+uint8_t CheckTaskState( TaskHandle_t taskHandle, uint8_t State);
+
+void TaskTreeAdd(TaskHandle_t self, uint8_t State);
+void TaskTreeRemove(TaskHandle_t self, uint8_t State);
+uint8_t GetTaskPriority(TaskHandle_t taskHandle);
+```
+
+这些操作都是围绕TCB_t结构体展开的，因此，该结构体需要使用Class宏修饰，表示它是一个对象，且具有非常多的行为方法。
+
+### 不使用
+
+当我们仅仅只是使用struct组织成员，仅仅使用面向过程的编程思想时，应当使用原来的struct。
+
+例如，
+
+在这里，我们仅仅只是使用结构体排列这些寄存器在栈中的存储结构，并没有创建、删除、返回等等操作，因此，我们需要使用struct修饰：
+
+```
+struct Stack_register {
+    //automatic stacking
+    uint32_t r4;
+    uint32_t r5;
+    uint32_t r6;
+    uint32_t r7;
+    uint32_t r8;
+    uint32_t r9;
+    uint32_t r10;
+    uint32_t r11;
+    //manual stacking
+    uint32_t r0;
+    uint32_t r1;
+    uint32_t r2;
+    uint32_t r3;
+    uint32_t r12;
+    uint32_t LR;
+    uint32_t PC;
+    uint32_t xPSR;
+};
+```
+
+
+
+
+
+
+
+## 总结
 
 综上，SKRTOS_sparrow的代码设计思想就讲到这里，后面会继续补充。
 
