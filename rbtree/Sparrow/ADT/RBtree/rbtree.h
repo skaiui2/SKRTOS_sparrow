@@ -14,10 +14,10 @@ Class(rb_node)
 {
     rb_node *rb_parent;
     rb_root_handle root;
-    uint8_t rb_color : 1;
+    uint8_t rb_color;
     rb_node *rb_right;
     rb_node *rb_left;
-    uint32_t value;
+    uint64_t value;
 };
 
 Class(rb_root)

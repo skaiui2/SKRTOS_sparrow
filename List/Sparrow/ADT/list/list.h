@@ -33,9 +33,9 @@
 /*this is public*/
 Class(ListNode)
 {
-    uint32_t value;
-    ListNode* prev;
-    ListNode* next;
+    uint64_t value;
+    ListNode *prev;
+    ListNode *next;
     void    *TheList;
 };
 

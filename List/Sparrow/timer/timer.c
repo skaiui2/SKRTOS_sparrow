@@ -26,6 +26,7 @@
 #include "timer.h"
 #include "heap.h"
 #include "atomic.h"
+#include "port.h"
 
 
 
@@ -34,7 +35,7 @@ Class(timer_struct)
     ListNode            TimerNode;
     uint32_t            TimerPeriod;
     TimerFunction_t     CallBackFun;
-    uint8_t             TimerStopFlag ;
+    uint8_t             TimerStopFlag;
 };
 
 TheList ClockList;
@@ -43,11 +44,10 @@ volatile uint64_t AbsoluteClock = 0;
 
 void ClockListAdd(timer_struct *timer)
 {
-    const uint32_t constTicks = AbsoluteClock;
-    uint32_t wakeTime = constTicks + timer->TimerNode.value;
-    timer->TimerNode.value = wakeTime;
-
+    uint32_t cpu_lock = xEnterCritical();
+    timer->TimerNode.value = AbsoluteClock + timer->TimerNode.value;
     ListAdd(&ClockList, &timer->TimerNode);
+    xExitCritical(cpu_lock);
 }
 
 
@@ -102,18 +102,15 @@ timer_struct *xTimerCreat(TimerFunction_t CallBackFun, uint32_t period, uint8_t 
 
 uint8_t TimerRerun(timer_struct *timer)
 {
-    atomic_set(run, (uint32_t *)&(timer->TimerStopFlag));
     ClockListAdd(timer);
-    return timer->TimerStopFlag;
+    return atomic_set_return(run, (uint32_t *)&(timer->TimerStopFlag));
 }
 
 
 
 uint8_t TimerStop(timer_struct *timer)
 {
-    atomic_set(stop, (uint32_t *)&(timer->TimerStopFlag));
-    ListRemove(&ClockList,&timer->TimerNode);
-    return timer->TimerStopFlag;
+    return atomic_set_return(stop, (uint32_t *)&(timer->TimerStopFlag));
 }
 
 
