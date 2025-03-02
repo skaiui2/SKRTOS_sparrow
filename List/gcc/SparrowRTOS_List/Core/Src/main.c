@@ -74,7 +74,7 @@ void count2( )
 
 void APP( )
 {
-    TaskHandle_t tcbTask3 = xTimerInit(4, 128);
+    TaskHandle_t tcbTask3 = xTimerInit(4, 128, 1);
     TimerHandle timerHandle1 = xTimerCreat((TimerFunction_t)count1,1,stop);
     TimerHandle timerHandle2 = xTimerCreat((TimerFunction_t)count2,1,run);
 }
