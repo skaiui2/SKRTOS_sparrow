@@ -23,7 +23,8 @@ Class(rb_node)
 Class(rb_root)
 {
     rb_node *rb_node;
-    rb_node *save_node;
+    rb_node *first_node;
+    rb_node *last_node;
     uint32_t count;
 };
 

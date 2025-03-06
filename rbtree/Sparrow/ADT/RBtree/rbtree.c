@@ -204,6 +204,7 @@ static void rb_erase_color( rb_node *node,  rb_node *parent,
     if (node) {
         node->rb_color = RB_BLACK;
     }
+
 }
 
 void rb_erase(rb_node *node,  rb_root *root)
@@ -393,7 +394,8 @@ void rb_root_init(rb_root_handle root)
 {
     *root = (rb_root){
         .rb_node = NULL,
-        .save_node = NULL,
+        .first_node = NULL,
+        .last_node = NULL,
         .count = 0
     };
 }
@@ -425,12 +427,18 @@ void rb_Insert_node(rb_root_handle root,  rb_node *new_node) {
             link = &((*link)->rb_right);
         }
     }
-    if (root->count == 0) {
-        root->save_node = new_node;
-    }
 
-    if (new_node->value >= root->save_node->value) {
-        root->save_node = new_node;
+    if (root->count != 0) {
+        if (new_node->value >= root->last_node->value) {
+            root->last_node = new_node;
+        }
+
+        if (new_node->value < root->first_node->value) {
+            root->first_node = new_node;
+        }
+    } else {
+        root->first_node = new_node;
+        root->last_node = new_node;
     }
 
     rb_link_node(new_node, parent, link);
@@ -441,11 +449,19 @@ void rb_Insert_node(rb_root_handle root,  rb_node *new_node) {
 
 void rb_remove_node(rb_root *root,  rb_node *node)
 {
-    if (node == root->save_node) {
-        root->save_node = rb_prev(node);
+    if (root->count > 1) {
+        if (node == root->last_node) {
+            root->last_node = rb_prev(node);
+        }
+        if (node == root->first_node) {
+            root->first_node = rb_next(node);
+        }
+    } else {
+        root->last_node = NULL;
+        root->first_node = NULL;
     }
     rb_erase(node, root);
-
+    rb_node_init(node);
     root->count--;
 }
 

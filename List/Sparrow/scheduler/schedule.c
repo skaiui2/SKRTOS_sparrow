@@ -246,15 +246,12 @@ void RecordWakeTime(uint16_t ticks)
 {
     const uint32_t constTicks = NowTickCount;
     TCB_t *self = schedule_currentTCB;
-    uint32_t wakeTime = constTicks + ticks;
-    self->task_node.value = wakeTime;
+    self->task_node.value = constTicks + ticks;
 
-    if( wakeTime < constTicks)
-    {
-        ListAdd(OverWakeTicksList , &(self->task_node) );
-    }
-    else{
-        ListAdd( WakeTicksList , &(self->task_node) );
+    if( self->task_node.value < constTicks) {
+        ListAdd(OverWakeTicksList, &(self->task_node));
+    } else {
+        ListAdd(WakeTicksList, &(self->task_node));
     }
 }
 
@@ -297,7 +294,7 @@ uint32_t * pxPortInitialiseStack( uint32_t * pxTopOfStack,
 
 
 
-void xTaskCreate( TaskFunction_t pxTaskCode,
+void TaskCreate( TaskFunction_t pxTaskCode,
                   const uint16_t usStackDepth,
                   void * const pvParameters,//You can use it for debugging
                   uint32_t uxPriority,
@@ -321,7 +318,7 @@ void xTaskCreate( TaskFunction_t pxTaskCode,
     TaskListAdd(NewTcb, Ready);
 }
 
-void xTaskDelete(TaskHandle_t self)
+void TaskDelete(TaskHandle_t self)
 {
     TaskListRemove(self, Ready);
     ListAdd(&DeleteList, &self->task_node);
@@ -360,7 +357,7 @@ void leisureTask( void )
 
 void LeisureTaskCreat(void)
 {
-    xTaskCreate(    (TaskFunction_t)leisureTask,
+    TaskCreate(    (TaskFunction_t)leisureTask,
                     128,
                     NULL,
                     0,
@@ -433,20 +430,17 @@ void DelayListRemove(TaskHandle_t self)
 
 void CheckTicks(void)
 {
-    uint32_t UpdateTickCount;
-    ListNode *list_node;
+    ListNode *list_node = NULL;
+    NowTickCount++;
 
-    UpdateTickCount = NowTickCount + 1;
-    NowTickCount = UpdateTickCount;
-
-    if( UpdateTickCount == ( uint32_t) 0UL) {
+    if( NowTickCount == ( uint32_t) 0UL) {
         TheList *temp;
         temp = WakeTicksList;
         WakeTicksList = OverWakeTicksList;
         OverWakeTicksList = temp;
     }
 
-    while ( (list_node = WakeTicksList->head) && (list_node->value <= UpdateTickCount) ) {
+    while ( (list_node = WakeTicksList->head) && (list_node->value <= NowTickCount) ) {
         TaskHandle_t self = container_of(list_node, TCB_t, task_node);
         DelayListRemove(self);
         TaskListAdd(self, Ready);

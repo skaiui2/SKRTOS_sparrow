@@ -50,30 +50,40 @@ void ClockListAdd(timer_struct *timer)
     xExitCritical(cpu_lock);
 }
 
+void ClockListRemove(timer_struct *timer)
+{
+    uint32_t cpu_lock = xEnterCritical();
+    ListRemove(&ClockList, &timer->TimerNode);
+    xExitCritical(cpu_lock);
+}
+
 
 void timer_check(void)
 {
     while (1) {
+        ListNode *next_node = NULL;
         ListNode *node = ClockList.head;
-        while ((node != NULL) && (node->value <= AbsoluteClock)) {
+        while ( (ClockList.head) && (node->value <= AbsoluteClock)) {
+            next_node = node->next;
             timer_struct *timer = container_of(node, timer_struct, TimerNode);
             timer->CallBackFun(timer);
-            node->value += timer->TimerPeriod;
-            if (timer->TimerStopFlag == stop) {
-                ListRemove(&ClockList, &timer->TimerNode);
+            if (timer->TimerStopFlag == run) {
+                node->value += timer->TimerPeriod;
+            } else {
+                ClockListRemove(timer);//remove node will be initialized.
             }
-            node = node->next;
+            node = next_node;
         }
         TaskDelay(TimerCheckPeriod);
     }
 }
 
 
-TaskHandle_t xTimerInit(uint8_t timer_priority, uint16_t stack, uint8_t check_period)
+TaskHandle_t TimerInit(uint8_t timer_priority, uint16_t stack, uint8_t check_period)
 {
     TaskHandle_t self = NULL;
     ListInit(&ClockList);
-    xTaskCreate((TaskFunction_t)timer_check,
+    TaskCreate((TaskFunction_t)timer_check,
                 stack,
                 NULL,
                 timer_priority,
@@ -85,7 +95,7 @@ TaskHandle_t xTimerInit(uint8_t timer_priority, uint16_t stack, uint8_t check_pe
 }
 
 
-timer_struct *xTimerCreat(TimerFunction_t CallBackFun, uint32_t period, uint8_t timer_flag)
+timer_struct *TimerCreat(TimerFunction_t CallBackFun, uint32_t period, uint8_t timer_flag)
 {
     timer_struct *timer = heap_malloc(sizeof(timer_struct));
     *timer = (timer_struct){
@@ -94,25 +104,40 @@ timer_struct *xTimerCreat(TimerFunction_t CallBackFun, uint32_t period, uint8_t 
             .TimerStopFlag = timer_flag
     };
     ListNodeInit(&(timer->TimerNode));
-    timer->TimerNode.value = period;
+    timer->TimerNode.value = AbsoluteClock + period;
     ClockListAdd(timer);
     return timer;
 }
 
-
-uint8_t TimerRerun(timer_struct *timer)
+void TimerDelete(TimerHandle timer)
 {
-    ClockListAdd(timer);
-    return atomic_set_return(run, (uint32_t *)&(timer->TimerStopFlag));
+    heap_free(timer);
 }
 
 
+uint8_t TimerRerun(timer_struct *timer, uint8_t timer_flag)
+{
+    ClockListAdd(timer);
+    return atomic_set_return(timer_flag, (uint32_t *)&(timer->TimerStopFlag));
+}
 
+
+/*
+ * timer callback function will Execute once, then removed.
+ */
 uint8_t TimerStop(timer_struct *timer)
 {
     return atomic_set_return(stop, (uint32_t *)&(timer->TimerStopFlag));
 }
 
+/*
+ * timer callback function removed Immediately.
+ */
+uint8_t TimerStopImmediate(timer_struct *timer)
+{
+    ClockListRemove(timer);
+    return atomic_set_return(stop, (uint32_t *)&(timer->TimerStopFlag));
+}
 
 
 

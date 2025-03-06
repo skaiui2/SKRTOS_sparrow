@@ -120,7 +120,7 @@ void taskA()
 
 void APP( )
 {
-    xTaskCreate(    taskA,//需要执行的任务函数
+    TaskCreate(     taskA,//需要执行的任务函数
                     128,//根据任务中的变量、嵌套层数进行配置，真实大小为该值*4个字节
                     NULL,//形参，默认为NULL
                     1,//优先级
@@ -157,7 +157,7 @@ configSysTickClockHz：systick时钟频率，默认是72M
 
 configTickRateHz：中断频率，1000默认是1ms中断一次
 
-alignment_byte：内存管理的字节对齐，默认是八字节对齐
+alignment_byte：内存管理的字节对齐，默认是八字节对齐，如果要修改为其他对齐，设置为：对齐数 - 1即可。
 
 config_heap：任务栈的大小，读者可以根据需要设置
 
@@ -182,7 +182,7 @@ configShieldInterPriority：临界区屏蔽的中断最大优先级，由于是�
 ### 任务创建
 
 ```
-void xTaskCreate( TaskFunction_t pxTaskCode,/*需要执行的任务函数,如果传入形参需要在函数前面加上类型转换，例如														(TaskFunction_t)taskA */
+void  TaskCreate( TaskFunction_t pxTaskCode,/*需要执行的任务函数,如果传入形参需要在函数前面加上类型转换，例如														(TaskFunction_t)taskA */
                   uint16_t usStackDepth,//根据任务中的变量、嵌套层数进行配置，真实大小为该值*4个字节
                   void *pvParameters,//形参，默认为NULL
                   uint32_t uxPriority,//优先级,注意的是不能设置同一优先级
@@ -192,7 +192,7 @@ void xTaskCreate( TaskFunction_t pxTaskCode,/*需要执行的任务函数,如果
 写法如下：
 
 ```
-xTaskCreate(    	taskA,
+ TaskCreate(    	taskA,
                     128,
                     NULL,
                     1,
@@ -287,13 +287,11 @@ void *heap_malloc(size_t WantSize);
 void heap_free(void *xReturn);
 ```
 
-这两个函数的使用与C语言的malloc和free一致，不过heap_malloc返回的地址默认八字节对齐的，实际大小也是八字节对齐的，读者可以在配置中修改。
+这两个函数的使用与C语言的malloc和free一致，不过heap_malloc返回的地址默认八字节对齐的，实际分配的内存块大小也是八字节对齐的，读者可以在配置中修改。
 
 #### 注意
 
-由于内存本身就是一种公共资源，但heap_malloc和heap_free内部并没有并发保护机制，如果在任务运行时动态申请内存，有发生竞态的风险。
-
-如果读者需要在任务运行时动态使用内存，推荐加上临界区保护。
+由于内存本身就是一种公共资源，但heap_malloc和heap_free内部并没有并发保护机制。因此在任务运行时动态申请内存，可能会发生竞态，这将导致程序出现错误，所以如果读者需要在任务运行时动态使用内存，请加上临界区保护。
 
 例如：
 
@@ -666,7 +664,7 @@ void taskD() {
 }
 
 void APP() {
-    Oo_buffer1 = Oo_buffer_creat();
+    rwlock_handle rwlock = rwlock_creat();
 }
 
 int main() {
@@ -727,7 +725,7 @@ void xTaskCreate( TaskFunction_t pxTaskCode,
 支持任务删除功能：
 
 ```
-void xTaskDelete(TaskHandle_t self);
+void TaskDelete(TaskHandle_t self);
 ```
 
 使用如下：
@@ -745,14 +743,14 @@ void taskA( )
 
 void APP( )
 {
-    xTaskCreate(....);
-    xTaskDelete(tcbTask3);//删除启动线程
+    TaskCreate(....);
+    TaskDelete(tcbTask3);//删除启动线程
 }
 
 int main(void)
 {
 	省略初始化代码
-    xTaskCreate(    (TaskFunction_t)APP,
+     TaskCreate(    (TaskFunction_t)APP,
                     128,
                     NULL,
                     1,
@@ -792,10 +790,11 @@ uint32_t atomic_set(uint32_t i, uint32_t *v)
 总API如下：
 
 ```
-TaskHandle_t xTimerInit(uint8_t timer_priority, uint16_t stack, uint8_t check_period);//初始化创建定时器
-TimerHandle xTimerCreat(TimerFunction_t CallBackFun, uint32_t period, uint8_t timer_flag);//创建并添加定时任务
+TaskHandle_t TimerInit(uint8_t timer_priority, uint16_t stack, uint8_t check_period);//初始化创建定时器线程
+TimerHandle TimerCreat(TimerFunction_t CallBackFun, uint32_t period, uint8_t timer_flag);//创建并添加定时任务
 uint8_t TimerRerun(TimerHandle timer);//定时器重新启动
-uint8_t TimerStop(TimerHandle timer);//定时器停止
+uint8_t TimerStop(TimerHandle timer);//定时器再执行一次后停止
+uint8_t TimerStopImmediate(TimerHandle timer);//定时器立即停止
 ```
 
 参数：
@@ -820,22 +819,22 @@ void count(void)
 
 void APP( )
 {
-    TaskHandle_t tcbTask3 = xTimerInit(4, 128, 1);//设置定时器的优先级和栈大小，以及检查周期
-    xTaskCreate(    (TaskFunction_t)taskA,
+    TaskHandle_t tcbTask3 = TimerInit(4, 128, 1);//设置定时器的优先级和栈大小，以及检查周期
+    TaskCreate(     (TaskFunction_t)taskA,
                     128,
                     NULL,
                     3,
                     &tcbTask1,
                     0
     );
-    xTaskCreate(    (TaskFunction_t)taskB,
+    TaskCreate(    (TaskFunction_t)taskB,
                     128,
                     NULL,
                     2,
                     &tcbTask2,
                     0
     );
-    TimerHandle timerHandle = xTimerCreat((TimerFunction_t)count,1,stop);
+    TimerHandle timerHandle = TimerCreat((TimerFunction_t)count,1,stop);
 }
 
 ```

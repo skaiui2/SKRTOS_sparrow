@@ -154,9 +154,6 @@ void RemoveLast( TheList *xList, ListNode *rm_node )
 {
     xList->head = NULL;
     xList->tail = NULL;
-    rm_node->prev = NULL;
-    rm_node->next = NULL;
-
 }
 
 void RemoveHead( TheList *xList, ListNode *rm_node )
@@ -211,9 +208,9 @@ void MoveFlow(uint8_t rt,TheList *xList, ListNode *rm_node)
 void ListRemove(TheList *xList, ListNode *rm_node)
 {
     xList->SaveNode = xList->SaveNode->next;
-    rm_node->TheList = NULL;
     uint8_t op = MoveControl(xList,rm_node);
     MoveFlow(op,xList, rm_node);
+    ListNodeInit(rm_node);
     xList->count -= 1;
 }
 

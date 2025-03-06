@@ -51,14 +51,14 @@ __attribute__( ( always_inline ) ) inline TaskHandle_t GetCurrentTCB(void)
 
 __attribute__( ( always_inline ) ) inline TaskHandle_t TaskHighestPriority(rb_root_handle root)
 {
-    rb_node *rb_highest_node = root->save_node;
+    rb_node *rb_highest_node = root->last_node;
     //rb_node *rb_highest_node = rb_last(root);
     return container_of(rb_highest_node, TCB_t, task_node);
 }
 
 __attribute__( ( always_inline ) ) inline TaskHandle_t IPCHighestPriorityTask(rb_root_handle root)
 {
-    rb_node *rb_highest_node = root->save_node;
+    rb_node *rb_highest_node = root->last_node;
     return container_of(rb_highest_node, TCB_t, IPC_node);
 }
 
@@ -220,14 +220,12 @@ void RecordWakeTime(uint16_t ticks)
 {
     const uint32_t constTicks = NowTickCount;
     TCB_t *self = schedule_currentTCB;
-    uint32_t wakeTime = constTicks + ticks;
-    self->task_node.value = wakeTime;
+    self->task_node.value = constTicks + ticks;
 
-    if( wakeTime < constTicks) {
+    if( self->task_node.value < constTicks) {
         rb_Insert_node(OverWakeTicksTree, &(self->task_node));
-    }
-    else{
-        rb_Insert_node( WakeTicksTree , &(self->task_node) );
+    } else {
+        rb_Insert_node(WakeTicksTree, &(self->task_node));
     }
 }
 
@@ -270,7 +268,7 @@ uint32_t * pxPortInitialiseStack( uint32_t * pxTopOfStack,
 
 
 
-void xTaskCreate( TaskFunction_t pxTaskCode,
+void  TaskCreate( TaskFunction_t pxTaskCode,
                   const uint16_t usStackDepth,
                   void * const pvParameters,//You can use it for debugging
                   uint32_t uxPriority,
@@ -295,7 +293,7 @@ void xTaskCreate( TaskFunction_t pxTaskCode,
     TaskTreeAdd(NewTcb, Ready);
 }
 
-void xTaskDelete(TaskHandle_t self)
+void TaskDelete(TaskHandle_t self)
 {
     TaskTreeRemove(self, Ready);
     rb_Insert_node(&DeleteTree, &self->task_node);
@@ -337,7 +335,7 @@ void leisureTask( void )
 
 void LeisureTaskCreat(void)
 {
-    xTaskCreate(    (TaskFunction_t)leisureTask,
+    TaskCreate(    (TaskFunction_t)leisureTask,
                     128,
                     NULL,
                     0,
@@ -408,26 +406,20 @@ void DelayTreeRemove(TaskHandle_t self)
 
 void CheckTicks(void)
 {
-    uint32_t UpdateTickCount;
-    rb_node *rb_node,*next_node;
+    rb_node *rb_node = NULL;
+    NowTickCount++;
 
-    UpdateTickCount = NowTickCount + 1;
-    NowTickCount = UpdateTickCount;
-
-    if( UpdateTickCount == ( uint32_t) 0UL) {
+    if( NowTickCount == ( uint32_t) 0UL) {
         rb_root *temp;
         temp = WakeTicksTree;
         WakeTicksTree = OverWakeTicksTree;
         OverWakeTicksTree = temp;
     }
-    
-    rb_node = rb_first(WakeTicksTree);
-    while ( (rb_node) && (rb_node->value <= UpdateTickCount)) {
-        next_node = rb_next(rb_node);
+
+    while ( (rb_node = WakeTicksTree->first_node) && (rb_node->value <= NowTickCount)) {
         TaskHandle_t self = container_of(rb_node, TCB_t, task_node);
         DelayTreeRemove(self);
         TaskTreeAdd(self, Ready);
-        rb_node = next_node;
     }
 
     schedule();

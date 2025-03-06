@@ -61,13 +61,13 @@ void TaskDelay( uint16_t ticks );
 typedef void (* TaskFunction_t)( void * );
 typedef  struct TCB_t         *TaskHandle_t;
 
-void xTaskCreate( TaskFunction_t pxTaskCode,
+void TaskCreate( TaskFunction_t pxTaskCode,
                   uint16_t usStackDepth,
                   void *pvParameters,
                   uint32_t uxPriority,
                   TaskHandle_t *self,
                   uint8_t TimeSlice);
-void xTaskDelete(TaskHandle_t self);
+void TaskDelete(TaskHandle_t self);
 
 uint8_t TaskPrioritySet(TaskHandle_t taskHandle,uint8_t priority);
 
