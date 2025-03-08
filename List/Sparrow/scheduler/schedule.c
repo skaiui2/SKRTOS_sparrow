@@ -151,7 +151,6 @@ void Insert_IPC(TaskHandle_t self,TheList *IPC_list)
 void Remove_IPC(TaskHandle_t self)
 {
     ListRemove( self->IPC_node.TheList , &(self->IPC_node));
-    self->IPC_node.value = 0;
 }
 
 static uint8_t ListHighestPriorityTask(void)

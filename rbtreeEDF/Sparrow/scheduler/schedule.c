@@ -29,44 +29,7 @@
 #include "heap.h"
 #include "port.h"
 #include "rbtree.h"
-
-
-Class(TCB_t)
-{
-    volatile uint32_t *pxTopOfStack;
-    rb_node task_node;
-    rb_node IPC_node;
-    uint8_t state;
-    uint8_t uxPriority;
-    uint32_t * pxStack;
-};
-
-__attribute__( ( used ) )  TaskHandle_t volatile schedule_currentTCB = NULL;
-
-__attribute__( ( always_inline ) ) inline TaskHandle_t GetCurrentTCB(void)
-{
-    return schedule_currentTCB;
-}
-
-
-__attribute__( ( always_inline ) ) inline TaskHandle_t TaskHighestPriority(rb_root_handle root)
-{
-    rb_node *rb_highest_node = root->last_node;
-    //rb_node *rb_highest_node = rb_last(root);
-    return container_of(rb_highest_node, TCB_t, task_node);
-}
-
-__attribute__( ( always_inline ) ) inline TaskHandle_t IPCHighestPriorityTask(rb_root_handle root)
-{
-    rb_node *rb_highest_node = root->last_node;
-    return container_of(rb_highest_node, TCB_t, IPC_node);
-}
-
-uint8_t GetTaskPriority(TaskHandle_t taskHandle)
-{
-    return taskHandle->uxPriority;
-}
-
+#include "atomic.h"
 
 
 rb_root ReadyTree;
@@ -77,15 +40,58 @@ rb_root *OverWakeTicksTree;
 rb_root SuspendTree;
 rb_root DeleteTree;
 
-
 static volatile uint32_t NowTickCount = ( uint32_t ) 0;
+volatile uint64_t AbsoluteClock = 0;
+
+Class(TCB_t)
+{
+    volatile uint32_t *pxTopOfStack;
+    rb_node task_node;
+    rb_node IPC_node;
+    uint16_t period;
+    uint8_t respondLine;
+    uint16_t deadline;
+    uint32_t EnterTime;
+    uint32_t ExitTime;
+    uint32_t SmoothTime;
+    uint32_t *pxStack;
+};
+
+__attribute__( ( used ) )  TaskHandle_t volatile schedule_currentTCB = NULL;
+
+__attribute__( ( always_inline ) ) inline TaskHandle_t GetCurrentTCB(void)
+{
+    return schedule_currentTCB;
+}
+
+__attribute__( ( always_inline ) ) inline uint8_t GetRespondLine(TaskHandle_t self)
+{
+    return self->respondLine;
+}
+
+__attribute__( ( always_inline ) ) inline TaskHandle_t TaskFirstRespond(rb_root_handle root)
+{
+    rb_node *rb_highest_node = root->first_node;
+    return container_of(rb_highest_node, TCB_t, task_node);
+}
+
+__attribute__( ( always_inline ) ) inline TaskHandle_t FirstRespond_IPC(rb_root_handle root)
+{
+    rb_node *rb_highest_node = root->first_node;
+    return container_of(rb_highest_node, TCB_t, IPC_node);
+}
+
+uint8_t SetRespondLine(TaskHandle_t self, uint8_t respondLine)
+{
+    return (uint8_t)atomic_set_return(respondLine, (uint32_t *)&(self->respondLine));
+}
 
 
 
 void ReadyTreeAdd(rb_node *node)
 {
     TaskHandle_t self = container_of(node, TCB_t, task_node);
-    node->value = self->uxPriority;
+    node->value =  AbsoluteClock + self->respondLine;
     rb_Insert_node( &ReadyTree, node);
 }
 
@@ -136,7 +142,7 @@ void TaskTreeRemove(TaskHandle_t self, uint8_t State)
 void Insert_IPC(TaskHandle_t self, rb_root *root)
 {
     self->IPC_node.root = root;
-    self->IPC_node.value = self->uxPriority;
+    self->IPC_node.value = AbsoluteClock + self->respondLine;
     rb_Insert_node(root, &(self->IPC_node));
 }
 
@@ -179,19 +185,9 @@ struct Stack_register {
     uint32_t xPSR;
 };
 
-
-#define switchTask()\
-*( ( volatile uint32_t * ) 0xe000ed04 ) = 1UL << 28UL
-
 __attribute__( ( always_inline ) ) inline void schedule( void )
 {
-    switchTask();
-}
-
-
-__attribute__((always_inline)) inline void StateSet( TaskHandle_t taskHandle,uint8_t State)
-{
-    taskHandle->state = State;
+    *( ( volatile uint32_t * ) 0xe000ed04 ) = 1UL << 28UL;
 }
 
 __attribute__((always_inline)) inline uint8_t CheckIPCState( TaskHandle_t taskHandle)
@@ -199,19 +195,13 @@ __attribute__((always_inline)) inline uint8_t CheckIPCState( TaskHandle_t taskHa
     return taskHandle->IPC_node.root == NULL;
 }
 
-__attribute__((always_inline)) inline uint8_t CheckTaskState( TaskHandle_t taskHandle, uint8_t State)// If task is the State,return true
-{
-    return taskHandle->state == State;
-}
-
-// the abstraction layer is end
 
 uint8_t volatile schedule_PendSV = 0;
 
-void vTaskSwitchContext( void )
+void TaskSwitchContext( void )
 {
     schedule_PendSV++;
-    schedule_currentTCB = TaskHighestPriority(&ReadyTree);
+    schedule_currentTCB = TaskFirstRespond(&ReadyTree);
 }
 
 
@@ -232,19 +222,22 @@ void RecordWakeTime(uint16_t ticks)
 /*The RTOS delay will switch the task.It is used to liberate low-priority task*/
 void TaskDelay( uint16_t ticks )
 {
-    TaskTreeRemove(schedule_currentTCB,Ready);
-    RecordWakeTime(ticks);
-    schedule();
+    if (ticks) {
+        TaskTreeRemove(schedule_currentTCB, Ready);
+        RecordWakeTime(ticks);
+        schedule();
+    }
 }
 
 /*
  * If the program runs here, there is a problem with the use of the RTOS,
- * such as the stack allocation space is too small, and the use of undefined operations
+ * such as the stack allocation space is too small, and the use of undefined operations.
  */
+volatile uint32_t error = 0;
 void ErrorHandle(void)
 {
     while (1){
-
+        error++;
     }
 }
 
@@ -266,11 +259,16 @@ uint32_t * pxPortInitialiseStack( uint32_t * pxTopOfStack,
 }
 
 
-
+/*
+ *  Creat the task, first malloc the stack, then TCB.
+ *  For ARM, the address of TCB above the stack.
+ */
 void  TaskCreate( TaskFunction_t pxTaskCode,
                   const uint16_t usStackDepth,
-                  void * const pvParameters,//You can use it for debugging
-                  uint32_t uxPriority,
+                  void * const pvParameters,
+                  uint16_t period,
+                  uint8_t respondLine,
+                  uint16_t deadline,
                   TaskHandle_t * const self
                   )
 {
@@ -280,8 +278,10 @@ void  TaskCreate( TaskFunction_t pxTaskCode,
     memset( ( void * ) NewTcb, 0x00, sizeof( TCB_t ) );
     *self = ( TCB_t *) NewTcb;
     *NewTcb = (TCB_t){
-        .state = Ready,
-        .uxPriority = uxPriority,
+        .period = period,
+        .respondLine = respondLine,
+        .deadline = deadline,
+        .SmoothTime = 0,
         .pxStack = pxStack
     };
     topStack =  NewTcb->pxStack + (usStackDepth - (uint32_t)1) ;
@@ -297,6 +297,30 @@ void TaskDelete(TaskHandle_t self)
     TaskTreeRemove(self, Ready);
     rb_Insert_node(&DeleteTree, &self->task_node);
     schedule();
+}
+
+uint32_t TaskEnter(void)
+{
+    return atomic_set_return((uint32_t)AbsoluteClock, &(schedule_currentTCB->EnterTime));
+}
+
+
+
+uint32_t TaskExit(void)
+{
+    TaskHandle_t self = schedule_currentTCB;
+    atomic_set((uint32_t)AbsoluteClock, &(self->ExitTime));
+    uint32_t newPeriod = self->ExitTime - self->EnterTime;
+    if (self->SmoothTime != 0) {
+        self->SmoothTime = (self->SmoothTime - (self->SmoothTime >> 3)) + (newPeriod << 13);
+    } else {
+        self->SmoothTime = newPeriod << 16;
+    }
+    if (newPeriod >= self->deadline) {
+        ErrorHandle();
+    }
+    TaskDelay(self->period);
+    return newPeriod;
 }
 
 
@@ -322,22 +346,29 @@ void TaskFree(void)
     }
 }
 
-//Task handle can be hide, but in order to debug, it must be created manually by the user
+/*
+ * Task handle can be hide, but in order to debug, it must be created manually by the user.
+ * leisureTask content can be manually modified as needed.
+ */
 TaskHandle_t leisureTcb = NULL;
-
+int count1=0;
 void leisureTask( void )
-{//leisureTask content can be manually modified as needed
+{
     while (1) {
+        count1++;
         TaskFree();
     }
 }
 
+uint16_t MaxRespondLine = (uint16_t)~0;
 void LeisureTaskCreat(void)
 {
-    TaskCreate(    (TaskFunction_t)leisureTask,
+    TaskCreate(     (TaskFunction_t)leisureTask,
                     128,
                     NULL,
                     0,
+                    MaxRespondLine,
+                    MaxRespondLine,
                     &leisureTcb );
 }
 
@@ -391,7 +422,7 @@ void HandlerInit(void)
 __attribute__( ( always_inline ) )  inline void SchedulerStart( void )
 {
     HandlerInit();
-    vTaskSwitchContext();
+    TaskSwitchContext();
     StartFirstTask();
 }
 
@@ -406,7 +437,6 @@ void DelayTreeRemove(TaskHandle_t self)
 void CheckTicks(void)
 {
     rb_node *rb_node = NULL;
-    NowTickCount++;
 
     if( NowTickCount == ( uint32_t) 0UL) {
         rb_root *temp;
@@ -425,14 +455,14 @@ void CheckTicks(void)
 }
 
 
-
-volatile uint64_t AbsoluteClock = 0;
+uint8_t SchedulerSuspend = 1;
 void SysTick_Handler(void)
 {
     uint32_t xre = xEnterCritical();
     AbsoluteClock++;
+    NowTickCount++;
     // If the idle task is suspended, the scheduler is suspended
-    if(CheckTaskState(leisureTcb, Suspend) == 0) {
+    if(SchedulerSuspend) {
         CheckTicks();
     }
     xExitCritical(xre);
