@@ -6,15 +6,9 @@ Sparrow RTOS是一个极简型RTOS内核，定位是学习型RTOS。
 
 项目地址：[skaiui2/SKRTOS_sparrow: Lightweight rtos inspired by SKRTOS](https://github.com/skaiui2/SKRTOS_sparrow)
 
-在项目下有五个分支:
+在项目下有两个分支:
 
-main：不同平台的已移植工程，例如：keil、IAR、clion（gcc）
-
-experiment：实验工程，需要搭配教程。
-
-manual：arm cm3和arm cm4的手册。
-
-memory：内存管理相关的实验工程及单独的内存管理函数库。
+experiment：实验工程，需要搭配该分支下的pdf教程《400行写一个RTOS》。
 
 **source**：Sparrow RTOS的源码，主要维护和更新该分支。
 
@@ -34,7 +28,7 @@ Sparrow RTOS共有四个版本：数表版本(Table)、链表版本(List)、红�
 
 也可以把这四个版本划分为：学习版、使用版、实验版。
 
-三个版本中支持的编译器和平台正在维护更新中，目前默认支持的架构是arm cm3，默认支持的编译器为gcc。
+四个版本中支持的编译器和平台正在维护更新中，目前默认支持的架构是arm cm3，默认支持的编译器为gcc。
 
 数表版本只支持32个以下的任务，且不支持同优先级，该版本支持keil、gcc、IAR多种编译器，其中不带IPC版本仅400行代码。
 
