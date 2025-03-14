@@ -1,6 +1,6 @@
 ## 实验
 
-## source文件夹
+### source文件夹
 
 里面存放的是教程的源码，包括gcc版本、keil版本、IAR版本，均为400行版本。
 
@@ -46,7 +46,7 @@ memory文件夹是内存管理算法的相关实验工程。
 
 ### manual
 
-里面是arm cm3和arm cm4的手册。
+里面是arm cm3架构的手册。
 
 ### docs
 
