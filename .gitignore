@@ -1,0 +1,11 @@
+Critical/cmake-build-debug
+Critical/.idea
+PendSV/cmake-build-debug
+PendSV/.idea
+Schedule/cmake-build-debug
+Schedule/.idea
+StartFirst/cmake-build-debug
+StartFirst/.idea
+SysTick/cmake-build-debug
+SysTick/.idea*/cmake-build-debug/
+cmake-build-debug/
