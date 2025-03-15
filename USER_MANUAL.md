@@ -1,32 +1,12 @@
 # Sparrow RTOS使用手册
 
-## 简介
-
-Sparrow RTOS是一个极简型RTOS内核，定位是学习型RTOS。
-
-项目地址：[skaiui2/SKRTOS_sparrow: Lightweight rtos inspired by SKRTOS](https://github.com/skaiui2/SKRTOS_sparrow)
-
-在项目下有两个分支:
-
-experiment：实验工程，需要搭配该分支下的pdf教程《400行写一个RTOS》。
-
-**source**：Sparrow RTOS的源码，主要维护和更新该分支。
 
 
-
-教程地址：[400行程序写一个实时操作系统（开篇） - 知乎](https://zhuanlan.zhihu.com/p/963319443)
-
-该教程的代码为数表版本内核，教程不仅讲解原理，也指导读者如何一步步完成一个RTOS内核。
-
-
-
-## 源码
+## 版本
 
 Sparrow RTOS共有四个版本：数表版本(Table)、链表版本(List)、红黑树版本(RBtree)，以及在红黑树版本上改进的响应EDF版本（rbtreeEDF）。
 
-**教程讲解的版本为数表版本**
-
-也可以把这四个版本划分为：学习版、使用版、实验版。
+也可以把这四个版本划分为：学习版、使用版、实验版、尝试版。
 
 四个版本中支持的编译器和平台正在维护更新中，目前默认支持的架构是arm cm3，默认支持的编译器为gcc。
 
@@ -38,7 +18,7 @@ Sparrow RTOS共有四个版本：数表版本(Table)、链表版本(List)、红�
 
 以上三个版本的设计思想并没有任何区别。
 
-响应EDF版本：在传统EDF算法上的改进，强调系统的周期性与可预测性。
+响应EDF版本：在传统EDF算法上的改进，强调系统的周期性与可预测性，支持arm cortex A7架构。
 
 **适用范围**
 
