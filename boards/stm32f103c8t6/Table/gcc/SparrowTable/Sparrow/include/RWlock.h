@@ -22,13 +22,17 @@
  * SOFTWARE.
  *  https://github.com/skaiui2/SKRTOS_sparrow
  */
-
-#ifndef HEAP_H
-#define HEAP_H
+#ifndef RWLOCK_H
+#define RWLOCK_H
 #include "schedule.h"
 
-void *heap_malloc(size_t WantSize);
-void heap_free(void *xReturn);
+typedef struct rwlock *rwlock_handle;
+rwlock_handle rwlock_creat(void);
+void read_acquire(rwlock_handle rwlock_handle1);
+void read_release(rwlock_handle rwlock_handle1);
+void write_acquire(rwlock_handle rwlock_handle1);
+void write_release(rwlock_handle rwlock_handle1);
+void rwlock_delete(rwlock_handle rwlock1);
 
 
 #endif

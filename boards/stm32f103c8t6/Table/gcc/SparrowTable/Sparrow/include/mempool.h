@@ -23,12 +23,20 @@
  *  https://github.com/skaiui2/SKRTOS_sparrow
  */
 
-#ifndef HEAP_H
-#define HEAP_H
+#ifndef MEMPOOL_H
+#define MEMPOOL_H
+#include "class.h"
 #include "schedule.h"
 
-void *heap_malloc(size_t WantSize);
-void heap_free(void *xReturn);
+typedef struct PoolHead * PoolHeadHandle;
+
+PoolHeadHandle memPool_creat(uint16_t size,uint8_t amount);
+void *memPool_apl(PoolHeadHandle ThePool);
+void memPool_free(void *xRet);
+void memPool_delete(PoolHeadHandle ThePool);
+
+
+
 
 
 #endif

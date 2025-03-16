@@ -23,12 +23,34 @@
  *  https://github.com/skaiui2/SKRTOS_sparrow
  */
 
-#ifndef HEAP_H
-#define HEAP_H
+#ifndef PCQUEUE_H
+#define PCQUEUE_H
 #include "schedule.h"
 
-void *heap_malloc(size_t WantSize);
-void heap_free(void *xReturn);
+
+typedef struct Oo_buffer *Oo_buffer_handle;
+Oo_buffer_handle Oo_buffer_creat(uint8_t buffer_size);
+void Oo_insert(Oo_buffer_handle Oo_buffer1, int object);
+int Oo_remove(Oo_buffer_handle Oo_buffer1);
+void Oo_buffer_delete(Oo_buffer_handle Oo_buffer1);
+
+
+typedef struct Mo_buffer *Mo_buffer_handle;
+Mo_buffer_handle Mo_buffer_creat(uint8_t buffer_size);
+void Mo_insert(Mo_buffer_handle Mo_buffer1, int object);
+int Mo_remove(Mo_buffer_handle Mo_buffer1);
+void Mo_buffer_delete(Mo_buffer_handle Mo_buffer1);
+
+
+typedef struct Mm_buffer *Mm_buffer_handle;
+Mm_buffer_handle Mm_buffer_creat(uint8_t buffer_size);
+void Mm_insert(Mm_buffer_handle Mm_buffer1, int object);
+int Mm_remove(Mm_buffer_handle Mm_buffer1);
+void Mm_buffer_delete(Mm_buffer_handle Mm_buffer1);
+
+
+
+
 
 
 #endif

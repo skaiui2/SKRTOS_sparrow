@@ -23,12 +23,23 @@
  *  https://github.com/skaiui2/SKRTOS_sparrow
  */
 
-#ifndef HEAP_H
-#define HEAP_H
+#ifndef PORT_H
+#define PORT_H
+
+#include "class.h"
 #include "schedule.h"
 
-void *heap_malloc(size_t WantSize);
-void heap_free(void *xReturn);
+uint32_t  EnterCritical( void );
+void ExitCritical( uint32_t xReturn );
+void StartFirstTask(void);
+uint32_t *StackInit( uint32_t *pxTopOfStack, TaskFunction_t pxCode,void *pvParameters);
+
+#define schedule()\
+*( ( volatile uint32_t * ) 0xe000ed04 ) = 1UL << 28UL
+
+
 
 
 #endif
+
+

@@ -23,12 +23,21 @@
  *  https://github.com/skaiui2/SKRTOS_sparrow
  */
 
-#ifndef HEAP_H
-#define HEAP_H
-#include "schedule.h"
+#ifndef CONFIG_H
+#define CONFIG_H
 
-void *heap_malloc(size_t WantSize);
-void heap_free(void *xReturn);
+
+
+#define configSysTickClockHz			( ( unsigned long ) 72000000 )
+#define configTickRateHz			( ( uint32_t ) 1000 )
+#define configShieldInterPriority 191
+
+
+
+
+
+
+
 
 
 #endif

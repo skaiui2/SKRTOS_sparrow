@@ -23,12 +23,20 @@
  *  https://github.com/skaiui2/SKRTOS_sparrow
  */
 
-#ifndef HEAP_H
-#define HEAP_H
-#include "schedule.h"
+#ifndef CLASS_H
+#define CLASS_H
 
-void *heap_malloc(size_t WantSize);
-void heap_free(void *xReturn);
+#include <stddef.h>
+#include <stdint.h>
+
+#define Class(class)    \
+typedef struct  class  class;\
+struct class
+
 
 
 #endif
+
+
+
+
