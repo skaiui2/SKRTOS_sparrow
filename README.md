@@ -1,126 +1,144 @@
 # SKRTOS_sparrow
 
-SKRTOS_sparrow内核的定位是学习型RTOS，项目的重点在于内核设计相关的文档教程。
+## Introduction
 
-### 2025.3.16留言
+SKRTOS_sparrow is a Real-Time Operation System micro kernel.  
 
-本项目暂停维护更新。
+#### NOTES
 
-## 说明
+All of my remaining time is dedicated to working on the TCP/IP stack and don’t have much time to fix the kernel's bugs. I might need to wait until I have more time to address these bugs.
 
-项目下有两个分支：
+**Contact information**
 
-**main**:内核源码、支持的架构、已经移植的工程。
+skaiuijing@gmail.com
 
-**study**：在该分支下有《400行程序写一个RTOS》pdf与对应的实验工程。如果读者对学习如何写一个RTOS感兴趣，请移步到另一个分支study：[skaiui2/SKRTOS_sparrow at study](https://github.com/skaiui2/SKRTOS_sparrow/tree/study)
+### Description
 
+**Main** Branch:
 
+kernel source code, supported architectures, ported projects.
 
-### 当前分支的目录
 
-arch:不同的架构移植接口
 
-boards：不同开发板的移植工程
+#### Tutorial
 
-docs：文档，包括内核设计与源码讲解
+If you want to write a micro kernel, there are two kinds of tutorial in **Chinese** and **English**.
 
-kernel：源码
+**study**：
 
+**中文**：[skaiui2/SKRTOS_sparrow at study](https://github.com/skaiui2/SKRTOS_sparrow/tree/study)
 
+**English** : 
 
-## 版本
+Part1: Memory management
 
-内核现在具有四个版本：数表版本(Table)、链表版本(List)、红黑树版本(RBtree)、响应EDF版本（rbtreeEDF）。
+[Let’s write a Real-Time Operating System(RTOS) (Part 1: Memory management) | by Skaiuijing | Apr, 2025 | Medium](https://medium.com/@skaiuijing/lets-write-a-real-time-operating-system-rtos-part-1-5873f6c2184f)
 
-也可以把这四个版本划分为：学习版、使用版、实验版、尝试版。
+Part2: Context switch and Multithread
 
-四个版本中支持的编译器和平台正在维护更新中，目前默认支持的架构是arm cm3，默认支持的编译器为gcc。
+[Let’s write a Real-Time Operating System(RTOS) (Part 2: Context switch and Multithread) | by Skaiuijing | Apr, 2025 | Medium](https://medium.com/@skaiuijing/lets-write-a-real-time-operating-system-rtos-part-2-8cc3cd11c8cf)
 
-#### 数表版本
+Part3: Multi-priority preemptive Scheduler
 
-只支持32个以下的任务，且不支持同优先级，该版本支持keil、gcc、IAR多种编译器，其中不带IPC版本仅400行代码。
+[Let’s write a Real-Time Operating System(RTOS) (Part3: Multi-priority preemptive Scheduler) | by Skaiuijing | Apr, 2025 | Medium](https://medium.com/@skaiuijing/lets-write-a-real-time-operating-system-rtos-part3-multi-priority-preemptive-scheduler-167152ce9719)
 
-[使用手册](UserManual/tableUser.md)
+Part4: Concurrency and interrupt management
 
-#### 链表版本
+Part5: Clock triggered scheduling
 
-支持同优先级，对支持的任务数量没有限制，该版本接口部分可参考数表版本进行修改。
+Part6: Timer
 
-#### 红黑树版本
+Part7: Semaphore and Mutex
 
-支持同优先级，但不支持时间片，其他功能与链表版本相同。
+Part8: Message queue
 
-以上三个版本的设计思想并没有任何区别。
+Part9: Read-Write lock
 
-#### 响应EDF版本
+Part10: Conclusion
 
-在传统EDF算法上的改进，强调系统的周期性与可预测性，支持arm cortex A7架构。
 
-另外三个版本：[使用手册](UserManual/other.md)
 
-**适用范围**
+### Directory of the current branch
 
-数表版本：学习用途或资源有限的条件。
+**arch**: Interface for porting different architectures
 
-链表版本：完成度较高，适合大多数场景。
+**boards**: Transplant project of different development boards
 
-红黑树版本：适用于大量任务频繁搜索、插入和删除操作的场景。
+**docs**: Documentation, including kernel design and source code
 
-响应EDF版本：适用于强调周期性与可预测性的场景，目前只进行了一些简单的测试，功能还不稳定，目前只是一个玩具。
+**kernel**: source code
 
-### 版本说明
 
-**本项目不再进行较大更新，而是注重于维护目前的四个版本**，接下来要做的工作有：
 
-1.**优化不同版本的代码**，完善功能，修复bug。
+## version
 
-2.**编写详细的文档**，包括使用文档、学习文档等一系列文档。
+The kernel now has four versions: the  **Table version** (Table), the List version** (List), the **red-black tree version** (RBtree), and the r**esponse EDF version** (rbtreeEDF).
 
-### 各版本优化方向
+These four versions can also be divided into: learning version, use version, experimental version, and trial version.
 
-**数表版本**：适用场景是低资源与高效率，内核应当精简，后期会使用大量的位操作加速运算，并进行冗余代码优化，对变量进行复用提高效率。
+The compilers and platforms supported in the four releases are under maintenance update.
 
-**链表版本**：适用于一般场景，内核追求稳定性，应当向流行的RTOS看齐，如FreeRTOS。
+### Table version
 
-**红黑树版本**：适用于大量线程的高并发场景，强调”万物皆可锁“的概念，后期会加入大量的锁保证并发的安全性，对锁与并发的管理应当学习Linux内核。
+Only support less than 32 tasks, and do not support the same priority.
 
-**响应EDF版本**：适用于强调周期性、可预测性的场景，在参考红黑树版本锁管理的基础上，应当添加任务可调度性的计算程序与预测程序，后期会改进调度算法，预测程序会参考TCP/IP的RTT估计器等算法进行修改。
+**USER MANUAL**
 
-目前各个版本大同小异，但是优化方向是不一样的，考虑到后期的变动，对不同版本的文档也进行了划分。
+[中文](UserManual/中文/tableUser.md)
 
+[English](UserManual/English/tableUser.md)
 
+#### Linked list version
 
-## 文档说明
+There is no limit on the number of supported tasks. The interface of this version can be modified by referring to the number table version.
 
-本分支下的**docs文件夹**包含了SKRTOS_sparrow内核的设计说明，
+#### Red and black tree version
 
-**ArithmeticOptimizations文件夹**：一些运算和程序优化相关的理解。
+Supports the same priority, but does not support time slices, and other features are the same as the linked list version.
 
-**CodeDesign文件夹**：代码的设计风格、编程思想。
+The above three versions of the design idea is not any difference.
 
-**Kernel_imple文件夹**：内核的具体实现，文件中的具体代码的讲解，每周末会更新一篇文章。
+#### Responds to the EDF version
 
-包括以下内容：
+The improvement on the traditional EDF algorithm emphasizes the periodicity and predictability of the system, and supports the arm cortex A7 architecture.
 
-1.内核各个文件的代码是什么？内核的代码风格是什么？
+**USER MANUAL**
 
-2.内核是如何设计的？如何从0到1写一个RTOS内核？
+Three other versions: [中文](UserManual/English/other.md)
 
-3.这一行行代码是在干什么？
+[English](UserManual/English/other.md)
 
-4.CPU架构、实时操作系统相关知识。
+### Scope of Application
 
-5.对特定问题的理解与思考
+table version: Learning conditions with limited use or resources.
 
+list version: high degree of completion, suitable for most scenarios.
 
+Red-black tree version: applicable to scenarios where a large number of tasks are frequently searched, inserted, and deleted.
 
-### 文档更新
+Response EDF version: Suitable for scenarios that emphasize periodicity and predictability, only some simple tests have been conducted, the function is not stable, and it is only a toy at present.
 
-Kernel_imple文件夹已更新文章：
 
-1.链表版本、红黑树版本、响应EDF版本的定时器实现。
 
-2.各个版本的内存管理实现。
+### Each version optimization direction
 
+**table version** : The application scenario is low resources and high efficiency, the kernel should be streamlined, and a large number of bit operations will be used in the later stage to accelerate the operation, and redundant code optimization, and the reuse of variables to improve efficiency.
 
+**list version** : Suitable for general scenarios.
+
+**Red-black tree version** : suitable for high concurrency scenarios with a large number of threads, emphasizing the concept of "everything can be locked", and a large number of locks will be added later to ensure the security of concurrency.
+
+**Response EDF version** : Suitable for scenarios that emphasize periodicity and predictability. On the basis of referring to red-black tree version lock management, a calculation program and prediction program for task schedulability should be added. The scheduling algorithm will be improved later, like add the prediction program.
+
+
+
+## Documentation
+
+The **docs folder ** under this branch contains the SKRTOS_sparrow kernel design instructions,
+
+**ArithmeticOptimizations folder ** : Some understanding of arithmetic and program optimization.
+
+**CodeDesign folder ** : Code design style, programming ideas.
+
+**Kernel_imple folder ** : The specific implementation of the kernel, the specific code in the file.
 
