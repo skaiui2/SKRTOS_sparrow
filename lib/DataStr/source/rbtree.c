@@ -484,7 +484,6 @@ void rb_remove_node(rb_root *root,  rb_node *node)
         root->first_node = NULL;
     }
     rb_erase(node, root);
-    rb_node_init(node);
     root->count--;
 }
 

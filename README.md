@@ -68,11 +68,13 @@ Part10: Conclusion
 
 **kernel**: source code
 
+**lib**: data structure and algorithm library
+
 
 
 ## version
 
-The kernel now has four versions: the  **Table version** (Table), the List version** (List), the **red-black tree version** (RBtree), and the r**esponse EDF version** (rbtreeEDF).
+The kernel now has four versions: the  **Table version** (Table), the **List version** (List), the **red-black tree version** (RBtree), and the r**esponse EDF version** (rbtreeEDF).
 
 These four versions can also be divided into: learning version, use version, experimental version, and trial version.
 
@@ -134,11 +136,11 @@ Response EDF version: Suitable for scenarios that emphasize periodicity and pred
 
 ## Documentation
 
-The **docs folder ** under this branch contains the SKRTOS_sparrow kernel design instructions,
+The docs folder  under this branch contains the SKRTOS_sparrow kernel design instructions,
 
-**ArithmeticOptimizations folder ** : Some understanding of arithmetic and program optimization.
+ArithmeticOptimizations folder  : Some understanding of arithmetic and program optimization.
 
-**CodeDesign folder ** : Code design style, programming ideas.
+CodeDesign folder  : Code design style, programming ideas.
 
-**Kernel_imple folder ** : The specific implementation of the kernel, the specific code in the file.
+Kernel_imple folder  : The specific implementation of the kernel, the specific code in the file.
 
