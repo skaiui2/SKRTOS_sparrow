@@ -14,9 +14,17 @@ skaiuijing@gmail.com
 
 ### Description
 
-**Main** Branch:
+#### Directory of the current branch
 
-kernel source code, supported architectures, ported projects.
+**arch**: Interface for porting different architectures
+
+**boards**: Transplant project of different development boards
+
+**docs**: Documentation, including kernel design and source code
+
+**kernel**: source code
+
+**lib**: data structure and algorithm library
 
 
 
@@ -44,6 +52,8 @@ Part3: Multi-priority preemptive Scheduler
 
 Part4: Concurrency and interrupt management
 
+[Let’s write a Real-Time Operating System(RTOS) (Part4: Concurrency and interrupt management) | by Skaiuijing | May, 2025 | Medium](https://medium.com/@skaiuijing/lets-write-a-real-time-operating-system-rtos-part4-concurrency-and-interrupt-management-2ef184ac1e42)
+
 Part5: Clock triggered scheduling
 
 Part6: Timer
@@ -55,20 +65,6 @@ Part8: Message queue
 Part9: Read-Write lock
 
 Part10: Conclusion
-
-
-
-### Directory of the current branch
-
-**arch**: Interface for porting different architectures
-
-**boards**: Transplant project of different development boards
-
-**docs**: Documentation, including kernel design and source code
-
-**kernel**: source code
-
-**lib**: data structure and algorithm library
 
 
 
