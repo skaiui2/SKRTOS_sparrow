@@ -208,61 +208,142 @@ void *radix_tree_lookup(struct radix_tree_root *root, unsigned long index)
 
 根据位图查找即可，就不多赘述了。
 
+### 上界查找
+
+```
+
+/*
+ * The last bit can cause issues because we do not perform a backtracking operation at that stage.
+ * So, we must ensure that the index is always aligned to at least 2.
+ */
+void *radix_tree_lookup_upper_bound(struct radix_tree_root *root, size_t index) {
+    struct radix_tree_node *node = root->rnode;
+    uint8_t height = root->height;
+    uint8_t shift = BIT_LEVEL * height;
+    uint8_t offset;
+    uint8_t first_search = 1;
+
+    if (index > root->max_size) {
+        return NULL;
+    }
+
+    while (height > 0) {
+        if (first_search) {
+            offset = (index >> shift) & (SIZE_LEVEL - 1);
+        } else {
+            offset = 0;
+        }
+
+        //search for this level
+        while ((offset < SIZE_LEVEL) && (!node->slots[offset])) {
+            offset++;
+            if (first_search) {
+                first_search = 0;
+            }
+        }
+
+        //go back
+        while ((offset >= SIZE_LEVEL) || (!node->slots[offset])) {
+            node = node->parent;
+            shift += BIT_LEVEL;
+            height++;
+            offset = ((index >> shift) & (SIZE_LEVEL - 1)) + 1;
+            while ((offset < SIZE_LEVEL) && (!node->slots[offset])) {
+                offset++;
+            }
+            if ((offset < SIZE_LEVEL) && node->slots[offset]) {
+                node = node->slots[offset];
+                shift -= BIT_LEVEL;
+                height--;
+                break;
+            }
+
+            if (first_search) {
+                first_search = 0;
+            }
+        }
+        if (first_search == 0) {
+            offset = 0;
+            while ((offset < SIZE_LEVEL) && (!node->slots[offset])) {
+                offset++;
+            }
+        }
+
+        node = (struct radix_tree_node *)node->slots[offset];
+        shift -= BIT_LEVEL;
+        height--;
+    }
+
+    if (first_search) {
+        offset = (int) (index & (SIZE_LEVEL - 1));
+    } else {
+        offset = 0;
+        while ((offset < SIZE_LEVEL) && (!node->slots[offset])) {
+            offset++;
+        }
+    }
+    if (node->slots[offset]) {
+        return node->slots[offset];
+    }
+    return NULL;
+}
+
+```
+
+1.分为正常映射查找和上界查找
+
+2.当正常查找获取空指针时，进行回溯操作，向上、向右对节点进行迭代，直到找到一个在先前节点右边的节点
+
+3.此时舍弃原先的位图遍历，从0逐个开始查找，获取到的节点不为NULL即可，再对每一层重复操作
+
+4.迭代到最后一层，获取叶子节点并返回
+
+### 注意
+
+由于最后一层的操作并不在循环中，因此最后一层的index设置不当会会导致BUG，因此务必确保index的对齐。换而言之，为了逻辑的可行性，我们舍弃了最后几位bit。
+
 
 
 ### 删除操作
 
 ```
-
 void *radix_tree_delete(struct radix_tree_root *root, unsigned long index)
 {
     struct radix_tree_node *node = root->rnode;
-    struct radix_tree_node *parent = NULL;
-    int offset, parent_offset = 0;
-    unsigned int height = root->height;
-    unsigned long shift = BIT_LEVEL * height;
-    
+    uint8_t height = root->height;
+    uint8_t shift = BIT_LEVEL * height;
+    uint8_t offset;
+
     while (height > 0) {
         if (!node) {
             return NULL;
         }
         offset = (int)((index >> shift) & (SIZE_LEVEL - 1));
-        parent = node;
-        parent_offset = offset;
         node = (struct radix_tree_node *)node->slots[offset];
         shift -= BIT_LEVEL;
         height--;
     }
-    
-    if (node == NULL) {
+
+    if (!node) {
         return NULL;
     }
     offset = (int)(index & (SIZE_LEVEL - 1));
-    void *item = node->slots[offset];
-    if (item == NULL) {
+    if (!node->slots[offset]) {
         return NULL;
     }
 
-    node->slots[offset] = NULL; 
+    node->slots[offset] = NULL;
     node->count--;
 
-    while (parent && node->count == 0) {
-        heap_free(node);
-        parent->slots[parent_offset] = NULL;
-        parent->count--;
-        node = parent;
-    }
-
-    return item;
+    return node->slots[offset];
 }
+
 
 ```
 
 1.与遍历操作同理，根据位图查找即可
 
-2.查找到后，初始化相关指针并使用heap_free回收相关内存
-
-
+2.查找到后，初始化相关指针即可
 
 
 
