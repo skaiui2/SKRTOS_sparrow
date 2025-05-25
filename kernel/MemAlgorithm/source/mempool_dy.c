@@ -23,8 +23,9 @@
  *  https://github.com/skaiui2/SKRTOS_sparrow
  */
 
-#include "mempool.h"
+#include "mempool_dy.h"
 #include "heap.h"
+
 
 Class(PoolNode)
 {
@@ -53,49 +54,41 @@ void pool_apart(PoolHead *ThePool, uint8_t amount,size_t apart_size)
 
     prev_node = ThePool->head;
     while(amount != 0) {
-        new_node = (PoolNode *) (((size_t) prev_node) + apart_size);
+        new_node = heap_malloc(apart_size);
         new_node->used = 0;
         list_add_next(&prev_node->free_node, &new_node->free_node);
         prev_node->next = new_node;
         prev_node = new_node;
         amount--;
     }
-    new_node->next = NULL;
+    if (new_node) {
+        new_node->next = NULL;
+    }
 }
 
 
 PoolHeadHandle memPool_creat(uint16_t size,uint8_t amount)
 {
-    size_t alignment_require_size;
-    size_t apart_size = size;
-    uint32_t all_size;
-    void *start_address;
     PoolHead *ThePool;
 
-    apart_size += NodeStructSize;
-    if(apart_size & alignment_byte) {
-        alignment_require_size = alignment_byte + 1 - (apart_size & alignment_byte);
-        apart_size += alignment_require_size;
-    }
-
-    all_size = (uint32_t)( amount * ((uint32_t)apart_size));
-    all_size += HeadStructSize;
-    start_address =heap_malloc(all_size);
-    if (start_address == NULL){
+    ThePool = heap_malloc(HeadStructSize);
+    if (ThePool == NULL){
         return false;
     }
-    ThePool = (PoolHead *)start_address;
     *ThePool = (PoolHead){
-            .head = (PoolNode *)((size_t)start_address + HeadStructSize),
             .BlockSize = size,
             .AllCount = amount,
             .RemainNode = amount
     };
-    ThePool->head->used = 0;
     list_node_init(&ThePool->free_list);
-    PoolNode *first_node = (PoolNode *)ThePool->head;
+    size += NodeStructSize;
+    ThePool->head = heap_malloc(size);
+    PoolNode *first_node = ThePool->head;
+    *first_node = (PoolNode) {
+        .used = 0,
+    };
     list_add_next(&ThePool->free_list, &first_node->free_node);
-    pool_apart(ThePool,amount - 1,apart_size);
+    pool_apart(ThePool,amount - 1,size);
 
     return ThePool;
 }
@@ -116,7 +109,7 @@ void *memPool_apl(PoolHeadHandle ThePool)
         return xReturn;
     }
 
-    if (use_node->used == 0) {
+    if(use_node->used == 0) {
         use_node->used = 1;
         ThePool->RemainNode -= 1;
         xReturn = (void *) (((uint8_t *) use_node) + NodeStructSize);
@@ -149,9 +142,36 @@ void memPool_free(PoolHeadHandle ThePool, void *xRet)
     }
 }
 
-void memPool_delete(PoolHeadHandle ThePool)
+void memPool_delete_node(PoolHeadHandle ThePool, void *address)
 {
+    PoolNode *free_node;
+    PoolNode *prev_node;
+    PoolNode *next_node;
+    if (!address) {
+        return;
+    }
+    address -= NodeStructSize;
+    free_node = address;
+    next_node = free_node->next;
+    list_remove(&free_node->free_node);
+    prev_node = address - (ThePool->BlockSize + NodeStructSize);
+    prev_node->next = next_node;
+
+    heap_free(address);
+}
+
+void memPool_delete_all(PoolHeadHandle ThePool)
+{
+    PoolNode *next_node;
+    PoolNode *free_node;
     if (ThePool) {
+        free_node = ThePool->head;
+        for (uint16_t amount = ThePool->AllCount; amount > 0; amount--) {
+            next_node = free_node->next;
+            heap_free(free_node);
+            free_node = next_node;
+        }
         heap_free(ThePool);
     }
+
 }

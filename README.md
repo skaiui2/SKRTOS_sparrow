@@ -54,11 +54,13 @@ Part4: Concurrency and interrupt management
 
 [Let’s write a Real-Time Operating System(RTOS) (Part4: Concurrency and interrupt management) | by Skaiuijing | May, 2025 | Medium](https://medium.com/@skaiuijing/lets-write-a-real-time-operating-system-rtos-part4-concurrency-and-interrupt-management-2ef184ac1e42)
 
-Part5: Clock triggered scheduling
+Part5: Time triggered scheduling
 
 [Let’s write a Real-Time Operating System(RTOS) (Part 5: Time triggered scheduling) | by Skaiuijing | May, 2025 | Medium](https://medium.com/@skaiuijing/lets-write-a-real-time-operating-system-rtos-part-5-clock-triggered-scheduling-fcd433285183)
 
 Part6: Timer
+
+[Let’s write a Real-Time Operating System(RTOS) (Part6: Timer) | by Skaiuijing | May, 2025 | Medium](https://medium.com/@skaiuijing/lets-write-a-real-time-operating-system-rtos-part6-timer-b7e9be931ec3)
 
 Part7: Semaphore and Mutex
 

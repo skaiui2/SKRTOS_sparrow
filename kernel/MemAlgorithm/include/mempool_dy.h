@@ -1,5 +1,3 @@
-
-
 /*
  * MIT License
  *
@@ -25,26 +23,18 @@
  *  https://github.com/skaiui2/SKRTOS_sparrow
  */
 
-#ifndef TRALLOC_H
-#define TRALLOC_H
+#ifndef MEMPOOL_DY_H
+#define MEMPOOL_DY_H
+#include "class.h"
+#include "schedule.h"
 
-#include <stdio.h>
+typedef struct PoolHead * PoolHeadHandle;
 
-
-#define container_of(ptr, type, member) \
-    ((type *)((char *)(ptr) - offsetof(type, member)))
-
-void *TR_alloc(uint16_t WantSize);
-void TR_free(void *xReturn);
-
-#define PTR_SIZE uint64_t
-
-#define config_heap   (10*1024)
-#define alignment_byte 0x07
-
-
-
-
+PoolHeadHandle memPool_creat(uint16_t size,uint8_t amount);
+void *memPool_apl(PoolHeadHandle ThePool);
+void memPool_free(PoolHeadHandle ThePool, void *xRet);
+void memPool_delete_node(PoolHeadHandle ThePool, void *address);
+void memPool_delete_all(PoolHeadHandle ThePool);
 
 
 
