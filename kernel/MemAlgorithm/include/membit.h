@@ -23,17 +23,16 @@
  *  https://github.com/skaiui2/SKRTOS_sparrow
  */
 
-#ifndef MEMPOOL_H
-#define MEMPOOL_H
+#ifndef MEMBIT_H
+#define MEMBIT_H
 #include "class.h"
-#include "schedule.h"
 
-typedef struct PoolHead * PoolHeadHandle;
+typedef struct PoolHead *PoolHeadHandle;
 
-PoolHeadHandle memPool_creat(uint16_t size,uint8_t amount);
-void *memPool_apl(PoolHeadHandle ThePool);
-void memPool_free(PoolHeadHandle ThePool, void *xRet);
-void memPool_delete(PoolHeadHandle ThePool);
+PoolHeadHandle mempool_creat(uint16_t size,uint8_t amount);
+void *mempool_alloc(PoolHeadHandle ThePool);
+void mempool_free(PoolHeadHandle ThePool, void *address);
+void mempool_delete(PoolHeadHandle ThePool);
 
 
 

@@ -28,11 +28,7 @@
 #ifndef TRALLOC_H
 #define TRALLOC_H
 
-#include <stdio.h>
-
-
-#define container_of(ptr, type, member) \
-    ((type *)((char *)(ptr) - offsetof(type, member)))
+#include "class.h"
 
 void *TR_alloc(uint16_t WantSize);
 void TR_free(void *xReturn);

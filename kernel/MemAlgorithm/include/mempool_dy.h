@@ -26,9 +26,8 @@
 #ifndef MEMPOOL_DY_H
 #define MEMPOOL_DY_H
 #include "class.h"
-#include "schedule.h"
 
-typedef struct PoolHead * PoolHeadHandle;
+typedef struct PoolHead *PoolHeadHandle;
 
 PoolHeadHandle memPool_creat(uint16_t size,uint8_t amount);
 void *memPool_apl(PoolHeadHandle ThePool);

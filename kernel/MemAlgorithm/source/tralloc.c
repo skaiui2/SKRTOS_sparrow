@@ -65,6 +65,7 @@ static const size_t HeapStructSize = (sizeof(TR_node) + (size_t)(alignment_byte)
 
 struct radix_tree_root FirstLevel[MAX_COUNT];
 
+
 void TR_init()
 {
     TR_node *first_node;
@@ -83,9 +84,11 @@ void TR_init()
     }
 
     first_node = (TR_node *)start_heap;
+    *first_node = (TR_node) {
+        .used = UnUse,
+        .block_size = TheHead.AllSize
+    };
     list_add_next(&(TheHead.cache_node), &(first_node->link_node));
-    first_node->used = UnUse;
-    first_node->block_size = TheHead.AllSize;
 
     uint8_t fl = log2_clz((uint32_t)TheHead.AllSize);
     radix_tree_insert(&FirstLevel[fl], TheHead.AllSize, first_node);
@@ -99,7 +102,6 @@ void *TR_alloc(uint16_t WantSize)
     TR_node *next_node;
     void *xReturn;
     uint8_t fl;
-    size_t size;
 
     if (WantSize) {
         WantSize += HeapStructSize;
@@ -112,16 +114,23 @@ void *TR_alloc(uint16_t WantSize)
     }
 
     if (WantSize & alignment_byte) {
-        size = (alignment_byte + 1) - (WantSize & alignment_byte);
-        WantSize += size;
+        WantSize += alignment_byte;
+        WantSize = WantSize & (~alignment_byte);
     }
 
-    fl = log2_clz((uint32_t)WantSize);
+    fl = log2_clz(WantSize);
     while (!FirstLevel[fl].rnode) {
         fl++;
     }
+    if (fl >= (MAX_COUNT - 1)) {
+        return NULL;
+    }
 
-    use_node = radix_tree_lookup_upper_bound(&FirstLevel[fl], WantSize);
+    if (fl != log2_clz(WantSize)) {
+        use_node = radix_tree_root_left(&FirstLevel[fl]);
+    } else {
+        use_node = radix_tree_lookup_upper_bound(&FirstLevel[fl], WantSize);
+    }
     if (!use_node) {
         return NULL;
     }
@@ -129,27 +138,28 @@ void *TR_alloc(uint16_t WantSize)
     next_node = use_node->next_block;
     radix_tree_delete(&FirstLevel[fl], use_node->block_size);
     if (next_node) {
-        radix_tree_insert(&FirstLevel[fl], (size_t)next_node->block_size, next_node);
+        radix_tree_insert(&FirstLevel[fl], next_node->block_size, next_node);
     }
 
     if (use_node->block_size == WantSize) {
+        TheHead.AllSize -= WantSize;
         return use_node;
     }
 
-    xReturn = (void*)((uint8_t *)use_node + HeapStructSize);
-    size = use_node->block_size >> 1;
-    for (; size >= WantSize; size >>= 1) {
-        if (use_node->block_size > MIN_size) {
-            use_node->block_size = size;
-            new_node = (void *) (((uint8_t *) use_node) + size);
-            new_node->used = UnUse;
-            new_node->block_size = size;
-            list_add_next(&(use_node->link_node), &(new_node->link_node));
-            fl = log2_clz((uint32_t) size);
-            radix_tree_insert(&FirstLevel[fl], size, new_node);
-        }
+    xReturn = (void *)((uint8_t *)use_node + HeapStructSize);
+    if( (use_node->block_size - WantSize) > MIN_size ) {
+        new_node = (void *) (((uint8_t *) use_node) + WantSize);
+        *new_node = (TR_node) {
+                .used = UnUse,
+                .block_size = use_node->block_size - WantSize
+        };
+        use_node->block_size = WantSize;
+        list_add_next(&(use_node->link_node), &(new_node->link_node));
+        fl = log2_clz((uint32_t) new_node->block_size);
+        radix_tree_insert(&FirstLevel[fl], new_node->block_size, new_node);
     }
 
+    TheHead.AllSize -= WantSize;
     return xReturn;
 }
 
@@ -161,8 +171,7 @@ void TR_free(void *xReturn)
     uint8_t *xFree = (uint8_t *)xReturn;
 
     xFree -= HeapStructSize;
-    free_node = (void*)xFree;
-    free_node->used = UnUse;
+    free_node = (TR_node *)xFree;
     TheHead.AllSize += free_node->block_size;
 
     TR_node *adj_node;
@@ -171,15 +180,13 @@ void TR_free(void *xReturn)
     insert_node = free_node;
 
     iter_node = free_node->link_node.next;
-    if (iter_node != &(TheHead.cache_node)
-        && (iter_node)) {
+    if (iter_node != &(TheHead.cache_node)) {
         adj_node = container_of(iter_node, TR_node, link_node);
         if(adj_node->used == UnUse) {
             list_remove(&(adj_node->link_node));
-            free_node->block_size += adj_node->block_size;
-
             fl = log2_clz((uint32_t)adj_node->block_size);
             radix_tree_delete(&FirstLevel[fl], adj_node->block_size);
+            free_node->block_size += adj_node->block_size;
             insert_node = free_node;
         }
     }
@@ -189,14 +196,15 @@ void TR_free(void *xReturn)
         adj_node = container_of(iter_node, TR_node, link_node);
         if(adj_node->used == UnUse) {
             list_remove(&(free_node->link_node));
-            adj_node->block_size += free_node->block_size;
             fl = log2_clz((uint32_t)adj_node->block_size);
             radix_tree_delete(&FirstLevel[fl], adj_node->block_size);
+            adj_node->block_size += free_node->block_size;
             insert_node = adj_node;
         }
     }
 
+    insert_node->used = UnUse;
+    insert_node->next_block = NULL;
     fl = log2_clz((uint32_t)insert_node->block_size);
     radix_tree_insert(&FirstLevel[fl], insert_node->block_size, insert_node);
 }
-
