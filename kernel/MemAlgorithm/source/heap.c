@@ -38,7 +38,7 @@ Class(xheap){
         size_t AllSize;
 };
 
-xheap TheHeap = {
+static xheap TheHeap = {
         .tail = NULL,
         .AllSize = config_heap,
 };

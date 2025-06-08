@@ -413,6 +413,23 @@ void rb_replace_node( rb_node *victim,  rb_node *new,
 }
 
 
+rb_node *rb_first_greater(rb_root *root, size_t key)
+{
+    rb_node *node = root->rb_node;
+    rb_node *candidate = NULL;
+
+    while (node != NULL) {
+        if (node->value > key) {
+            candidate = node;
+            node = node->rb_left;
+        } else {
+            node = node->rb_right;
+        }
+    }
+
+    return candidate;
+}
+
 void rb_root_init(rb_root_handle root)
 {
     *root = (rb_root){

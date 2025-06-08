@@ -44,7 +44,7 @@ Class(xheap){
     size_t AllSize;
 };
 
-xheap TheHeap = {
+static xheap TheHeap = {
         .cache_node.next = NULL,
         .cache_node.prev = NULL,
         .AllSize = config_heap,
@@ -117,15 +117,10 @@ void *mem_malloc(size_t WantSize)
         || (find_node->value < WantSize)) {
         goto free;
     }
-    if ((find_node = MemTree.first_node) == NULL) {
+    
+    find_node = rb_first_greater(&MemTree, WantSize);
+    if (find_node == NULL) {
         goto free;
-    }
-
-    while (find_node->value < WantSize) {
-        find_node = rb_next(find_node);
-        if (find_node == NULL) {
-            goto free;
-        }
     }
 
     block_size = find_node->value;

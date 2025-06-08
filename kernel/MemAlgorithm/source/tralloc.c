@@ -54,7 +54,7 @@ Class(mem_head){
 };
 
 
-mem_head TheHead = {
+static mem_head TheHead = {
         .cache_node.next = NULL,
         .cache_node.prev = NULL,
         .AllSize = config_heap,
