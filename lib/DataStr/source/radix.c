@@ -243,8 +243,12 @@ void *radix_tree_lookup_upper_bound(struct radix_tree_root *root, size_t index) 
         //search for this level
         while ((offset < SIZE_LEVEL) && (!node->slots[offset])) {
             offset++;
-            if (offset < SIZE_LEVEL) {
-                node = radix_tree_node_left(node->slots[offset]);
+            if (offset < SIZE_LEVEL && node->slots[offset]) {
+                if (node->height > 1) {
+                    node = radix_tree_node_left(node->slots[offset]);
+                } else {
+                    node = node->slots[offset];
+                }
                 return node;
             }
         }
