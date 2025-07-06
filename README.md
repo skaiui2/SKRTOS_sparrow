@@ -36,41 +36,7 @@ If you want to write a micro kernel, there are two kinds of tutorial in **Chines
 
 **中文**：[skaiui2/SKRTOS_sparrow at study](https://github.com/skaiui2/SKRTOS_sparrow/tree/study)
 
-**English** : 
-
-Part1: Memory management
-
-[Let’s write a Real-Time Operating System(RTOS) (Part 1: Memory management) | by Skaiuijing | Apr, 2025 | Medium](https://medium.com/@skaiuijing/lets-write-a-real-time-operating-system-rtos-part-1-5873f6c2184f)
-
-Part2: Context switch and Multithread
-
-[Let’s write a Real-Time Operating System(RTOS) (Part 2: Context switch and Multithread) | by Skaiuijing | Apr, 2025 | Medium](https://medium.com/@skaiuijing/lets-write-a-real-time-operating-system-rtos-part-2-8cc3cd11c8cf)
-
-Part3: Multi-priority preemptive Scheduler
-
-[Let’s write a Real-Time Operating System(RTOS) (Part3: Multi-priority preemptive Scheduler) | by Skaiuijing | Apr, 2025 | Medium](https://medium.com/@skaiuijing/lets-write-a-real-time-operating-system-rtos-part3-multi-priority-preemptive-scheduler-167152ce9719)
-
-Part4: Concurrency and interrupt management
-
-[Let’s write a Real-Time Operating System(RTOS) (Part4: Concurrency and interrupt management) | by Skaiuijing | May, 2025 | Medium](https://medium.com/@skaiuijing/lets-write-a-real-time-operating-system-rtos-part4-concurrency-and-interrupt-management-2ef184ac1e42)
-
-Part5: Time triggered scheduling
-
-[Let’s write a Real-Time Operating System(RTOS) (Part 5: Time triggered scheduling) | by Skaiuijing | May, 2025 | Medium](https://medium.com/@skaiuijing/lets-write-a-real-time-operating-system-rtos-part-5-clock-triggered-scheduling-fcd433285183)
-
-Part6: Timer
-
-[Let’s write a Real-Time Operating System(RTOS) (Part6: Timer) | by Skaiuijing | May, 2025 | Medium](https://medium.com/@skaiuijing/lets-write-a-real-time-operating-system-rtos-part6-timer-b7e9be931ec3)
-
-Part7: Semaphore and Mutex
-
-Part8: Message queue
-
-Part9: Read-Write lock
-
-Part10: Conclusion
-
-
+**English** : [Let’s write a Real-Time Operating System(RTOS) (Part 1: Memory management) | by Skaiuijing | Apr, 2025 | Medium](https://medium.com/@skaiuijing/lets-write-a-real-time-operating-system-rtos-part-1-5873f6c2184f)
 
 ## version
 
