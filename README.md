@@ -4,10 +4,6 @@
 
 SKRTOS_sparrow is a Real-Time Operation System micro kernel.  
 
-#### NOTES
-
-All of my remaining time is dedicated to working on the TCP/IP stack and don’t have much time to fix the kernel's bugs. I might need to wait until I have more time to address these bugs.
-
 **Contact information**
 
 skaiuijing@gmail.com
@@ -25,6 +21,8 @@ skaiuijing@gmail.com
 **kernel**: source code
 
 **lib**: data structure and algorithm library
+
+**net**: TCP/IP protocol.
 
 
 
@@ -110,3 +108,4 @@ CodeDesign folder  : Code design style, programming ideas.
 
 Kernel_imple folder  : The specific implementation of the kernel, the specific code in the file.
 
+net folder: the net protocol implements.
