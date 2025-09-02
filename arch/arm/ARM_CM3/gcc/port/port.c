@@ -185,11 +185,6 @@ struct SysTicks {
 
     struct SysTicks *SysTick = (struct SysTicks * volatile)0xe000e010;
 
-    /* Stop and clear the SysTick. */
-    *SysTick = (struct SysTicks){
-            .CTRL = 0UL,
-            .VAL  = 0UL,
-    };
     /* Configure SysTick to interrupt at the requested rate. */
     *SysTick = (struct SysTicks){
             .LOAD = ( configSysTickClockHz / configTickRateHz ) - 1UL,

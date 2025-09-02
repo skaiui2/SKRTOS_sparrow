@@ -170,41 +170,6 @@ void ADTListInit(void)
     ListInit( &BlockList );
 }
 
-
-
-
-struct Stack_register {
-    //automatic stacking
-    uint32_t r4;
-    uint32_t r5;
-    uint32_t r6;
-    uint32_t r7;
-    uint32_t r8;
-    uint32_t r9;
-    uint32_t r10;
-    uint32_t r11;
-    //manual stacking
-    uint32_t r0;
-    uint32_t r1;
-    uint32_t r2;
-    uint32_t r3;
-    uint32_t r12;
-    uint32_t LR;
-    uint32_t PC;
-    uint32_t xPSR;
-};
-
-
-#define switchTask()\
-*( ( volatile uint32_t * ) 0xe000ed04 ) = 1UL << 28UL
-
-__attribute__( ( always_inline ) ) inline void schedule( void )
-{
-    switchTask();
-
-}
-
-
 __attribute__((always_inline)) inline void StateSet( TaskHandle_t taskHandle,uint8_t State)
 {
     taskHandle->state = State;
@@ -220,18 +185,15 @@ __attribute__((always_inline)) inline uint8_t CheckTaskState( TaskHandle_t taskH
     return taskHandle->state == State;
 }
 
-// the abstraction layer is end
 
 uint8_t volatile schedule_PendSV = 0;
-
-void vTaskSwitchContext( void )
+void TaskSwitchContext(void)
 {
     uint8_t Index= ListHighestPriorityTask();
     TheList *TopPrioritiesList = &(ReadyListArray[Index]);
-    if( TopPrioritiesList->SwitchFlag > 0)
-    {
+    if( TopPrioritiesList->SwitchFlag > 0) {
         TopPrioritiesList->SwitchFlag -= 1;
-    }else {
+    } else {
         TopPrioritiesList->SaveNode = TopPrioritiesList->SaveNode->next;
         TopPrioritiesList->SwitchFlag = TopPrioritiesList->SaveNode->value;
     }
@@ -247,7 +209,7 @@ void RecordWakeTime(uint16_t ticks)
     TCB_t *self = schedule_currentTCB;
     self->task_node.value = constTicks + ticks;
 
-    if( self->task_node.value < constTicks) {
+    if(self->task_node.value < constTicks) {
         ListAdd(OverWakeTicksList, &(self->task_node));
     } else {
         ListAdd(WakeTicksList, &(self->task_node));
@@ -262,35 +224,6 @@ void TaskDelay( uint16_t ticks )
     RecordWakeTime(ticks);
     schedule();
 }
-
-/*
- * If the program runs here, there is a problem with the use of the RTOS,
- * such as the stack allocation space is too small, and the use of undefined operations
- */
-void ErrorHandle(void)
-{
-    while (1){
-
-    }
-}
-
-
-
-uint32_t * pxPortInitialiseStack( uint32_t * pxTopOfStack,
-                                  TaskFunction_t pxCode,
-                                  void * pvParameters)
-{
-    pxTopOfStack -= 16;
-    struct Stack_register *Stack = (struct Stack_register *)pxTopOfStack;
-
-    Stack->xPSR = 0x01000000UL;
-    Stack->PC = ( ( uint32_t ) pxCode ) & ( ( uint32_t ) 0xfffffffeUL );
-    Stack->LR = ( uint32_t ) ErrorHandle;
-    Stack->r0 = ( uint32_t ) pvParameters;
-
-    return pxTopOfStack;
-}
-
 
 
 void TaskCreate( TaskFunction_t pxTaskCode,
@@ -373,49 +306,9 @@ void SchedulerInit(void)
     LeisureTaskCreat();
 }
 
-
-struct SysTicks {
-    uint32_t CTRL;
-    uint32_t LOAD;
-    uint32_t VAL;
-    uint32_t CALIB;
-};
-
-
-void PendSvInit(void)
-{
-    ( *( ( volatile uint32_t * ) 0xe000ed20 ) ) |= ( ( ( uint32_t ) 255UL ) << 16UL );
-}
-
-void SysTickInit(void)
-{
-    ( *( ( volatile uint32_t * ) 0xe000ed20 ) ) |= ( ( ( uint32_t ) 255UL ) << 24UL );
-
-    struct SysTicks *SysTick = ( struct SysTicks * volatile)0xe000e010;
-
-    /* Stop and clear the SysTick. */
-    *SysTick = (struct SysTicks){
-            .CTRL = 0UL,
-            .VAL  = 0UL,
-    };
-    /* Configure SysTick to interrupt at the requested rate. */
-    *SysTick = (struct SysTicks){
-            .LOAD = ( configSysTickClockHz / configTickRateHz ) - 1UL,
-            .CTRL  = ( ( 1UL << 2UL ) | ( 1UL << 1UL ) | ( 1UL << 0UL ) )
-    };
-}
-
-
-void HandlerInit(void)
-{
-    PendSvInit();
-    SysTickInit();
-}
-
 __attribute__( ( always_inline ) )  inline void SchedulerStart( void )
 {
-    HandlerInit();
-    vTaskSwitchContext();
+    TaskSwitchContext();
     StartFirstTask();
 }
 
@@ -424,7 +317,6 @@ void DelayListRemove(TaskHandle_t self)
 {
     ListRemove(WakeTicksList, &(self->task_node));
 }
-
 
 
 void CheckTicks(void)
@@ -447,20 +339,3 @@ void CheckTicks(void)
 
     schedule();
 }
-
-
-
-extern uint64_t AbsoluteClock;
-void SysTick_Handler(void)
-{
-    uint32_t xre = xEnterCritical();
-    AbsoluteClock++;
-    // If the idle task is suspended, the scheduler is suspended
-    if(CheckTaskState(leisureTcb, Suspend) == 0) {
-        CheckTicks();
-    }
-    xExitCritical(xre);
-}
-
-
-
