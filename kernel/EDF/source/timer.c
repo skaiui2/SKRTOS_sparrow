@@ -38,13 +38,25 @@ Class(timer_struct)
 
 rb_root ClockTree;
 static uint16_t TimerCheckPeriod = 0;
+extern uint32_t NowTickCount;
+/*
+ * If we know a,b both less than the half of number axis.
+ * Spill or not,if a is ahead of b, return false.Or else, return tree.
+ */
+uint8_t compare(uint32_t a, uint32_t b)
+{
+    return (int)(a - b) < 0 ;
+}
 
-extern uint64_t AbsoluteClock;
+uint8_t compare_get(uint32_t a, uint32_t b)
+{
+    return (int)(a - b) <= 0 ;
+}
 
 void ClockTreeAdd(timer_struct *timer)
 {
     uint32_t cpu_lock = xEnterCritical();
-    timer->TimerNode.value += AbsoluteClock;
+    timer->TimerNode.value += NowTickCount;
     rb_Insert_node(&ClockTree, &timer->TimerNode);
     xExitCritical(cpu_lock);
 }
@@ -65,7 +77,7 @@ void timer_check(void)
 
         rb_node *next_node = NULL;
         rb_node *node = ClockTree.first_node;
-        while ( (node) && (node->value <= AbsoluteClock) ) {
+        while (node && compare_get(node->value, NowTickCount)) {
             next_node = rb_next(node);
             timer_struct *timer = container_of(node, timer_struct, TimerNode);
             timer->CallBackFun(timer);
@@ -93,7 +105,7 @@ TaskHandle_t TimerInit(uint16_t stack, uint16_t period, uint8_t RespondLine, uin
                RespondLine,
                deadline,
                 &self);
-    TimerCheckPeriod = AbsoluteClock + check_period;
+    TimerCheckPeriod = NowTickCount + check_period;
     return self;
 }
 
@@ -107,7 +119,7 @@ timer_struct *TimerCreat(TimerFunction_t CallBackFun, uint32_t period, uint8_t t
             .TimerStopFlag = timer_flag
     };
     rb_node_init(&(timer->TimerNode));
-    timer->TimerNode.value = AbsoluteClock + period;
+    timer->TimerNode.value = NowTickCount + period;
     ClockTreeAdd(timer);
     return timer;
 }

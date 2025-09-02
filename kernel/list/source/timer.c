@@ -40,12 +40,26 @@ Class(timer_struct)
 
 TheList ClockList;
 static uint16_t TimerCheckPeriod = 0;
-volatile uint64_t AbsoluteClock = 0;
+extern uint32_t NowTickCount;
+
+/*
+ * If we know a,b both less than the half of number axis.
+ * Spill or not,if a is ahead of b, return false.Or else, return tree.
+ */
+uint8_t compare(uint32_t a, uint32_t b)
+{
+    return (int)(a - b) < 0 ;
+}
+
+uint8_t compare_get(uint32_t a, uint32_t b)
+{
+    return (int)(a - b) <= 0 ;
+}
 
 void ClockListAdd(timer_struct *timer)
 {
     uint32_t cpu_lock = xEnterCritical();
-    timer->TimerNode.value = AbsoluteClock + timer->TimerNode.value;
+    timer->TimerNode.value = NowTickCount + timer->TimerNode.value;
     ListAdd(&ClockList, &timer->TimerNode);
     xExitCritical(cpu_lock);
 }
@@ -63,7 +77,7 @@ void timer_check(void)
     while (1) {
         ListNode *next_node = NULL;
         ListNode *node = ClockList.head;
-        while ( (ClockList.head) && (node->value <= AbsoluteClock)) {
+        while (ClockList.head && compare_get(node->value, NowTickCount)) {
             next_node = node->next;
             timer_struct *timer = container_of(node, timer_struct, TimerNode);
             timer->CallBackFun(timer);
@@ -104,7 +118,7 @@ timer_struct *TimerCreat(TimerFunction_t CallBackFun, uint32_t period, uint8_t t
             .TimerStopFlag = timer_flag
     };
     ListNodeInit(&(timer->TimerNode));
-    timer->TimerNode.value = AbsoluteClock + period;
+    timer->TimerNode.value = NowTickCount + period;
     ClockListAdd(timer);
     return timer;
 }
