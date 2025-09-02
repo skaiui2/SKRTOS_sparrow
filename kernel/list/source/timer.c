@@ -27,6 +27,7 @@
 #include "heap.h"
 #include "atomic.h"
 #include "port.h"
+#include "compare.h"
 
 
 
@@ -41,20 +42,6 @@ Class(timer_struct)
 TheList ClockList;
 static uint16_t TimerCheckPeriod = 0;
 extern uint32_t NowTickCount;
-
-/*
- * If we know a,b both less than the half of number axis.
- * Spill or not,if a is ahead of b, return false.Or else, return tree.
- */
-uint8_t compare(uint32_t a, uint32_t b)
-{
-    return (int)(a - b) < 0 ;
-}
-
-uint8_t compare_get(uint32_t a, uint32_t b)
-{
-    return (int)(a - b) <= 0 ;
-}
 
 void ClockListAdd(timer_struct *timer)
 {
@@ -77,7 +64,7 @@ void timer_check(void)
     while (1) {
         ListNode *next_node = NULL;
         ListNode *node = ClockList.head;
-        while (ClockList.head && compare_get(node->value, NowTickCount)) {
+        while (ClockList.head && compare_before_eq(node->value, NowTickCount)) {
             next_node = node->next;
             timer_struct *timer = container_of(node, timer_struct, TimerNode);
             timer->CallBackFun(timer);

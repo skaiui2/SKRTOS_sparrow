@@ -27,6 +27,7 @@
 #include "heap.h"
 #include "atomic.h"
 #include "port.h"
+#include "compare.h"
 
 
 
@@ -43,15 +44,6 @@ TimerHandle TimerStructArray[configTimerNumber];
 uint32_t    TimerRecordArray[configTimerNumber];
 static uint16_t TimerCheckPeriod = 0;
 extern uint32_t TicksBase;
-
-/*
- * If we know a,b both less than the half of number axis.
- * Spill or not,if a is ahead of b, return false.Or else, return tree.
- */
-uint8_t compare(uint32_t a, uint32_t b)
-{
-    return (int)(a - b) < 0 ;
-}
 
 void TimerTableAdd(timer_struct *timer)
 {
@@ -77,8 +69,7 @@ void timer_check(void) {
         uint32_t lookup = TimerTable;
         while (lookup) {
             uint8_t i = FindHighestPriority(lookup);
-            if ((TicksBase == TimerRecordArray[i]) ||
-                compare(TimerRecordArray[i], TicksBase)) {
+            if (compare_before_eq(TimerRecordArray[i], TicksBase)) {
                 timer_struct *timer = TimerStructArray[i];
                 timer->CallBackFun(timer);
                 if (timer->TimerStopFlag == run) {

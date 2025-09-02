@@ -27,6 +27,7 @@
 #include "heap.h"
 #include "atomic.h"
 #include "port.h"
+#include "compare.h"
 
 Class(timer_struct)
 {
@@ -39,19 +40,6 @@ Class(timer_struct)
 rb_root ClockTree;
 static uint16_t TimerCheckPeriod = 0;
 extern uint32_t NowTickCount;
-/*
- * If we know a,b both less than the half of number axis.
- * Spill or not,if a is ahead of b, return false.Or else, return tree.
- */
-uint8_t compare(uint32_t a, uint32_t b)
-{
-    return (int)(a - b) < 0 ;
-}
-
-uint8_t compare_get(uint32_t a, uint32_t b)
-{
-    return (int)(a - b) <= 0 ;
-}
 
 void ClockTreeAdd(timer_struct *timer)
 {
@@ -75,7 +63,7 @@ void timer_check(void)
     while (1) {
         rb_node *next_node = NULL;
         rb_node *node = ClockTree.first_node;
-        while (node && compare_get(node->value, NowTickCount)) {
+        while (node && compare_before_eq(node->value, NowTickCount)) {
             next_node = rb_next(node);
             timer_struct *timer = container_of(node, timer_struct, TimerNode);
             timer->CallBackFun(timer);
