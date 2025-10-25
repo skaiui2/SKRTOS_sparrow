@@ -2,48 +2,49 @@
 
 在TCP/IP中，radix树可以被用来作为设计路由表的数据结构。而在Linux内核中，也被应用于内存管理相关的算法。
 
+当然，Linux内核中是被用来作虚拟内存和物理内存的映射，而在这里，被用来实现类tlsf内存管理算法。
+
 
 
 ## radix树原理与实现
 
-作为字典树的变种，radix由于本身的动态特性，即使概念并不复杂，但考虑性能，其实真正的实现是比较复杂的。
+作为字典树的变种，radix由于本身的动态特性，其实真正的实现是比较复杂的。
 
 ### 数据结构
 
 ```
-
 struct radix_tree_node {
+    void *slots[2];
     struct radix_tree_node *parent;
-    unsigned int height;
+    uint8_t offset;
     unsigned int count;
-    unsigned char offset;
-    void *slots[SIZE_LEVEL];
+    unsigned int height;
 };
 
 struct radix_tree_root {
-    size_t max_size;
     unsigned int height;
-    struct radix_tree_node *rnode;
     unsigned int count;
+    struct radix_tree_node *rnode;
 };
 
 ```
 
 节点高度的作用是对位的映射。
 
-当SIZE_LEVEL等于2时，对于每一颗树而言，有：
+对于每一颗树而言，有：
 
 节点挂满的状态，此时趋向于一颗完全二叉树：
 
 ```
 
-        [Root] (height=2)
+        [Root] (height=3)
            |
+          [rn_node] (height = 3)
    		---------------------------
    		/                	 	\
- 	[Node] (h=2)     		 	[Node] (h=1)
+ 	[Node] (h=2)     		 	[Node] (h=2)
  	  /           \              /		     \
-	[N]   		 [N]       		[N]           [N]    (h=0)
+	[N]   		 [N]       		[N]           [N]    (h=1)
    /    \      /     \         /    \    	 /    \
  [0]    [1]  [2]    [3]       [4]    [5]    [6]    [7]  (叶子节点)
 
@@ -53,7 +54,17 @@ struct radix_tree_root {
 
 
 
+### 计算总bit数
 
+```
+
+__attribute__( ( always_inline ) ) inline uint8_t log2_clz(uint32_t Table)
+{
+    return 31 - __builtin_clz(Table);
+}
+```
+
+这被用来计算高度。
 
 ### 初始化
 
@@ -61,10 +72,23 @@ struct radix_tree_root {
 
 void radix_tree_init(struct radix_tree_root *root)
 {
-    root->height = 0;
-    root->rnode = NULL;
+    *root = (struct radix_tree_root) {
+            .count = 0,
+            .height = 0,
+            .rnode = NULL
+    };
 }
 
+void radix_tree_node_init(struct radix_tree_node *node, uint8_t height)
+{
+    *node = (struct radix_tree_node) {
+            .parent = NULL,
+            .count = 0,
+            .height = height,
+            .slots[0] = NULL,
+            .slots[1] = NULL
+    };
+}
 ```
 
 使用动态内存分配：
@@ -75,14 +99,21 @@ heap_malloc作为内核最简单易用的内存管理实现，是所有内存管
 
 struct radix_tree_node *radix_tree_node_alloc(struct radix_tree_root *root, uint8_t height)
 {
-    struct radix_tree_node *node = heap_malloc(sizeof(struct radix_tree_node));//It can replace by membitpool
+    struct radix_tree_node *node = heap_malloc(sizeof(struct radix_tree_node));
     if (node == NULL) {
         return NULL;
     }
-    radix_tree_node_init(node, height);
-    root->count++;
 
+    root->count++;
+    radix_tree_node_init(node, height);
     return node;
+}
+
+
+void radix_tree_node_free(struct radix_tree_root *root, struct radix_tree_node *node)
+{
+    heap_free(node);
+    root->count--;
 }
 
 ```
@@ -91,50 +122,90 @@ struct radix_tree_node *radix_tree_node_alloc(struct radix_tree_root *root, uint
 
 ```
 
-int radix_tree_insert(struct radix_tree_root *root, size_t index, void *item)
+int radix_tree_grow_height(struct radix_tree_root *root, uint8_t height)
 {
-    struct radix_tree_node **node_ptr = &root->rnode;
-    uint8_t height;
-
-    if (!*node_ptr) {
-        *node_ptr = radix_tree_node_alloc(root, 0);
-        if (!*node_ptr) {
-            return -1;
-        }
-        return radix_tree_grow(root, index, item);
-    }
-
-    height = root->height;
-    while (index >= (1UL << (BIT_LEVEL * (height + 1)))) {
-        struct radix_tree_node *new_node = radix_tree_node_alloc(root, height + 1);
+    while(root->height < height) {
+        (root->height)++;
+        struct radix_tree_node *new_node = radix_tree_node_alloc(root, root->height);
         if (!new_node) {
             return -1;
         }
+        new_node->offset = 0;
 
-        for (char i = 0; i < SIZE_LEVEL; i++) {
-            if (root->rnode->slots[i]) {
-                ((struct radix_tree_node *)root->rnode->slots[i])->parent = new_node;
+        root->rnode->parent = new_node;
+        new_node->slots[0] = root->rnode;
+        new_node->count++;
+        root->rnode = new_node;
+    }
+    return (int)root->height;
+}
+
+int radix_tree_grow_node(struct radix_tree_root *root, size_t index, void *item)
+{
+    struct radix_tree_node *node = root->rnode;
+    uint8_t offset;
+    uint8_t height = root->height;
+    uint8_t shift;
+
+    while (height-- > 1) {
+        shift = height;
+        offset = (index >> shift) & 1;
+        if (!node->slots[offset]) {
+            node->slots[offset] = radix_tree_node_alloc(root, height);
+            if (!node->slots[offset]) {
+                return -1;
             }
+
+            node->count++;
+            ((struct radix_tree_node *)node->slots[offset])->offset = offset;
+            ((struct radix_tree_node *)node->slots[offset])->parent = node;
         }
-        *new_node = *root->rnode;
-        for (char i = 0; i < SIZE_LEVEL; i++) {
-            if (root->rnode->slots[i]) {
-                root->rnode->slots[i] = NULL;
-            }
-        }
-        root->rnode->slots[0] = new_node;
-        root->height++;
-        height++;
+        node = (struct radix_tree_node *)node->slots[offset];
     }
 
-    return radix_tree_grow(root, index, item);
+    struct radix_tree_node *leaf = node;
+    offset = index & 1;
+    if (leaf->slots[offset]) {
+        return -1;
+    }
+    leaf->slots[offset] = item;
+    leaf->count++;
+
+    return 0;
+}
+
+
+int radix_tree_insert(struct radix_tree_root *root, size_t index, void *item)
+{
+    struct radix_tree_node **node_ptr = &root->rnode;
+    uint8_t height = log2_clz(index) + 1;
+
+    //If no node, it can grow node no need to grow height!
+    if (!*node_ptr) {
+        *node_ptr = radix_tree_node_alloc(root, height);
+        if (!*node_ptr) {
+            return -1;
+        }
+        (*node_ptr)->parent = (struct radix_tree_node *)root;
+        root->height = height;
+        return radix_tree_grow_node(root, index, item);
+    }
+
+    if (height > root->height) {
+        height = radix_tree_grow_height(root, height);
+        if (height < 0) {
+            return height;
+        }
+    }
+
+    return radix_tree_grow_node(root, index, item);
 }
 
 ```
 
 1.先判断树是否为空，如果是，那就直接生长，如果不是，就调整树高，由于需要使用位图进行映射，考虑操作效率，选择树的增长为自顶向上生长，而非从根节点向下生长。因此我们使用的radix树需要判断位图是否可容纳当前树的叶子节点。
 
-2.对于每一高度的树，节点都对应位图上BIT_LEVEL的占用个数，因此在拓展树高后，需要拓展并补充树的节点，如果仍然没有生长到想要的位置，那就继续扩展，如果已经生长到需要的位置，那么就停止。
+2.对于每一高度的树，节点都对应位图上bit的占用个数，因此在拓展树高后，需要拓展并补充树的节点，如果仍然没有生长到想要的位置，那就继续扩展，如果已经生长到需要的位置，那么就停止。
 
 3.树生长停止时，此时恰好位于该叶子节点上，因此结构体中的子树指针可被复用为指向映射数据。
 
@@ -144,29 +215,38 @@ int radix_tree_insert(struct radix_tree_root *root, size_t index, void *item)
 
 ```
 
+/*
+ * Note:
+ * The variable `shift` is not hard‑wired to `height`.
+ * By default, shift = height - 1, but if you want to change
+ * the branching factor (e.g. implement path compression or
+ * use a different number of bits per level), you can redefine
+ * it with your own macro, such as:
+ *
+ *     shift = BIT_LEVEL * height;
+ *
+ * In other words, users are free to customize how many index
+ * bits are consumed per tree level by adjusting this definition.
+ */
+
 void *radix_tree_lookup(struct radix_tree_root *root, size_t index)
 {
     struct radix_tree_node *node = root->rnode;
     uint8_t height = root->height;
-    uint8_t shift = BIT_LEVEL * height;
+    int shift = height - 1;
     uint8_t offset;
 
     if (!node) {
         return NULL;
     }
 
-    if (index > root->max_size) {
-        return NULL;
-    }
-
-    height += 1;
     while (height > 0) {
-        offset = (int)((index >> shift) & (SIZE_LEVEL - 1));
+        offset = (int)((index >> shift) & 1);
         node = (struct radix_tree_node *)node->slots[offset];
         if (!node) {
             return NULL;
         }
-        shift -= BIT_LEVEL;
+        shift--;
         height--;
     }
 
@@ -180,60 +260,47 @@ void *radix_tree_lookup(struct radix_tree_root *root, size_t index)
 ### 上界查找
 
 ```
-
 void *radix_tree_lookup_upper_bound(struct radix_tree_root *root, size_t index) {
     struct radix_tree_node *node = root->rnode;
-    struct radix_tree_node *parent;
-    uint8_t height = root->height;
-    uint8_t shift = BIT_LEVEL * height;
+    if (!node) return NULL;
+
+    unsigned int shift = root->height - 1;
     uint8_t offset;
-    uint8_t fit_search = 0;
 
-    if (index > root->max_size) {
-        return NULL;
-    }
-
-    height += 1;
-    while (height > 0) {
-        if (!node) {
-            return NULL;
-        }
-        offset = (int)((index >> shift) & (SIZE_LEVEL - 1));
-        parent = node;
-        node = (struct radix_tree_node *)node->slots[offset];
-        if (!node) {
-            fit_search = 1;
+    while (node && node->height > 1) {
+        offset = (index >> shift) & 1;
+        if (node->slots[offset]) {
+            node = node->slots[offset];
+            shift--;
+        } else {
+            if (offset + 1 < 2 && node->slots[offset+1]) {
+                return radix_tree_node_left(node->slots[offset+1]);
+            }
             break;
         }
-        shift -= BIT_LEVEL;
-        height--;
     }
 
-    if (fit_search) {
-        node = parent;
-        uint8_t temp = offset;
-        //search for this level
-        while ((offset < SIZE_LEVEL) && (!node->slots[offset])) {
-            offset++;
-            if (offset < SIZE_LEVEL) {
-                node = radix_tree_node_left(node->slots[offset]);
-                return node;
-            }
+    // if in leaf layer
+    if (node && node->height == 1) {
+        offset = index & 1;
+        if (node->slots[offset]) {
+            return node->slots[offset];
         }
-        //go back
-        offset = temp;
-        node = go_back_index(offset, node, index, shift);
-
-        node = radix_tree_node_left(node);
-    }
-    if (!node) {
-        return NULL;
+        if (offset + 1 < 2 && node->slots[offset+1]) {
+            return node->slots[offset+1];
+        }
     }
 
-    return node;
+    while (node && node->parent) {
+        int off = node->offset;
+        node = node->parent;
+        if (off + 1 < 2 && node->slots[off+1]) {
+            return radix_tree_node_left(node->slots[off+1]);
+        }
+    }
+
+    return NULL;
 }
-
-
 ```
 
 1.分为正常映射查找和上界查找
@@ -262,13 +329,19 @@ void *radix_tree_node_left(struct radix_tree_node *node)
             return NULL;
         }
         offset = 0;
-        while ((offset < SIZE_LEVEL) && (!node->slots[offset])) {
+        while ((offset < 2) && (!node->slots[offset])) {
             offset++;
         }
         node = (struct radix_tree_node *)node->slots[offset];
         height--;
     }
     return node;
+}
+
+
+__attribute__((always_inline)) inline void *radix_tree_root_left(struct radix_tree_root *root)
+{
+    return radix_tree_node_left(root->rnode);
 }
 ```
 
@@ -277,66 +350,54 @@ void *radix_tree_node_left(struct radix_tree_node *node)
 ### 删除操作
 
 ```
-
-
 void *radix_tree_delete(struct radix_tree_root *root, unsigned long index)
 {
     struct radix_tree_node *node = root->rnode;
     uint8_t height = root->height;
-    uint8_t shift = BIT_LEVEL * height;
+    uint8_t shift = height - 1;
     uint8_t offset;
 
-    while (height > 0) {
-        if (!node) {
-            return NULL;
-        }
-        offset = (int)((index >> shift) & (SIZE_LEVEL - 1));
+    if (height < log2_clz(index)) return NULL;
+
+    while (height > 1) {
+        if (!node) return NULL;
+        offset = (index >> shift) & 1;
         node = (struct radix_tree_node *)node->slots[offset];
-        shift -= BIT_LEVEL;
+        shift--;
         height--;
     }
 
-    if (!node) {
-        return NULL;
-    }
-    offset = (int)(index & (SIZE_LEVEL - 1));
+    if (!node) return NULL;
+
+    offset = index & 1;
     void *item = node->slots[offset];
-    if (!item) {
-        return NULL;
-    }
+    if (!item) return NULL;
 
     node->slots[offset] = NULL;
     node->count--;
 
-    struct radix_tree_node *parent = NULL;
-    while (node && (node->count == 0) && (node != root->rnode)) {
-        offset = node->offset;
-        parent = node->parent;
-        heap_free(node);
+    while (node->count == 0 && node != root->rnode) {
+        struct radix_tree_node *parent = node->parent;
+        uint8_t off = node->offset;
+        radix_tree_node_free(root, node);
+        parent->slots[off] = NULL;
         parent->count--;
         node = parent;
     }
-    if (node) {
-        node->slots[offset] = NULL;
-    }
 
-    if (node == root->rnode) {
+    if (root->rnode && root->rnode->count == 0) {
+        radix_tree_node_free(root, node);
         root->rnode = NULL;
-        //It can replace by membitpool
-        heap_free(node);
+        root->height = 0;
     }
 
     return item;
 }
-
-
 ```
 
 1.与遍历操作同理，根据位图查找即可
 
 2.查找到后，初始化相关指针即可，然后自底向上，逐个回收空闲的radix树节点。
-
-
 
 
 
@@ -415,6 +476,318 @@ int radix_tree_insert()
 
 
 
+
+## 测试
+
+目前radix树是可以正常使用的，在之前的一段时间，上界查找有一些问题。笔者花了一下午时间，修复好了程序。
+
+测试程序如下，其中上界查找是重点，程序已全部通过：
+
+这里使用队列是为了进行层序遍历，方便打印调试。
+
+```
+
+
+// 队列节点
+typedef struct queue_item {
+    struct radix_tree_node *node;
+    int level;
+    struct queue_item *next;
+} queue_item_t;
+
+typedef struct {
+    queue_item_t *front, *rear;
+} queue_t;
+
+static void enqueue(queue_t *q, struct radix_tree_node *node, int level) {
+    queue_item_t *n = malloc(sizeof(queue_item_t));
+    n->node = node;
+    n->level = level;
+    n->next = NULL;
+    if (!q->rear) q->front = q->rear = n;
+    else { q->rear->next = n; q->rear = n; }
+}
+
+static queue_item_t* dequeue(queue_t *q) {
+    if (!q->front) return NULL;
+    queue_item_t *n = q->front;
+    q->front = n->next;
+    if (!q->front) q->rear = NULL;
+    return n;
+}
+
+// 层序遍历打印
+void print_radix_tree_bfs(const struct radix_tree_root *root) {
+    if (!root || !root->rnode) {
+        printf("Empty tree\n");
+        return;
+    }
+
+    printf("RadixTree Root (height=%u)\n", root->height);
+
+    queue_t q = {0};
+    enqueue(&q, root->rnode, 0);
+
+    int current_level = -1;
+
+    while (q.front) {
+        queue_item_t *qi = dequeue(&q);
+        struct radix_tree_node *node = qi->node;
+        int level = qi->level;
+
+        if (level != current_level) {
+            current_level = level;
+            printf("\n[Level %d] ", level);
+        }
+
+        printf("[Node@%p h=%u] ", (void*)node, node->height);
+
+        if (node->height > 1) {
+            // 内部节点：slots 指向子节点
+            for (int i = 0; i < 2; i++) {
+                void *p = node->slots[i];
+                if (p) {
+                    struct radix_tree_node *child = (struct radix_tree_node*)p;
+                    printf("slot[%d]=Node@%p(h=%u, count=%u) ", i, (void*)child, child->height), child->count;
+                    enqueue(&q, child, level + 1);
+                } else {
+                    printf("slot[%d]=NULL ", i);
+                }
+            }
+        } else if (node->height == 1) {
+            // 叶子节点：slots 存放的是 int* 值
+            printf("node's h[%d], count(%d) ", node->height, node->count);
+            for (int i = 0; i < 2; i++) {
+                int *val = (int*)node->slots[i];
+                if (val) {
+                    printf("slot[%d]=Value(%d) ", i, *val);
+                } else {
+                    printf("slot[%d]=NULL ", i);
+                }
+            }
+        }
+
+        free(qi);
+    }
+    printf("\n");
+}
+
+
+
+#include <assert.h>
+#include <stdio.h>
+
+void test_upper_bound_small() {
+    struct radix_tree_root tree;
+    radix_tree_init(&tree);
+
+    int v10 = 10, v20 = 20, v40 = 40, v100 = 100;
+
+    // 插入几个稀疏键
+    assert(radix_tree_insert(&tree, 10, &v10) == 0);
+    assert(radix_tree_insert(&tree, 20, &v20) == 0);
+    assert(radix_tree_insert(&tree, 40, &v40) == 0);
+    assert(radix_tree_insert(&tree, 100, &v100) == 0);
+
+    // 精确命中
+    int *r = (int*)radix_tree_lookup_upper_bound(&tree, 10);
+    assert(r && *r == 10);
+
+    r = (int*)radix_tree_lookup_upper_bound(&tree, 20);
+    assert(r && *r == 20);
+
+    // 落在空洞之间
+    r = (int*)radix_tree_lookup_upper_bound(&tree, 15);
+    assert(r && *r == 20);
+
+    r = (int*)radix_tree_lookup_upper_bound(&tree, 25);
+    assert(r && *r == 40);
+
+    r = (int*)radix_tree_lookup_upper_bound(&tree, 41);
+    assert(r && *r == 100);
+
+    // 超过最大键
+    r = (int*)radix_tree_lookup_upper_bound(&tree, 101);
+    assert(r == NULL);
+
+    // 删除一个键后再测试
+    int *d = (int*)radix_tree_delete(&tree, 20);
+    assert(d && *d == 20);
+
+    r = (int*)radix_tree_lookup_upper_bound(&tree, 15);
+    assert(r && *r == 40); // 20 已删除，应该跳到 40
+
+    printf("Upper bound small test passed.\n");
+}
+
+#include <assert.h>
+#include <stdlib.h>
+#include <time.h>
+
+void test_upper_bound_medium() {
+    struct radix_tree_root tree;
+    radix_tree_init(&tree);
+
+    // 插入稀疏键
+    int v10=10, v20=20, v40=40, v60=60, v100=100;
+    radix_tree_insert(&tree, 10, &v10);
+    radix_tree_insert(&tree, 20, &v20);
+    radix_tree_insert(&tree, 40, &v40);
+    radix_tree_insert(&tree, 60, &v60);
+    radix_tree_insert(&tree, 100, &v100);
+
+    // 精确命中
+    assert(*(int*)radix_tree_lookup_upper_bound(&tree, 10) == 10);
+    assert(*(int*)radix_tree_lookup_upper_bound(&tree, 20) == 20);
+
+    // 空洞跳转
+    assert(*(int*)radix_tree_lookup_upper_bound(&tree, 15) == 20);
+    assert(*(int*)radix_tree_lookup_upper_bound(&tree, 25) == 40);
+    assert(*(int*)radix_tree_lookup_upper_bound(&tree, 41) == 60);
+
+    // 超过最大键
+    assert(radix_tree_lookup_upper_bound(&tree, 101) == NULL);
+
+    // 删除一个中间键
+    radix_tree_delete(&tree, 40);
+    assert(*(int*)radix_tree_lookup_upper_bound(&tree, 25) == 60);
+
+    // 删除最小键
+    radix_tree_delete(&tree, 10);
+    assert(*(int*)radix_tree_lookup_upper_bound(&tree, 5) == 20);
+
+    // 删除最大键
+    radix_tree_delete(&tree, 100);
+    assert(radix_tree_lookup_upper_bound(&tree, 90) == NULL);
+}
+
+void test_upper_bound_random() {
+    struct radix_tree_root tree;
+    radix_tree_init(&tree);
+
+    const int N = 2000;
+    int *vals = malloc(N * sizeof(int));
+    int present[N];
+    for (int i = 0; i < N; i++) present[i] = 0;
+
+    srand(12345);
+
+    // 随机插入一半的键
+    for (int i = 0; i < N; i++) {
+        if (rand() % 2) {
+            vals[i] = i;
+            radix_tree_insert(&tree, i, &vals[i]);
+            present[i] = 1;
+        }
+    }
+
+    // 随机查询上界
+    for (int q = 0; q < 5000; q++) {
+        int idx = rand() % N;
+        int expected = -1;
+        for (int k = idx; k < N; k++) {
+            if (present[k]) { expected = k; break; }
+        }
+        int *res = (int*)radix_tree_lookup_upper_bound(&tree, idx);
+        if (expected == -1) {
+            assert(res == NULL);
+        } else {
+            assert(res && *res == expected);
+        }
+    }
+
+    // 随机删除并再次验证
+    for (int i = 0; i < N; i++) {
+        if (present[i] && (rand() % 3 == 0)) {
+            radix_tree_delete(&tree, i);
+            present[i] = 0;
+        }
+    }
+
+    for (int q = 0; q < 2000; q++) {
+        int idx = rand() % N;
+        int expected = -1;
+        for (int k = idx; k < N; k++) {
+            if (present[k]) { expected = k; break; }
+        }
+        int *res = (int*)radix_tree_lookup_upper_bound(&tree, idx);
+        if (expected == -1) {
+            assert(res == NULL);
+        } else {
+            assert(res && *res == expected);
+        }
+    }
+
+    free(vals);
+}
+
+void run_upper_bound_tests() {
+    test_upper_bound_small();   // 之前的小规模测试
+    test_upper_bound_medium();  // 系统性覆盖
+    test_upper_bound_random();  // 随机压力测试
+}
+#include <assert.h>
+#include <stdlib.h>
+
+void run_radix_tree_tests() {
+    struct radix_tree_root tree;
+    radix_tree_init(&tree);
+
+    // 插入数据
+    int values[10];
+    for (int i = 0; i < 10; i++) {
+        values[i] = i * 100;
+        int ret = radix_tree_insert(&tree, i, &values[i]);
+        assert(ret == 0);
+    }
+
+    // 查找测试
+    for (int i = 0; i < 10; i++) {
+        int *res = (int*)radix_tree_lookup(&tree, i);
+        assert(res && *res == values[i]);
+    }
+
+    // 删除部分节点（偶数索引）
+    for (int i = 0; i < 10; i += 2) {
+        int *res = (int*)radix_tree_delete(&tree, i);
+        assert(res && *res == values[i]);
+    }
+
+    // 再次查找，确认删除效果
+    for (int i = 0; i < 10; i++) {
+        int *res = (int*)radix_tree_lookup(&tree, i);
+        if (i % 2 == 0) {
+            assert(res == NULL); // 偶数已删除
+        } else {
+            assert(res && *res == values[i]); // 奇数仍存在
+        }
+    }
+
+    // 删除不存在的 index
+    int *res = (int*)radix_tree_delete(&tree, 99);
+    assert(res == NULL);
+
+    // 重复删除同一个 index
+    res = (int*)radix_tree_delete(&tree, 1);
+    assert(res && *res == values[1]);
+    res = (int*)radix_tree_delete(&tree, 1);
+    assert(res == NULL);
+
+    // 最终清空
+    for (int i = 0; i < 10; i++) {
+        (void)radix_tree_delete(&tree, i);
+    }
+    assert(tree.count == 0);
+    assert(tree.rnode == NULL);
+}
+
+int main() {
+    run_radix_tree_tests();
+    run_upper_bound_tests();
+    return 0;
+}
+
+```
 
 
 

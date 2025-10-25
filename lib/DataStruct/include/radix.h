@@ -1,29 +1,23 @@
 #ifndef RADIX_H
 #define RADIX_H
 #include "macro.h"
-
-
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
 
-#define SIZE_LEVEL  2
-#define BIT_LEVEL    1
-
 struct radix_tree_node {
+    void *slots[2];
     struct radix_tree_node *parent;
-    unsigned int height;
+    uint8_t offset;
     unsigned int count;
-    unsigned char offset;
-    void *slots[SIZE_LEVEL];
+    unsigned int height;
 };
 
 struct radix_tree_root {
-    size_t max_size;
     unsigned int height;
-    struct radix_tree_node *rnode;
     unsigned int count;
+    struct radix_tree_node *rnode;
 };
 
 
