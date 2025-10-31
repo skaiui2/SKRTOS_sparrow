@@ -10,6 +10,11 @@ void list_node_init(struct list_node *node)
     };
 }
 
+int list_empty(struct list_node *node)
+{
+    return node->next == node || node->prev == node;
+}
+
 /*
  * prev insert in front of next.
 */

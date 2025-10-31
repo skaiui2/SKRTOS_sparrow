@@ -14,6 +14,8 @@ struct list_node {
 
 void list_node_init(struct list_node *node);
 
+int list_empty(struct list_node *node);
+
 void list_add_prev(struct list_node *next, struct list_node *prev);
 
 void list_add_next(struct list_node *prev, struct list_node *next);
