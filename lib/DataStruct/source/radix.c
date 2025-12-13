@@ -1,9 +1,17 @@
 #include "radix.h"
 
 
-__attribute__( ( always_inline ) ) inline uint8_t log2_clz(uint32_t Table)
+__attribute__((always_inline)) inline uint8_t log2_clz64(uint64_t value)
 {
-    return 31 - __builtin_clz(Table);
+    return 63 - __builtin_clzll(value);
+}
+
+static inline uint8_t radix_tree_height(uint64_t index)
+{
+    if (index == 0) return 1;
+
+    uint8_t msb = log2_clz64(index);
+    return msb / BIT_LEVEL + 1;
 }
 
 
@@ -21,9 +29,7 @@ void radix_tree_node_init(struct radix_tree_node *node, uint8_t height)
     *node = (struct radix_tree_node) {
             .parent = NULL,
             .count = 0,
-            .height = height,
-            .slots[0] = NULL,
-            .slots[1] = NULL
+            .height = height
     };
 }
 
@@ -69,11 +75,10 @@ int radix_tree_grow_node(struct radix_tree_root *root, size_t index, void *item)
     struct radix_tree_node *node = root->rnode;
     uint8_t offset;
     uint8_t height = root->height;
-    uint8_t shift;
+    uint8_t shift = (height - 1) * BIT_LEVEL;
 
     while (height-- > 1) {
-        shift = height;
-        offset = (index >> shift) & 1;
+        offset = (index >> shift) & (SIZE_LEVEL - 1);
         if (!node->slots[offset]) {
             node->slots[offset] = radix_tree_node_alloc(root, height);
             if (!node->slots[offset]) {
@@ -85,10 +90,11 @@ int radix_tree_grow_node(struct radix_tree_root *root, size_t index, void *item)
             ((struct radix_tree_node *)node->slots[offset])->parent = node;
         }
         node = (struct radix_tree_node *)node->slots[offset];
+        shift -= BIT_LEVEL;
     }
 
     struct radix_tree_node *leaf = node;
-    offset = index & 1;
+    offset = index & (SIZE_LEVEL - 1);
     if (leaf->slots[offset]) {
         return -1;
     }
@@ -102,7 +108,7 @@ int radix_tree_grow_node(struct radix_tree_root *root, size_t index, void *item)
 int radix_tree_insert(struct radix_tree_root *root, size_t index, void *item)
 {
     struct radix_tree_node **node_ptr = &root->rnode;
-    uint8_t height = log2_clz(index) + 1;
+    int height = radix_tree_height(index);
 
     //If no node, it can grow node no need to grow height!
     if (!*node_ptr) {
@@ -127,23 +133,40 @@ int radix_tree_insert(struct radix_tree_root *root, size_t index, void *item)
 
 /*
  * Note:
- * The variable `shift` is not hard‑wired to `height`.
- * By default, shift = height - 1, but if you want to change
- * the branching factor (e.g. implement path compression or
- * use a different number of bits per level), you can redefine
- * it with your own macro, such as:
+ * The core idea of this implementation is to start from the most significant
+ * bits of the index and consume BIT_LEVEL bits per tree level, expanding
+ * downward until reaching the leaves. This allows the radix tree to scale
+ * flexibly with different branching factors.
  *
- *     shift = BIT_LEVEL * height;
+ * Macros:
+ *     #define BIT_LEVEL   N
+ *     #define SIZE_LEVEL  (1 << BIT_LEVEL)
  *
- * In other words, users are free to customize how many index
- * bits are consumed per tree level by adjusting this definition.
+ * - BIT_LEVEL defines how many bits are consumed at each level.
+ * - SIZE_LEVEL defines the number of slots (children) per node.
+ *
+ * Height calculation:
+ *     height = floor(msb / BIT_LEVEL) + 1
+ * where msb is the index of the most significant bit. This ensures that
+ * any remainder bits are correctly accounted for by adding one more level.
+ *
+ * Traversal principle:
+ * - Initialize shift = (height - 1) * BIT_LEVEL
+ * - At each level: offset = (index >> shift) & (SIZE_LEVEL - 1)
+ * - Then shift -= BIT_LEVEL and descend to the next level
+ * - At the leaf level, slots hold actual items, and rightward traversal
+ *   supports upper-bound queries.
+ *
+ * By adjusting BIT_LEVEL, the tree can seamlessly switch between binary
+ * (BIT_LEVEL=1), quaternary (BIT_LEVEL=2), or higher branching structures,
+ * achieving scalable and flexible expansion.
  */
 
 void *radix_tree_lookup(struct radix_tree_root *root, size_t index)
 {
     struct radix_tree_node *node = root->rnode;
-    uint8_t height = root->height;
-    int shift = height - 1;
+    int height = (int)root->height;
+    uint32_t shift = (height - 1) * BIT_LEVEL;
     uint8_t offset;
 
     if (!node) {
@@ -151,12 +174,12 @@ void *radix_tree_lookup(struct radix_tree_root *root, size_t index)
     }
 
     while (height > 0) {
-        offset = (int)((index >> shift) & 1);
+        offset = (int)((index >> shift) & (SIZE_LEVEL - 1));
         node = (struct radix_tree_node *)node->slots[offset];
         if (!node) {
             return NULL;
         }
-        shift--;
+        shift -= BIT_LEVEL;
         height--;
     }
 
@@ -167,18 +190,18 @@ void *radix_tree_lookup(struct radix_tree_root *root, size_t index)
 void *radix_tree_node_left(struct radix_tree_node *node)
 {
     int offset;
-    uint8_t height;
+    int height;
     if (!node) {
         return NULL;
     }
 
-    height = node->height;
+    height = (int)node->height;
     while (height > 0) {
         if (!node) {
             return NULL;
         }
         offset = 0;
-        while ((offset < 2) && (!node->slots[offset])) {
+        while ((offset < SIZE_LEVEL) && (!node->slots[offset])) {
             offset++;
         }
         node = (struct radix_tree_node *)node->slots[offset];
@@ -193,26 +216,26 @@ __attribute__((always_inline)) inline void *radix_tree_root_left(struct radix_tr
     return radix_tree_node_left(root->rnode);
 }
 
-void *radix_tree_delete(struct radix_tree_root *root, unsigned long index)
+void *radix_tree_delete(struct radix_tree_root *root, size_t index)
 {
     struct radix_tree_node *node = root->rnode;
-    uint8_t height = root->height;
-    uint8_t shift = height - 1;
+    int height = (int)root->height;
+    uint8_t shift = (height - 1) * BIT_LEVEL;
     uint8_t offset;
 
-    if (height < log2_clz(index)) return NULL;
+    if (height < radix_tree_height(index)) return NULL;
 
     while (height > 1) {
         if (!node) return NULL;
-        offset = (index >> shift) & 1;
+        offset = (index >> shift) & (SIZE_LEVEL - 1);
         node = (struct radix_tree_node *)node->slots[offset];
-        shift--;
+        shift -= BIT_LEVEL;
         height--;
     }
 
     if (!node) return NULL;
 
-    offset = index & 1;
+    offset = index & (SIZE_LEVEL - 1);
     void *item = node->slots[offset];
     if (!item) return NULL;
 
@@ -238,42 +261,51 @@ void *radix_tree_delete(struct radix_tree_root *root, unsigned long index)
 }
 
 void *radix_tree_lookup_upper_bound(struct radix_tree_root *root, size_t index) {
+    uint8_t offset;
+    uint32_t shift = (root->height - 1) * BIT_LEVEL;
+
     struct radix_tree_node *node = root->rnode;
     if (!node) return NULL;
 
-    unsigned int shift = root->height - 1;
-    uint8_t offset;
-
     while (node && node->height > 1) {
-        offset = (index >> shift) & 1;
+        offset = (index >> shift) & (SIZE_LEVEL - 1);
         if (node->slots[offset]) {
             node = node->slots[offset];
-            shift--;
+            shift -= BIT_LEVEL;
         } else {
-            if (offset + 1 < 2 && node->slots[offset+1]) {
-                return radix_tree_node_left(node->slots[offset+1]);
+            while(++offset < SIZE_LEVEL) {
+                if (node->slots[offset]) {
+                    return radix_tree_node_left(node->slots[offset]);
+                }
             }
+
             break;
         }
     }
 
     // if in leaf layer
     if (node && node->height == 1) {
-        offset = index & 1;
+        offset = index & (SIZE_LEVEL - 1);
         if (node->slots[offset]) {
             return node->slots[offset];
         }
-        if (offset + 1 < 2 && node->slots[offset+1]) {
-            return node->slots[offset+1];
+
+        while (++offset < SIZE_LEVEL) {
+            if (node->slots[offset]) {
+                return node->slots[offset];
+            }
         }
     }
 
     while (node && node->parent) {
-        int off = node->offset;
+        uint8_t off = node->offset;
         node = node->parent;
-        if (off + 1 < 2 && node->slots[off+1]) {
-            return radix_tree_node_left(node->slots[off+1]);
+        while (++off < SIZE_LEVEL) {
+            if (node->slots[off]) {
+                return radix_tree_node_left(node->slots[off]);
+            }
         }
+
     }
 
     return NULL;

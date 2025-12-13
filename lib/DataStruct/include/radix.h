@@ -6,8 +6,13 @@
 #include <stdlib.h>
 #include <stdint.h>
 
+
+#define BIT_LEVEL   4
+#define SIZE_LEVEL  (1 << BIT_LEVEL)
+
+
 struct radix_tree_node {
-    void *slots[2];
+    void *slots[SIZE_LEVEL];
     struct radix_tree_node *parent;
     uint8_t offset;
     unsigned int count;
@@ -27,7 +32,8 @@ int radix_tree_insert(struct radix_tree_root *root, size_t index, void *item);
 void *radix_tree_lookup(struct radix_tree_root *root, size_t index);
 void *radix_tree_root_left(struct radix_tree_root *root);
 void *radix_tree_lookup_upper_bound(struct radix_tree_root *root, size_t index);
-void *radix_tree_delete(struct radix_tree_root *root, unsigned long index);
+void *radix_tree_delete(struct radix_tree_root *root, size_t index);
+
 
 
 
