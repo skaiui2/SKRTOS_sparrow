@@ -83,9 +83,9 @@ void *heap_malloc(size_t WantSize)
     void *xReturn = NULL;
     WantSize += HeapStructSize;
     if((WantSize & alignment_byte) != 0x00) {
-        alignment_require_size = (alignment_byte + 1) - (WantSize & alignment_byte);//must 8-byte alignment
+        alignment_require_size = (alignment_byte + 1) - (WantSize & alignment_byte);
         WantSize += alignment_require_size;
-    }//You can add the TaskSuspend function ,that make here be an atomic operation
+    }
     if(TheHeap.tail== NULL ) {
         heap_init();
     }//Resume
