@@ -11,29 +11,22 @@
 #include <memory.h>
 #include <unistd.h> 
  
-#include "config.h"
+#define  TCPT_NTIMERS 4
+#define IP_MAX_MEMBERSHIPS              20
 
-#define class(class)    \
-typedef struct class##_class class##_class;\
-struct class##_class
-
-#define Class(class)    \
-typedef struct  class  class;\
-struct class
-
-
-#define container_of(ptr, type, member) \
-    ((type *)((char *)(ptr) - offsetof(type, member)))
-
-
-#define STRUCT_SIZE_PRE(str, member) offsetof(str, member)
 
 /*
- * If we know a,b both less than the half of number axis.
- * Spill or not,if a is ahead of b, return true.Or else, return flase.
+ * Greater than:
  */
-#define COMPARE_GT(a, b) ((int)(a - b) > 0)
-#define COMPARE_GET(a, b) ((int)(a - b) >= 0)
+#define SEQ_GT(a,b)  ((int32_t)((a) - (b)) > 0)
+#define SEQ_GEQ(a,b) ((int32_t)((a) - (b)) >= 0)
+
+#define SEQ_EQ(a,b) ((int32_t)((a) == (b)))
+/*
+ * less than:
+*/
+#define SEQ_LT(a,b)  ((int32_t)((a) - (b)) < 0)
+#define SEQ_LEQ(a,b) ((int32_t)((a) - (b)) <= 0)
 
 
 #define min(a, b) ((a) < (b) ? (a) : (b))
@@ -153,30 +146,6 @@ do {    \
 #define ICMP_ADDRESSREPLY	18	/* Address Mask Reply		*/
 #define NR_ICMP_TYPES		18
 
-/*
-#define AF_UNSPEC      0   // Unspecified protocol family, used for generic sockets or unspecified addresses
-#define AF_INET        2   // IPv4 protocol family, used for IPv4 network communication
-#define AF_INET6       10  // IPv6 protocol family, used for IPv6 network communication
-#define AF_UNIX        1   // UNIX local socket, used for inter-process communication on the same machine
-#define AF_LOCAL       1   // Alias for AF_UNIX, represents local sockets
-#define AF_PACKET      17  // Direct access to the link-layer packets, used for low-level networking
-#define AF_NETLINK     16  // Communication between kernel and user-space processes
-#define AF_BLUETOOTH   31  // Bluetooth protocol family, used for Bluetooth device communication
-
-
-#define IPPROTO_IP      0x00  // IPv4 协议
-#define IPPROTO_ICMP    0x01  // ICMP (Internet Control Message Protocol)
-#define IPPROTO_IGMP    0x02  // IGMP (Internet Group Management Protocol)
-#define IPPROTO_TCP     0x06  // TCP (Transmission Control Protocol)
-#define IPPROTO_UDP     0x11  // UDP (User Datagram Protocol)
-#define IPPROTO_IPV6    0x29  // IPv6 协议
-#define IPPROTO_GRE     0x2F  // GRE (Generic Routing Encapsulation)
-#define IPPROTO_ESP     0x32  // ESP (Encapsulating Security Payload)
-#define IPPROTO_AH      0x33  // AH (Authentication Header)
-#define IPPROTO_SCTP    0x84  // SCTP (Stream Control Transmission Protocol)
-#define IPPROTO_RAW     0xFF  // RAW 数据包协议
-
-*/
 
 
 #endif 
