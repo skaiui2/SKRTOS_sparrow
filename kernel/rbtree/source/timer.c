@@ -23,77 +23,77 @@
  *  https://github.com/skaiui2/SKRTOS_sparrow
  */
 
-/*
- * WARNING: This file is deprecated and contains known vulnerabilities.
- *          Use kernel/rbtree/source/timer.c instead.
- */
-
 #include "timer.h"
 #include "heap.h"
 #include "atomic.h"
-
-
+#include "port.h"
+#include "compare.h"
 
 Class(timer_struct)
 {
-    rb_node           TimerNode;
+    rb_node             TimerNode;
     uint32_t            TimerPeriod;
     TimerFunction_t     CallBackFun;
-    uint8_t             TimerStopFlag ;
+    uint8_t             TimerStopFlag;
 };
 
 rb_root ClockTree;
-
-extern uint64_t AbsoluteClock;
+static uint16_t TimerCheckPeriod = 0;
+extern uint32_t NowTickCount;
 
 void ClockTreeAdd(timer_struct *timer)
 {
-    const uint32_t constTicks = AbsoluteClock;
-    uint32_t wakeTime = constTicks + timer->TimerNode.value;
-    timer->TimerNode.value = wakeTime;
-
+    uint32_t cpu_lock = xEnterCritical();
+    timer->TimerNode.value = NowTickCount + timer->TimerPeriod;
     rb_Insert_node(&ClockTree, &timer->TimerNode);
+    xExitCritical(cpu_lock);
+}
+
+
+void ClockTreeRemove(timer_struct *timer)
+{
+    uint32_t cpu_lock = xEnterCritical();
+    rb_remove_node(&ClockTree, &timer->TimerNode);
+    xExitCritical(cpu_lock);
 }
 
 
 void timer_check(void)
 {
     while (1) {
-        rb_node *node = rb_first(&ClockTree);
-        if (node == NULL) {
-            continue;
-        }
-        while (node != NULL && node->value <= AbsoluteClock ) {
-            timer_struct *timer = container_of( node,timer_struct,TimerNode);
+        rb_node *next_node = NULL;
+        rb_node *node = ClockTree.first_node;
+        while (node && compare_before_eq(node->value, NowTickCount)) {
+            next_node = rb_next(node);
+            timer_struct *timer = container_of(node, timer_struct, TimerNode);
             timer->CallBackFun(timer);
-            if(timer->TimerStopFlag == stop) {
-                rb_remove_node(&ClockTree, &timer->TimerNode);
-            }
-            rb_node *next_node = rb_next(node);
-            if( next_node != ClockTree.save_node ) {
-                node = next_node;
-            } else {
-                node = NULL;
-            }
+
+            ClockTreeRemove(timer);
+            if (timer->TimerStopFlag == run) {
+                ClockTreeAdd(timer);
+            } 
+            node = next_node;
         }
+        TaskDelay(TimerCheckPeriod);//User-defined periodic check.
     }
 }
 
 
-TaskHandle_t xTimerInit(uint8_t timer_priority, uint16_t stack)
+TaskHandle_t TimerInit(uint8_t timer_priority, uint16_t stack, uint8_t check_period)
 {
     TaskHandle_t self = NULL;
     rb_root_init(&ClockTree);
-    xTaskCreate((TaskFunction_t)timer_check,
+    TaskCreate((TaskFunction_t)timer_check,
                 stack,
                 NULL,
                 timer_priority,
                 &self);
+    TimerCheckPeriod = check_period;
     return self;
 }
 
 
-timer_struct *xTimerCreat(TimerFunction_t CallBackFun, uint32_t period, uint8_t timer_flag)
+timer_struct *TimerCreat(TimerFunction_t CallBackFun, uint32_t period, uint8_t timer_flag)
 {
     timer_struct *timer = heap_malloc(sizeof(timer_struct));
     *timer = (timer_struct){
@@ -101,30 +101,38 @@ timer_struct *xTimerCreat(TimerFunction_t CallBackFun, uint32_t period, uint8_t 
             .CallBackFun = CallBackFun,
             .TimerStopFlag = timer_flag
     };
-    timer->TimerNode.value = period;
     rb_node_init(&(timer->TimerNode));
     ClockTreeAdd(timer);
     return timer;
 }
 
 
-uint8_t TimerRerun(timer_struct *timer)
+void TimerDelete(TimerHandle timer)
 {
-    atomic_set(run, (uint32_t *)&(timer->TimerStopFlag));
-    ClockTreeAdd(timer);
-    return timer->TimerStopFlag;
+    heap_free(timer);
 }
 
 
+uint8_t TimerRerun(timer_struct *timer, uint8_t timer_flag)
+{
+    ClockTreeAdd(timer);
+    return atomic_set_return(timer_flag, (uint32_t *)&(timer->TimerStopFlag));
+}
 
+
+/*
+ * timer callback function will Execute once, then removed.
+ */
 uint8_t TimerStop(timer_struct *timer)
 {
-    atomic_set(stop, (uint32_t *)&(timer->TimerStopFlag));
-    rb_node_init(&timer->TimerNode);
-    return timer->TimerStopFlag;
+    return atomic_set_return(stop, (uint32_t *)&(timer->TimerStopFlag));
 }
 
-
-
-
-
+/*
+ * timer callback function removed Immediately.
+ */
+uint8_t TimerStopImmediate(timer_struct *timer)
+{
+    ClockTreeRemove(timer);
+    return atomic_set_return(stop, (uint32_t *)&(timer->TimerStopFlag));
+}

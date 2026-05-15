@@ -71,6 +71,8 @@ void timer_check(void)
             ListNode *next_node = node->next;
             if( next_node != ClockList.tail ) {
                 node = next_node;
+            } else {
+                node = NULL;
             }
         }
     }
