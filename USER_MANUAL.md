@@ -789,6 +789,10 @@ uint32_t atomic_set(uint32_t i, uint32_t *v)
 
 支持定时器，
 
+> **⚠️ DEPRECATION NOTE**: The timer API (`xTimerInit`, `xTimerCreat`) shown below is from
+> the legacy implementation which contains known NULL-pointer-dereference and
+> use-after-free vulnerabilities. The canonical, fixed implementation is at `kernel/rbtree/source/timer.c`.
+
 总API如下：
 
 ```
