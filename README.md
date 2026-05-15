@@ -1,42 +1,122 @@
 # SKRTOS_sparrow
 
-SKRTOS_sparrow内核的定位是学习型RTOS。**不仅开源代码，也开源思想与知识**。
+## Introduction
 
-移植、教程、使用等，请参考使用手册。
+SKRTOS_sparrow is a Real-Time Operation System micro kernel.  
 
-### 使用手册
+**Contact information**
 
-[使用手册](USER_MANUAL.md)
+skaiuijing@gmail.com
 
-## 文档说明
+### Description
 
-本分支下的docs文件夹包含了SKRTOS_sparrow内核的设计说明，
+#### Directory of the current branch
 
-**CodeDesign文件夹**：代码的设计风格、编程思想。
+**arch**: Interface for porting different architectures
 
-**Kernel_imple文件夹**：内核的具体实现，文件中的具体代码的讲解。
+**boards**: Transplant project of different development boards
 
-包括以下内容：
+**docs**: Documentation, including kernel design and source code
 
-1.内核各个文件的代码是什么？内核的代码风格是什么？
+**kernel**: source code
 
-2.内核是如何设计的？如何从0到1写一个RTOS内核？
+**lib**: data structure and algorithm library
 
-3.这一行行代码是在干什么？
+**net**: TCP/IP protocol.
 
-4.CPU架构、实时操作系统相关知识。
+**FileSystm**: file system.
 
-5.对特定问题的理解与思考
 
-**注意！！！**
 
-在知乎等平台发布的文章将不再更新，主要内容后面会迁移到GitHub上，文档内容后面有时间会尝试整理为pdf文件。
+#### Tutorial
 
-Kernel_imple文件夹中的文件目前只有文件名，没有内容，**每周末会更新一篇文章讲解内核实现**。
+If you want to write a micro kernel, there are two kinds of tutorial in **Chinese** and **English**.
+
+**study**：
+
+**中文**：[skaiui2/SKRTOS_sparrow at study](https://github.com/skaiui2/SKRTOS_sparrow/tree/study)
+
+**English** : [Let’s write a Real-Time Operating System(RTOS) (Part 1: Memory management) | by Skaiuijing | Apr, 2025 | Medium](https://medium.com/@skaiuijing/lets-write-a-real-time-operating-system-rtos-part-1-5873f6c2184f)
+
+## version
+
+The kernel now has four versions: the  **Table version** (Table), the **List version** (List), the **red-black tree version** (RBtree), and the r**esponse EDF version** (rbtreeEDF).
+
+These four versions can also be divided into: learning version, use version, experimental version, and trial version.
+
+The compilers and platforms supported in the four releases are under maintenance update.
+
+### Table version
+
+Only support less than 32 tasks, and do not support the same priority.
+
+**USER MANUAL**
+
+[中文](UserManual/中文/tableUser.md)
+
+[English](UserManual/English/tableUser.md)
+
+#### Linked list version
+
+There is no limit on the number of supported tasks. The interface of this version can be modified by referring to the number table version.
+
+#### Red and black tree version
+
+Supports the same priority, but does not support time slices, and other features are the same as the linked list version.
+
+The above three versions of the design idea is not any difference.
+
+#### Responds to the EDF version
+
+The improvement on the traditional EDF algorithm emphasizes the periodicity and predictability of the system, and supports the arm cortex A7 architecture.
+
+**USER MANUAL**
+
+Three other versions: [中文](UserManual/English/other.md)
+
+[English](UserManual/English/other.md)
+
+### Scope of Application
+
+table version: Learning conditions with limited use or resources.
+
+list version: high degree of completion, suitable for most scenarios.
+
+Red-black tree version: applicable to scenarios where a large number of tasks are frequently searched, inserted, and deleted.
+
+Response EDF version: Suitable for scenarios that emphasize periodicity and predictability, only some simple tests have been conducted, the function is not stable, and it is only a toy at present.
+
+
+
+### Each version optimization direction
+
+**table version** : The application scenario is low resources and high efficiency, the kernel should be streamlined, and a large number of bit operations will be used in the later stage to accelerate the operation, and redundant code optimization, and the reuse of variables to improve efficiency.
+
+**list version** : Suitable for general scenarios.
+
+**Red-black tree version** : suitable for high concurrency scenarios with a large number of threads, emphasizing the concept of "everything can be locked", and a large number of locks will be added later to ensure the security of concurrency.
+
+**Response EDF version** : Suitable for scenarios that emphasize periodicity and predictability. On the basis of referring to red-black tree version lock management, a calculation program and prediction program for task schedulability should be added. The scheduling algorithm will be improved later, like add the prediction program.
+
+
+
+## Documentation
+
+The docs folder  under this branch contains the SKRTOS_sparrow kernel design instructions,
+
+ArithmeticOptimizations folder  : Some understanding of arithmetic and program optimization.
+
+CodeDesign folder  : Code design style, programming ideas.
+
+Kernel_imple folder  : The specific implementation of the kernel, the specific code in the file.
+
+net folder: the net protocol implements.
 
 ## Security Notice
 
-The legacy timer implementations at `rbtree/Sparrow/timer/timer.c` and `List/Sparrow/timer/timer.c` contain known NULL-pointer-dereference and use-after-free vulnerabilities.
+The legacy timer implementations at `rbtree/Sparrow/timer/timer.c` and
+`List/Sparrow/timer/timer.c` contain known NULL-pointer-dereference and
+use-after-free vulnerabilities.
 
 **Canonical fixed implementation:** `kernel/rbtree/source/timer.c`
 
@@ -46,7 +126,7 @@ The legacy timer implementations at `rbtree/Sparrow/timer/timer.c` and `List/Spa
 |------------|---------------------|
 | `xTimerInit(priority, stack)` | `TimerInit(priority, stack, check_period)` |
 | `xTimerCreat(cb, period, flag)` | `TimerCreat(cb, period, flag)` |
-| `TimerStop(timer)` | `TimerStopImmediate(timer)` (for immediate removal) |
+| `TimerStop(timer)` | `TimerStopImmediate(timer)` |
 | `TimerRerun(timer)` | `TimerRerun(timer, flag)` |
 
 See `kernel/rbtree/source/timer.c` for the complete implementation.
