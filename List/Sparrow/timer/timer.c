@@ -23,6 +23,11 @@
  *  https://github.com/skaiui2/SKRTOS_sparrow
  */
 
+/*
+ * WARNING: This file is deprecated and contains known vulnerabilities.
+ *          Use kernel/rbtree/source/timer.c instead.
+ */
+
 #include "timer.h"
 #include "heap.h"
 #include "atomic.h"
@@ -54,14 +59,18 @@ void timer_check(void)
 {
     while (1) {
         ListNode *node = ClockList.head;
-        while ( node->value <= AbsoluteClock ) {
+        if (node == NULL) {
+            continue;
+        }
+        while (node != NULL && node->value <= AbsoluteClock ) {
             timer_struct *timer = container_of( node,timer_struct,TimerNode);
             timer->CallBackFun(timer);
             if(timer->TimerStopFlag == stop) {
                 ListRemove(&ClockList, &timer->TimerNode);
             }
-            if( node != ClockList.tail ) {
-                node = node->next;
+            ListNode *next_node = node->next;
+            if( next_node != ClockList.tail ) {
+                node = next_node;
             }
         }
     }
@@ -91,7 +100,7 @@ timer_struct *xTimerCreat(TimerFunction_t CallBackFun, uint32_t period, uint8_t 
             .TimerStopFlag = timer_flag
     };
     timer->TimerNode.value = period;
-    ListInit(&ClockList);
+    ListInit(&timer->TimerNode);
     ClockListAdd(timer);
     return timer;
 }
