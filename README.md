@@ -33,3 +33,20 @@ SKRTOS_sparrow内核的定位是学习型RTOS。**不仅开源代码，也开源
 在知乎等平台发布的文章将不再更新，主要内容后面会迁移到GitHub上，文档内容后面有时间会尝试整理为pdf文件。
 
 Kernel_imple文件夹中的文件目前只有文件名，没有内容，**每周末会更新一篇文章讲解内核实现**。
+
+## Security Notice
+
+The legacy timer implementations at `rbtree/Sparrow/timer/timer.c` and `List/Sparrow/timer/timer.c` contain known NULL-pointer-dereference and use-after-free vulnerabilities.
+
+**Canonical fixed implementation:** `kernel/rbtree/source/timer.c`
+
+### Migration from legacy to kernel timer API
+
+| Legacy API | Canonical Kernel API |
+|------------|---------------------|
+| `xTimerInit(priority, stack)` | `TimerInit(priority, stack, check_period)` |
+| `xTimerCreat(cb, period, flag)` | `TimerCreat(cb, period, flag)` |
+| `TimerStop(timer)` | `TimerStopImmediate(timer)` (for immediate removal) |
+| `TimerRerun(timer)` | `TimerRerun(timer, flag)` |
+
+See `kernel/rbtree/source/timer.c` for the complete implementation.
